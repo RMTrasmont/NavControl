@@ -36,8 +36,8 @@
     self.navigationItem.rightBarButtonItem = self.editButtonItem;
     
     
-    self.companyList = @[@"Apple mobile devices",@"Samsung mobile devices"];
-    self.title = @"Mobile device makers";
+    self.companyList = @[@"Apple mobile",@"Samsung mobile devices",@"Google mobile devices",@"LG mobile devices"];
+    self.title = @"Mobile companies";
     
     
 }
@@ -76,8 +76,23 @@
     
     cell.textLabel.text = [self.companyList objectAtIndex:[indexPath row]];
     
+    if (indexPath.row == 0){
+        [[cell imageView] setImage:[UIImage imageNamed:@"appleLogo"]];
+    } else if (indexPath.row == 1){
+        [[cell imageView] setImage:[UIImage imageNamed:@"samsungLogo"]];
+    } else if (indexPath.row == 2){
+        [[cell imageView] setImage:[UIImage imageNamed:@"googleLogo"]];
+    } else {
+        [[cell imageView] setImage:[UIImage imageNamed:@"lgLogo"]];
+    }
+    
+    
+    
     return cell;
+
+
 }
+
 
 /*
 // Override to support conditional editing of the table view.
@@ -127,9 +142,14 @@
 
 
     if (indexPath.row == 0){
+        
         self.productViewController.title = @"Apple mobile devices";
-    } else {
+    } else if (indexPath.row == 1) {
         self.productViewController.title = @"Samsung mobile devices";
+    } else if (indexPath.row == 2){
+        self.productViewController.title = @"Google mobile devices";
+    }else {
+        self.productViewController.title = @"LG mobile devices";
     }
     
     [self.navigationController
