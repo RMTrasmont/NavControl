@@ -137,10 +137,11 @@
 #pragma mark - Table view delegate
 
 // In a xib-based application, navigation from a table can be handled in -tableView:didSelectRowAtIndexPath:
+
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-
-
+    
+    //NOTE: PRODUCT VIEW CONTROLLER, NOT COMPANY, SIMPLY SETS THE TITLE FOR THE NEXT PAGE
     if (indexPath.row == 0){
         
         self.productViewController.title = @"Apple mobile devices";
@@ -152,6 +153,7 @@
         self.productViewController.title = @"LG mobile devices";
     }
     
+    // PUSHES TO THE DIFFERENT PRODUCTS FROM THE COMPANY
     [self.navigationController
         pushViewController:self.productViewController
         animated:YES];

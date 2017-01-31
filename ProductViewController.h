@@ -7,7 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <WebKit/WebKit.h>
 
 @interface ProductViewController : UITableViewController
+
+@property(strong,nonatomic) WKWebView *webView;
+
 @property (nonatomic, retain) NSArray *products;
+
+@property (strong,nonatomic) NSString *productURL;
+
 @end
