@@ -10,6 +10,8 @@
 #import "WebVCViewController.h"
 @interface ProductViewController ()
 
+@property (retain,nonatomic)NSMutableArray *mutableProductList;
+
 @end
 
 @implementation ProductViewController
@@ -33,31 +35,36 @@
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     self.navigationItem.rightBarButtonItem = self.editButtonItem;
     
-    //Array of Products
+    //ARRAY OF PRODUCTS
     self.products = @[@"iPad",@"iPod Touch",@"iPhone",@"Galaxy S4", @"Galaxy Note", @"Galaxy Tab",@"Pixel",@"Pixel XL",@"Pixel C",@"V10",@"V20",@"G5"];
+    
+    //MUTABEL ARRAY OF PRODUCST
     
 
 }
 
+//****************************************************************************************************************
 //A VIEW WILL APPEAR THAT CATEGORIZES THE VIEW Brands -> Products  self.Title refers Title at the TOP Part of the View
-//*************************************************************************
+
 - (void)viewWillAppear:(BOOL)animated {
     
     [super viewWillAppear:animated];
     
+    //IF THE TITLE ON TOP OF TABLE IS THIS...PLACES THESE PRODUCTS ON THE ROWS BELOW IT
     if ([self.title isEqualToString:@"Apple mobile devices"]) {
-        self.products = @[@"iPad", @"iPod Touch",@"iPhone"];
+        _mutableProductList = [[NSMutableArray alloc]initWithObjects:@"iPad",@"iPod Touch",@"iPhone", nil];
     } else if ([self.title isEqualToString:@"Samsung mobile devices"]){
-        self.products = @[@"Galaxy S4", @"Galaxy Note", @"Galaxy Tab"];
+        _mutableProductList = [[NSMutableArray alloc]initWithObjects:@"Galaxy S4", @"Galaxy Note", @"Galaxy Tab", nil];
     } else if ([self.title isEqualToString:@"Google mobile devices"]){
-        self.products = @[@"Pixel",@"Pixel XL",@"Pixel C" ];
+        _mutableProductList = [[NSMutableArray alloc]initWithObjects:@"Pixel",@"Pixel XL",@"Pixel C" , nil];
     } else {
-        self.products = @[@"V10",@"V20",@"G5"];    
+        _mutableProductList = [[NSMutableArray alloc]initWithObjects:@"V10",@"V20",@"G5", nil];
     }
     
     [self.tableView reloadData];
 }
-//**************************************************************************
+
+//****************************************************************************************************************
 
 
 - (void)didReceiveMemoryWarning
@@ -79,10 +86,11 @@
 {
 #warning Incomplete method implementation.
     // Return the number of rows in the section.
-    return [self.products count];
+    return [_mutableProductList count];
 }
 
-//
+//****************************************************************************************************************
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *CellIdentifier = @"Cell";
@@ -91,10 +99,11 @@
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
     // Configure the cell...
-    cell.textLabel.text = [self.products objectAtIndex:[indexPath row]];
+    cell.textLabel.text = [_mutableProductList objectAtIndex:[indexPath row]];
     return cell;
 }
 
+//******************************************************************************************************************
 /*
 // Override to support conditional editing of the table view.
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
@@ -233,6 +242,27 @@
 }
 
 //*******************************************************************************************************
+
+
+//CONVERT NSARRAY INTO NSMUTABLE ARRAY
+- (NSMutableArray *)createMutableArray:(NSArray *)array
+{
+    return [NSMutableArray arrayWithArray:array];
+}
+
+//*******************************************************************************************************
+
+//DELETE PRODUCTS ON TABLEVIEW CELL METHOD
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    
+    //REMOVES THE ACTUAL OBJECT FROM THE NSMUTABLE ARRAY THE TABLEVIEW USES
+   [_mutableProductList removeObjectAtIndex:indexPath.row];
+    
+    //CALL TO REFRESH THE DATA AND UPDATE NUMBER OF ITEMS
+    [tableView reloadData];
+}
+
 
 
 @end

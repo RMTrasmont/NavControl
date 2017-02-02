@@ -11,6 +11,8 @@
 
 @interface CompanyViewController ()
 
+@property (retain,nonatomic) NSMutableArray *mutableCompanyList;
+
 @end
 
 @implementation CompanyViewController
@@ -35,9 +37,12 @@
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     self.navigationItem.rightBarButtonItem = self.editButtonItem;
     
-    
+    //NSARRAY COMPANY LISR
     self.companyList = @[@"Apple mobile",@"Samsung mobile devices",@"Google mobile devices",@"LG mobile devices"];
     self.title = @"Mobile companies";
+    
+    //NS MUTABLE ARRAY COMPANY LIST
+    _mutableCompanyList = [self createMutableArray:self.companyList];
     
     
 }
@@ -61,7 +66,7 @@
 {
 #warning Incomplete method implementation.
     // Return the number of rows in the section.
-    return [self.companyList count];
+    return [_mutableCompanyList count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -74,7 +79,7 @@
     
     // Configure the cell...
     
-    cell.textLabel.text = [self.companyList objectAtIndex:[indexPath row]];
+    cell.textLabel.text = [_mutableCompanyList objectAtIndex:[indexPath row]];
     
     if (indexPath.row == 0){
         [[cell imageView] setImage:[UIImage imageNamed:@"appleLogo"]];
@@ -161,6 +166,26 @@
 
 }
  
+
+//CONVERT NSARRAY INTO NSMUTABLE ARRAY
+- (NSMutableArray *)createMutableArray:(NSArray *)array
+{
+    return [NSMutableArray arrayWithArray:array];
+}
+
+
+
+
+//DELETE FUNCTION TO DELETE ROW OF COMPANIES
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    
+    //REMOVES THE ACTUAL OBJECT FROM THE NSMUTABLE ARRAY THE TABLEVIEW USES
+    [_mutableCompanyList removeObjectAtIndex:indexPath.row];
+    
+    //CALL TO REFRESH THE DATA AND UPDATE NUMBER OF ITEMS
+    [tableView reloadData];
+}
 
 
 @end
