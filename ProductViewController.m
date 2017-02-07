@@ -43,7 +43,7 @@
 
 }
 
-//****************************************************************************************************************
+//********************************************************************************************
 //A VIEW WILL APPEAR THAT CATEGORIZES THE VIEW Brands -> Products  self.Title refers Title at the TOP Part of the View
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -51,6 +51,7 @@
     [super viewWillAppear:animated];
     
     //IF THE TITLE ON TOP OF TABLE IS THIS...PLACES THESE PRODUCTS ON THE ROWS BELOW IT
+    //CREATE A NEW ARRAY EACH TIME -->[[NSMutableArray alloc]initWithObjects:
     if ([self.title isEqualToString:@"Apple mobile devices"]) {
         _mutableProductList = [[NSMutableArray alloc]initWithObjects:@"iPad",@"iPod Touch",@"iPhone", nil];
     } else if ([self.title isEqualToString:@"Samsung mobile devices"]){
@@ -64,7 +65,7 @@
     [self.tableView reloadData];
 }
 
-//****************************************************************************************************************
+//********************************************************************************************
 
 
 - (void)didReceiveMemoryWarning
@@ -89,7 +90,7 @@
     return [_mutableProductList count];
 }
 
-//****************************************************************************************************************
+//********************************************************************************************
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -103,7 +104,7 @@
     return cell;
 }
 
-//******************************************************************************************************************
+//********************************************************************************************
 /*
 // Override to support conditional editing of the table view.
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
@@ -161,7 +162,9 @@
  
  */
 
-//*******************************************************************************************************
+//********************************************************************************************
+// DO ALL CUSTOMIZING OF CELLS HERE INSIDE THIS METHOD
+
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     
     //INITIALIZE CUSTOM OBJECT TO ASSIGN WEB URL TO ITS URL PROPERTY
@@ -232,7 +235,8 @@
                    break;
            }
        }
-
+    
+    
     //SETS THE NEXT VIEW'S WEBURL TO BE WHAT WE SELECTED IT HERE ON THIS PAGE
     webVC.webURL = self.productURL;
     
@@ -241,7 +245,7 @@
 
 }
 
-//*******************************************************************************************************
+//********************************************************************************************
 
 
 //CONVERT NSARRAY INTO NSMUTABLE ARRAY
@@ -250,7 +254,7 @@
     return [NSMutableArray arrayWithArray:array];
 }
 
-//*******************************************************************************************************
+//********************************************************************************************
 
 //DELETE PRODUCTS ON TABLEVIEW CELL METHOD
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
@@ -263,6 +267,21 @@
     [tableView reloadData];
 }
 
+//********************************************************************************************
+//ALLOW REORDER OF CELLS
+-(UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath{
+    return UITableViewCellEditingStyleNone;
+}
+
+-(BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return YES;
+}
+
+-(void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)sourceIndexPath toIndexPath:(NSIndexPath *)destinationIndexPath{
+    
+}
+//********************************************************************************************
 
 
 @end

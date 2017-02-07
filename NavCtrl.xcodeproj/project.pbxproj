@@ -435,7 +435,7 @@
 				INFOPLIST_FILE = "NavCtrl/NavCtrl-Info.plist";
 				PRODUCT_BUNDLE_IDENTIFIER = "qcd.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -451,7 +451,7 @@
 				INFOPLIST_FILE = "NavCtrl/NavCtrl-Info.plist";
 				PRODUCT_BUNDLE_IDENTIFIER = "qcd.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

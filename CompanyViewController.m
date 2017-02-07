@@ -69,6 +69,7 @@
     return [_mutableCompanyList count];
 }
 
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *CellIdentifier = @"Cell";
@@ -146,6 +147,7 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     
+    
     //NOTE: PRODUCT VIEW CONTROLLER, NOT COMPANY, SIMPLY SETS THE TITLE FOR THE NEXT PAGE
     if (indexPath.row == 0){
         
@@ -162,6 +164,7 @@
     [self.navigationController
         pushViewController:self.productViewController
         animated:YES];
+    
     
 
 }

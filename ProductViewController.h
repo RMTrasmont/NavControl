@@ -11,10 +11,14 @@
 
 @interface ProductViewController : UITableViewController
 
-@property(strong,nonatomic) WKWebView *webView;
-
 @property (nonatomic, retain) NSArray *products;
 
 @property (strong,nonatomic) NSString *productURL;
+
+//************************************************************************************
+@property(strong,nonatomic) WKWebView *webView;
+//************************************************************************************
+
+
 
 @end
