@@ -24,6 +24,9 @@
 		48A656EB18163F8700746D36 /* ProductViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 48A656E918163F8700746D36 /* ProductViewController.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		48A656EE1816468000746D36 /* Sunflower.gif in Resources */ = {isa = PBXBuildFile; fileRef = 48A656ED1816468000746D36 /* Sunflower.gif */; };
 		530FD8EC1E3FF71700F7877D /* WebVCViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 530FD8EB1E3FF71700F7877D /* WebVCViewController.m */; };
+		53EA62BA1E523C2C00091583 /* Product.m in Sources */ = {isa = PBXBuildFile; fileRef = 53EA62B91E523C2C00091583 /* Product.m */; };
+		53EA62BF1E523C9800091583 /* Company.m in Sources */ = {isa = PBXBuildFile; fileRef = 53EA62BE1E523C9800091583 /* Company.m */; };
+		53EA62C81E52793A00091583 /* DAO.m in Sources */ = {isa = PBXBuildFile; fileRef = 53EA62C71E52793A00091583 /* DAO.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -61,6 +64,12 @@
 		48A656ED1816468000746D36 /* Sunflower.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = Sunflower.gif; sourceTree = "<group>"; };
 		530FD8EA1E3FF71700F7877D /* WebVCViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebVCViewController.h; sourceTree = "<group>"; };
 		530FD8EB1E3FF71700F7877D /* WebVCViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WebVCViewController.m; sourceTree = "<group>"; };
+		53EA62B81E523C2C00091583 /* Product.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Product.h; sourceTree = "<group>"; };
+		53EA62B91E523C2C00091583 /* Product.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Product.m; sourceTree = "<group>"; };
+		53EA62BD1E523C9800091583 /* Company.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Company.h; sourceTree = "<group>"; };
+		53EA62BE1E523C9800091583 /* Company.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Company.m; sourceTree = "<group>"; };
+		53EA62C61E52793A00091583 /* DAO.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DAO.h; sourceTree = "<group>"; };
+		53EA62C71E52793A00091583 /* DAO.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DAO.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -151,6 +160,9 @@
 				483796CC1BCBF7C70062D5AB /* ParentViewController */,
 				483796CD1BCBF7EB0062D5AB /* ProductViewController */,
 				530FD8ED1E413BBA00F7877D /* WebVcViewController */,
+				53EA62BC1E523C5000091583 /* Company */,
+				53EA62BB1E523C3600091583 /* Product */,
+				53EA62C21E52592A00091583 /* DAO */,
 				48A656C618163BF200746D36 /* Images.xcassets */,
 				48A656E518163C1B00746D36 /* CompanyViewController.xib */,
 				48A656BB18163BF200746D36 /* Supporting Files */,
@@ -195,6 +207,33 @@
 				530FD8EB1E3FF71700F7877D /* WebVCViewController.m */,
 			);
 			name = WebVcViewController;
+			sourceTree = "<group>";
+		};
+		53EA62BB1E523C3600091583 /* Product */ = {
+			isa = PBXGroup;
+			children = (
+				53EA62B81E523C2C00091583 /* Product.h */,
+				53EA62B91E523C2C00091583 /* Product.m */,
+			);
+			name = Product;
+			sourceTree = "<group>";
+		};
+		53EA62BC1E523C5000091583 /* Company */ = {
+			isa = PBXGroup;
+			children = (
+				53EA62BD1E523C9800091583 /* Company.h */,
+				53EA62BE1E523C9800091583 /* Company.m */,
+			);
+			name = Company;
+			sourceTree = "<group>";
+		};
+		53EA62C21E52592A00091583 /* DAO */ = {
+			isa = PBXGroup;
+			children = (
+				53EA62C61E52793A00091583 /* DAO.h */,
+				53EA62C71E52793A00091583 /* DAO.m */,
+			);
+			name = DAO;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -297,9 +336,12 @@
 			files = (
 				48A656E618163C1B00746D36 /* CompanyViewController.m in Sources */,
 				48A656C518163BF200746D36 /* NavControllerAppDelegate.m in Sources */,
+				53EA62C81E52793A00091583 /* DAO.m in Sources */,
+				53EA62BA1E523C2C00091583 /* Product.m in Sources */,
 				530FD8EC1E3FF71700F7877D /* WebVCViewController.m in Sources */,
 				48A656C118163BF200746D36 /* main.m in Sources */,
 				48A656EB18163F8700746D36 /* ProductViewController.m in Sources */,
+				53EA62BF1E523C9800091583 /* Company.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
