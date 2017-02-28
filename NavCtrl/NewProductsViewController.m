@@ -102,14 +102,13 @@
     //ADD PRODUCT TO COMPANY PRODUCTS ARRAY BY USING THE VARIABLE LAST TOUCHED INDEXPATH ROW IN COMPANY VIEWCONTROLLER
 
     
-        //IF THE COMPANY PRODUCTS ARRAY IS EMPTY , MAKE A NEW ARRAY OF PRODUCTS THEN ADD THE PRODUCT
+        //IF THE COMPANY PRODUCTS ARRAY IS EMPTY, MAKE A NEW ARRAY THEN ADD THE PRODUCT
     if(self.dataManager.companyListDAO[self.dataManager.indexOfLastCompanyTouched].companyProductList.count == 0 ){
         self.dataManager.companyListDAO[self.dataManager.indexOfLastCompanyTouched].companyProductList = [NSMutableArray arrayWithObject:madeProduct];
     } else {
-        //ADDS PRODUCTS TO ALREADY EXISTING COMPANIES W/ EXISTING ARRAY OF PRODUCTS
+        //ADDS PRODUCTS TO ALREADY EXISTING COMPANY W/ EXISTING ARRAY OF PRODUCTS
         [self.dataManager.companyListDAO[self.dataManager.indexOfLastCompanyTouched].companyProductList addObject:madeProduct];
     }
-    
     
     //SEGUE "POP" VIEW TO BE BACK AT PRODUCTS VIEW CONTROLLER SCREEN
     [self.navigationController popViewControllerAnimated:YES];

@@ -84,6 +84,8 @@
     [super viewWillAppear:animated];
     
     [self.tableView reloadData];
+    
+    
 }
 
 //********************************************************************************************
@@ -128,6 +130,22 @@
     
     //CENTER THE TEXT IN THE CELLS
     cell.textLabel.textAlignment = NSTextAlignmentCenter;
+    
+    //ASSIGN CUSTOM BUTTON TO ACCESSORY VIEW CELL TO EDIT NAMES AND URL...
+    //NOTE: cell.editingAccessoryView(SHOWS UP ON CELL WHEN "EDIT" IS CLICKED)
+    //NOTE: cell.accessoryView(SHOWS UP ON CELL WITHOUT "EDIT" BEING CLICKED)
+    UIButton *editButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    [editButton setImage:[UIImage imageNamed:@"editPencil(48x48)"] forState:UIControlStateNormal];
+    [editButton setFrame:CGRectMake(0, 0, 24, 24)];
+    //ADD METHOD TO THE BUTTON;
+    [editButton addTarget:self
+                   action:@selector(segueToEditProductScreen)  // <--- NEED TO CREATE METHOD*****************
+         forControlEvents:UIControlEventTouchUpInside];
+    
+    cell.accessoryView = editButton;                // <--- SHOW ON CELL RIGHT AWAY // USE FOR PRODUCTS
+    //cell.editingAccessoryView = editButton;       // <--- SHOW ON CELL ONCE EDIT BUTTON CLICKED // SAFER B/C COMPANY HOLDS ARRAY
+
+    
     return cell;
 }
 
@@ -136,30 +154,25 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     
+     Product *currentProduct = self.dataManager.companyListDAO[self.dataManager.indexOfLastCompanyTouched].companyProductList[indexPath.row];
+    
     //INITIALIZE CUSTOM OBJECT TO ASSIGN WEB URL TO ITS URL PROPERTY
     WebVCViewController *webVC = [[WebVCViewController alloc]init];
     
-    Product *currentProduct = self.dataManager.companyListDAO[self.dataManager.indexOfLastCompanyTouched].companyProductList[indexPath.row];
+   //SETS THE NEXT VIEW'S WEBURL TO BE WHAT WE SELECTED IT HERE ON THIS PAGE
+    webVC.webURL = currentProduct.productURL;
     
-    //SET URL VARIABLE FOR PRODUCTSURL
-    self.productURL = currentProduct.productURL;
-    
-   
-    //SETS THE NEXT VIEW'S WEBURL TO BE WHAT WE SELECTED IT HERE ON THIS PAGE
-    webVC.webURL = self.productURL;
+    //*** SAVE LAST CLICKED PRODUCT INDEX ****
+    self.dataManager.indexOfLastProductTouched = indexPath.row;
     
     //PUSHES THE NEXT VIEW
-    [self.navigationController pushViewController:webVC animated:NO];
+    [self.navigationController pushViewController:webVC animated:YES];
+    
+    
+    //PRINT OUT NAME OF COMPANY AND ATTRIBUTES
+    NSLog(@"%@",currentProduct.productName);
+    NSLog(@"%@",currentProduct.productURL);
 
-}
-
-//********************************************************************************************
-
-
-//CONVERT NSARRAY INTO NSMUTABLE ARRAY
-- (NSMutableArray *)createMutableArray:(NSArray *)array
-{
-    return [NSMutableArray arrayWithArray:array];
 }
 
 //********************************************************************************************
@@ -193,6 +206,14 @@
 -(void)segueToCompanyView{
     
     [self.navigationController popToRootViewControllerAnimated:YES];
+}
+
+//METHOD TO SEGUE "PUSH" TO EDIT PRODUCT SCREEN
+-(void)segueToEditProductScreen{
+    
+    EditProductViewController *editScreen = [[EditProductViewController alloc]init];
+    
+    [self.navigationController pushViewController:editScreen animated:YES];
 }
 
 @end

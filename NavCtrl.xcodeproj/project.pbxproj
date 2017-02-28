@@ -29,6 +29,8 @@
 		53EA62BA1E523C2C00091583 /* Product.m in Sources */ = {isa = PBXBuildFile; fileRef = 53EA62B91E523C2C00091583 /* Product.m */; };
 		53EA62BF1E523C9800091583 /* Company.m in Sources */ = {isa = PBXBuildFile; fileRef = 53EA62BE1E523C9800091583 /* Company.m */; };
 		53EA62C81E52793A00091583 /* DAO.m in Sources */ = {isa = PBXBuildFile; fileRef = 53EA62C71E52793A00091583 /* DAO.m */; };
+		53FBDE291E65E4E30034DBCE /* EditCompanyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FBDE281E65E4E30034DBCE /* EditCompanyViewController.m */; };
+		53FBDE2D1E6619090034DBCE /* EditProductViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 53FBDE2C1E6619090034DBCE /* EditProductViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -76,6 +78,10 @@
 		53EA62BE1E523C9800091583 /* Company.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Company.m; sourceTree = "<group>"; };
 		53EA62C61E52793A00091583 /* DAO.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DAO.h; sourceTree = "<group>"; };
 		53EA62C71E52793A00091583 /* DAO.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DAO.m; sourceTree = "<group>"; };
+		53FBDE271E65E4E30034DBCE /* EditCompanyViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditCompanyViewController.h; sourceTree = "<group>"; };
+		53FBDE281E65E4E30034DBCE /* EditCompanyViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditCompanyViewController.m; sourceTree = "<group>"; };
+		53FBDE2B1E6619090034DBCE /* EditProductViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditProductViewController.h; sourceTree = "<group>"; };
+		53FBDE2C1E6619090034DBCE /* EditProductViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditProductViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -170,6 +176,8 @@
 				53EA62BB1E523C3600091583 /* Product */,
 				5399E39D1E564F4300C38A43 /* NewCompanyViewController */,
 				53D998D71E5CCD5F004A4CC3 /* NewProductsViewController */,
+				53FBDE261E65E4970034DBCE /* EditCompanyViewController */,
+				53FBDE2A1E6618E00034DBCE /* EditProductViewController */,
 				53EA62C21E52592A00091583 /* DAO */,
 				48A656C618163BF200746D36 /* Images.xcassets */,
 				48A656E518163C1B00746D36 /* CompanyViewController.xib */,
@@ -260,6 +268,24 @@
 				53EA62C71E52793A00091583 /* DAO.m */,
 			);
 			name = DAO;
+			sourceTree = "<group>";
+		};
+		53FBDE261E65E4970034DBCE /* EditCompanyViewController */ = {
+			isa = PBXGroup;
+			children = (
+				53FBDE271E65E4E30034DBCE /* EditCompanyViewController.h */,
+				53FBDE281E65E4E30034DBCE /* EditCompanyViewController.m */,
+			);
+			name = EditCompanyViewController;
+			sourceTree = "<group>";
+		};
+		53FBDE2A1E6618E00034DBCE /* EditProductViewController */ = {
+			isa = PBXGroup;
+			children = (
+				53FBDE2B1E6619090034DBCE /* EditProductViewController.h */,
+				53FBDE2C1E6619090034DBCE /* EditProductViewController.m */,
+			);
+			name = EditProductViewController;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -368,8 +394,10 @@
 				530FD8EC1E3FF71700F7877D /* WebVCViewController.m in Sources */,
 				48A656C118163BF200746D36 /* main.m in Sources */,
 				48A656EB18163F8700746D36 /* ProductViewController.m in Sources */,
+				53FBDE2D1E6619090034DBCE /* EditProductViewController.m in Sources */,
 				5399E3A01E56502E00C38A43 /* NewCompanyViewController.m in Sources */,
 				53EA62BF1E523C9800091583 /* Company.m in Sources */,
+				53FBDE291E65E4E30034DBCE /* EditCompanyViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

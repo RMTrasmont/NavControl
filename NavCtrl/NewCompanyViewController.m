@@ -133,7 +133,6 @@
 //************************************************************************************
 //OVERRIDE METHOD TO MAKE KEYBOARD DISAPEAR WHEN BACKGROUND IS TOUCHED
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
-    NSLog(@"touchesBegan:withEvent:");
     [self.view endEditing:YES];
     [super touchesBegan:touches withEvent:event];
 }

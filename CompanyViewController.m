@@ -123,8 +123,8 @@
                 action:@selector(segueToEditCompanyScreen)  // <--- NEED TO CREATE METHOD*****************
                 forControlEvents:UIControlEventTouchUpInside];
     
-    //cell.accessoryView = editButton;                // <--- SHOW ON CELL RIGHT AWAY
-    cell.editingAccessoryView = editButton;       // <--- SHOW ON CELL ONCE EDIT BUTTON CLICKED
+    //cell.accessoryView = editButton;                // <--- SHOW ON CELL RIGHT AWAY // USE FOR PRODUCTS
+    cell.editingAccessoryView = editButton;       // <--- SHOW ON CELL ONCE EDIT BUTTON CLICKED // SAFER B/C COMPANY HOLDS ARRAY
     
     
     return cell;
@@ -208,7 +208,10 @@
         pushViewController:self.productViewController
         animated:YES];
     
-    
+    //PRINT OUT NAME OF COMPANY AND ATTRIBUTES
+    NSLog(@"%@",selectedCompany.companyProductList);
+    NSLog(@"%@",selectedCompany.companyName);
+    NSLog(@"%@",selectedCompany.companyLogoURL);
 
 }
 
@@ -239,8 +242,10 @@
 -(void)segueToEditCompanyScreen{
     
     //INITALIZE THE VIEW YOU'RE TRYING TO GO TO
+    EditCompanyViewController *editScreen = [[EditCompanyViewController alloc]init];
     
     //SEGUE TO THE NEW VIEW
+    [self.navigationController pushViewController:editScreen animated:YES];
     
 }
 

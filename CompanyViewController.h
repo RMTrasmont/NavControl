@@ -11,7 +11,7 @@
 #import "ProductViewController.h"
 #import "NewCompanyViewController.h"
 #import "DAO.h"
-
+#import "EditCompanyViewController.h"
 @class ProductViewController;
 
 @interface CompanyViewController : UITableViewController

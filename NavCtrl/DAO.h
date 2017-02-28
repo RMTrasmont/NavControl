@@ -28,6 +28,9 @@
 //PROPERTY FOR LAST TOUCHED COMPANY INDEX
 @property (nonatomic) NSInteger indexOfLastCompanyTouched;
 
+//PROPERTY FOR LAST PRODUCT TOUCHED INDEX
+@property(nonatomic) NSInteger indexOfLastProductTouched;
+
 //CREATE A COMPANY METHOD
 -(Company *)makeNewCompanyWithName:(NSString *)name andLogoURL:(NSURL *)logoURL;
 
