@@ -24,6 +24,8 @@
 		48A656EB18163F8700746D36 /* ProductViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 48A656E918163F8700746D36 /* ProductViewController.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		48A656EE1816468000746D36 /* Sunflower.gif in Resources */ = {isa = PBXBuildFile; fileRef = 48A656ED1816468000746D36 /* Sunflower.gif */; };
 		530FD8EC1E3FF71700F7877D /* WebVCViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 530FD8EB1E3FF71700F7877D /* WebVCViewController.m */; };
+		5399E3A01E56502E00C38A43 /* NewCompanyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5399E39F1E56502E00C38A43 /* NewCompanyViewController.m */; };
+		53D998DA1E5CCDA2004A4CC3 /* NewProductsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 53D998D91E5CCDA2004A4CC3 /* NewProductsViewController.m */; };
 		53EA62BA1E523C2C00091583 /* Product.m in Sources */ = {isa = PBXBuildFile; fileRef = 53EA62B91E523C2C00091583 /* Product.m */; };
 		53EA62BF1E523C9800091583 /* Company.m in Sources */ = {isa = PBXBuildFile; fileRef = 53EA62BE1E523C9800091583 /* Company.m */; };
 		53EA62C81E52793A00091583 /* DAO.m in Sources */ = {isa = PBXBuildFile; fileRef = 53EA62C71E52793A00091583 /* DAO.m */; };
@@ -64,6 +66,10 @@
 		48A656ED1816468000746D36 /* Sunflower.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = Sunflower.gif; sourceTree = "<group>"; };
 		530FD8EA1E3FF71700F7877D /* WebVCViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebVCViewController.h; sourceTree = "<group>"; };
 		530FD8EB1E3FF71700F7877D /* WebVCViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WebVCViewController.m; sourceTree = "<group>"; };
+		5399E39E1E56502E00C38A43 /* NewCompanyViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewCompanyViewController.h; sourceTree = "<group>"; };
+		5399E39F1E56502E00C38A43 /* NewCompanyViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewCompanyViewController.m; sourceTree = "<group>"; };
+		53D998D81E5CCDA2004A4CC3 /* NewProductsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewProductsViewController.h; sourceTree = "<group>"; };
+		53D998D91E5CCDA2004A4CC3 /* NewProductsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewProductsViewController.m; sourceTree = "<group>"; };
 		53EA62B81E523C2C00091583 /* Product.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Product.h; sourceTree = "<group>"; };
 		53EA62B91E523C2C00091583 /* Product.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Product.m; sourceTree = "<group>"; };
 		53EA62BD1E523C9800091583 /* Company.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Company.h; sourceTree = "<group>"; };
@@ -162,6 +168,8 @@
 				530FD8ED1E413BBA00F7877D /* WebVcViewController */,
 				53EA62BC1E523C5000091583 /* Company */,
 				53EA62BB1E523C3600091583 /* Product */,
+				5399E39D1E564F4300C38A43 /* NewCompanyViewController */,
+				53D998D71E5CCD5F004A4CC3 /* NewProductsViewController */,
 				53EA62C21E52592A00091583 /* DAO */,
 				48A656C618163BF200746D36 /* Images.xcassets */,
 				48A656E518163C1B00746D36 /* CompanyViewController.xib */,
@@ -207,6 +215,24 @@
 				530FD8EB1E3FF71700F7877D /* WebVCViewController.m */,
 			);
 			name = WebVcViewController;
+			sourceTree = "<group>";
+		};
+		5399E39D1E564F4300C38A43 /* NewCompanyViewController */ = {
+			isa = PBXGroup;
+			children = (
+				5399E39E1E56502E00C38A43 /* NewCompanyViewController.h */,
+				5399E39F1E56502E00C38A43 /* NewCompanyViewController.m */,
+			);
+			name = NewCompanyViewController;
+			sourceTree = "<group>";
+		};
+		53D998D71E5CCD5F004A4CC3 /* NewProductsViewController */ = {
+			isa = PBXGroup;
+			children = (
+				53D998D81E5CCDA2004A4CC3 /* NewProductsViewController.h */,
+				53D998D91E5CCDA2004A4CC3 /* NewProductsViewController.m */,
+			);
+			name = NewProductsViewController;
 			sourceTree = "<group>";
 		};
 		53EA62BB1E523C3600091583 /* Product */ = {
@@ -337,10 +363,12 @@
 				48A656E618163C1B00746D36 /* CompanyViewController.m in Sources */,
 				48A656C518163BF200746D36 /* NavControllerAppDelegate.m in Sources */,
 				53EA62C81E52793A00091583 /* DAO.m in Sources */,
+				53D998DA1E5CCDA2004A4CC3 /* NewProductsViewController.m in Sources */,
 				53EA62BA1E523C2C00091583 /* Product.m in Sources */,
 				530FD8EC1E3FF71700F7877D /* WebVCViewController.m in Sources */,
 				48A656C118163BF200746D36 /* main.m in Sources */,
 				48A656EB18163F8700746D36 /* ProductViewController.m in Sources */,
+				5399E3A01E56502E00C38A43 /* NewCompanyViewController.m in Sources */,
 				53EA62BF1E523C9800091583 /* Company.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

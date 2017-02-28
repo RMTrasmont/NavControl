@@ -9,8 +9,12 @@
 #import <Foundation/Foundation.h>
 #import "Company.h"
 #import "Product.h"
-
+#import "NewCompanyViewController.h"
+#import "NewProductsViewController.h"
+#import "CompanyViewController.h"
+#import "ProductViewController.h"
 @interface DAO : NSObject
+
 
 //Singleton
 
@@ -18,31 +22,21 @@
 
 -(void)firstRun;
 
-//AN ARRAY OF COMPANIES
-@property (strong,nonatomic) NSMutableArray *companyList;
+// COMPANY AND NEW PRODUCT PROPERTIES GET SET HERE
+@property(strong,nonatomic)NSMutableArray <Company *> *companyListDAO;
 
-//"CREAT ,READ, UPDATE ,DELETE"
+//PROPERTY FOR LAST TOUCHED COMPANY INDEX
+@property (nonatomic) NSInteger indexOfLastCompanyTouched;
 
-//**************************CREATE***********************************
-//- (NSMutableArray *)companyArray;
-//
-//- (NSMutableArray *)productsArray;
-//
-//- (Company *)companyName: (NSString *)name withImage:(UIImage *)imageName andProducts:(NSMutableArray *)products;
-//
-//- (Product *)productName:(NSString *)name fromCompany:(NSString *)company withURL:(NSURL *)url;
+//CREATE A COMPANY METHOD
+-(Company *)makeNewCompanyWithName:(NSString *)name andLogoURL:(NSURL *)logoURL;
 
-//**************************READ***********************************
+//CREATE A PRODUCT METHOD
+-(Product *)makeNewProductWithName:(NSString *)name andURL:(NSURL *)url;
 
+//ADD COMPANY  TO COMAPNYLIST IN DAO METHOD
+-(void)addCompanyToList:(Company *)company;
 
 
-//**************************UPDATE***********************************
-//add products to Company array
-//-(void)addProduct:(NSString *)productName toCompany:(NSString *)companyName;
-
-
-//**************************DELETE***********************************
-//delete products from company array
-//delete company itself
 
 @end

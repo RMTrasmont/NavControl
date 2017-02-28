@@ -8,12 +8,16 @@
 
 #import <UIKit/UIKit.h>
 #import <WebKit/WebKit.h>
-
+#import "ProductViewController.h"
+#import "WebVCViewController.h"
+#import "NewProductsViewController.h"
+#import "DAO.h"
+#import "Company.h"
 @interface ProductViewController : UITableViewController
 
-@property (nonatomic, retain) NSArray *products;
+//@property (retain,nonatomic)NSMutableArray *productsInVC;
 
-@property (strong,nonatomic) NSString *productURL;
+@property (strong,nonatomic) NSURL *productURL;
 
 //************************************************************************************
 @property(strong,nonatomic) WKWebView *webView;

@@ -17,13 +17,15 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    NSURL *url = [NSURL URLWithString: self.webURL];
+    NSURL *url = self.webURL;
     NSURLRequest *request = [NSURLRequest requestWithURL: url];
     WKWebView * webVCView  = [[WKWebView alloc] initWithFrame: self.view.frame];
     [webVCView  loadRequest: request];
     webVCView.frame = CGRectMake(self.view.frame.origin.x,self.view.frame.origin.y , self.view.frame.size.width, self.view.frame.size.height);
     
     [self.view addSubview: webVCView];
+    
+    
 
 }
 

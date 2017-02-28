@@ -10,6 +10,6 @@
 #import <WebKit/WebKit.h>
 @interface WebVCViewController : UIViewController
 
-@property (retain,nonatomic) NSString * webURL;
+@property (retain,nonatomic) NSURL * webURL;
 
 @end

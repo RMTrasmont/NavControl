@@ -6,11 +6,15 @@
 //  Copyright (c) 2013 Aditya Narayan. All rights reserved.
 //
 
+#import <WebKit/WebKit.h>
 #import "ProductViewController.h"
 #import "WebVCViewController.h"
+#import "NewProductsViewController.h"
+#import "DAO.h"
+
 @interface ProductViewController ()
 
-@property (retain,nonatomic)NSMutableArray *mutableProductList;
+@property (nonatomic)DAO *dataManager;
 
 @end
 
@@ -28,19 +32,48 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
+    
+    self.dataManager = [DAO sharedManager];
+    
     // Uncomment the following line to preserve selection between presentations.
      self.clearsSelectionOnViewWillAppear = NO;
  
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     self.navigationItem.rightBarButtonItem = self.editButtonItem;
     
-    //ARRAY OF PRODUCTS
-    self.products = @[@"iPad",@"iPod Touch",@"iPhone",@"Galaxy S4", @"Galaxy Note", @"Galaxy Tab",@"Pixel",@"Pixel XL",@"Pixel C",@"V10",@"V20",@"G5"];
     
-    //MUTABEL ARRAY OF PRODUCST
+    //DISPLAY ADD + BUTTON TO RIGHT SIDE OF BAR
+    self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc]
+                                               initWithBarButtonSystemItem:UIBarButtonSystemItemAdd
+                                               target:self
+                                               action:@selector(segueToAddProductView)]   //<---MAKE & DEFINE METHOD
+                                               autorelease];
     
+    
+    
+    //DISPLAY "BACK" BUTTON TO LEFT SIDE OF BAR
+//    self.navigationItem.leftBarButtonItem = [[[UIBarButtonItem alloc]
+//                                               initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
+//                                               target:self
+//                                               action:@selector(segueToCompanyView)]     //<---MAKE & DEFINE
+//                                               autorelease];
+//    
+    
+   //CUSTOM "SHOOT BACK" BUTTON
+    UIButton *backButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    backButton.frame = CGRectMake(0, 0, 60, 48);
+    backButton.showsTouchWhenHighlighted = YES;
+    [backButton setImage:[UIImage imageNamed:@"shootBack"] forState:UIControlStateNormal];
+    backButton.imageEdgeInsets = UIEdgeInsetsMake(10, 10, 10, 10);
+    //ADD ACTION TO BUTTON
+    [backButton addTarget:self action:@selector(segueToCompanyView) forControlEvents:UIControlEventTouchUpInside];
+    //CONVERT FROM UIBUTTON TO UIBARBUTTON
+    UIBarButtonItem *backBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
+    
+    self.navigationItem.leftBarButtonItem = backBarButtonItem;
 
+
+    
 }
 
 //********************************************************************************************
@@ -49,18 +82,6 @@
 - (void)viewWillAppear:(BOOL)animated {
     
     [super viewWillAppear:animated];
-    
-    //IF THE TITLE ON TOP OF TABLE IS THIS...PLACES THESE PRODUCTS ON THE ROWS BELOW IT
-    //CREATE A NEW ARRAY EACH TIME -->[[NSMutableArray alloc]initWithObjects:
-    if ([self.title isEqualToString:@"Apple mobile devices"]) {
-        _mutableProductList = [[NSMutableArray alloc]initWithObjects:@"iPad",@"iPod Touch",@"iPhone", nil];
-    } else if ([self.title isEqualToString:@"Samsung mobile devices"]){
-        _mutableProductList = [[NSMutableArray alloc]initWithObjects:@"Galaxy S4", @"Galaxy Note", @"Galaxy Tab", nil];
-    } else if ([self.title isEqualToString:@"Google mobile devices"]){
-        _mutableProductList = [[NSMutableArray alloc]initWithObjects:@"Pixel",@"Pixel XL",@"Pixel C" , nil];
-    } else {
-        _mutableProductList = [[NSMutableArray alloc]initWithObjects:@"V10",@"V20",@"G5", nil];
-    }
     
     [self.tableView reloadData];
 }
@@ -87,7 +108,7 @@
 {
 #warning Incomplete method implementation.
     // Return the number of rows in the section.
-    return [_mutableProductList count];
+    return self.dataManager.companyListDAO[self.dataManager.indexOfLastCompanyTouched].companyProductList.count;
 }
 
 //********************************************************************************************
@@ -99,68 +120,16 @@
     if (cell == nil) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
+    
+    Product *currentProduct = self.dataManager.companyListDAO[self.dataManager.indexOfLastCompanyTouched].companyProductList[indexPath.row];
+    
     // Configure the cell...
-    cell.textLabel.text = [_mutableProductList objectAtIndex:[indexPath row]];
+    cell.textLabel.text = currentProduct.productName;
+    
+    //CENTER THE TEXT IN THE CELLS
+    cell.textLabel.textAlignment = NSTextAlignmentCenter;
     return cell;
 }
-
-//********************************************************************************************
-/*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
-}
-*/
-
-/*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    }   
-    else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
-}
-*/
-
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
-{
-}
-*/
-
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
-
-/*
-#pragma mark - Table view delegate
-
-// In a xib-based application, navigation from a table can be handled in -tableView:didSelectRowAtIndexPath:
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Navigation logic may go here, for example:
-    // Create the next view controller.
-    <#DetailViewController#> *detailViewController = [[<#DetailViewController#> alloc] initWithNibName:@"<#Nib name#>" bundle:nil];
-
-    // Pass the selected object to the new view controller.
-    
-    // Push the view controller.
-    [self.navigationController pushViewController:detailViewController animated:YES];
-}
- 
- */
 
 //********************************************************************************************
 // DO ALL CUSTOMIZING OF CELLS HERE INSIDE THIS METHOD
@@ -170,73 +139,12 @@
     //INITIALIZE CUSTOM OBJECT TO ASSIGN WEB URL TO ITS URL PROPERTY
     WebVCViewController *webVC = [[WebVCViewController alloc]init];
     
+    Product *currentProduct = self.dataManager.companyListDAO[self.dataManager.indexOfLastCompanyTouched].companyProductList[indexPath.row];
     
-    //Apple Products
-    if([self.title isEqualToString:@"Apple mobile devices"]){
-    switch (indexPath.row){
-        case 0:
-          self.productURL = @"http://www.apple.com/ipad/";
-            break;
-        case 1:
-            self.productURL = @"http://www.apple.com/ipod-touch/";
-            break;
-        case 2:
-            self.productURL = @"http://www.apple.com/iphone/";
-            break;
-        default:
-            break;
-        }
-    }
-    //Samsung Products
-       else if ([self.title isEqualToString:@"Samsung mobile devices"]){
-        switch (indexPath.row) {
-            case 0:
-                self.productURL = @"http://www.samsung.com/us/mobile/phones/all-phones/s/galaxy_s4/_/n-10+11+hv1rp+trouu";
-                break;
-            case 1:
-                self.productURL = @"http://www.samsung.com/us/mobile/phones/all-phones/s/galaxy_note5/_/n-10+11+hv1rp+troum";
-                break;
-            case 2:
-                self.productURL = @"http://www.samsung.com/us/search/searchMain?Dy=1&Nty=1&Ntt=galaxy+tabpro+s";
-                break;
-            default:
-                break;
-        }
-    }
-    //Google Products
-       else if ([self.title isEqualToString:@"Google mobile devices"]){
-           switch (indexPath.row) {
-               case 0:
-                   self.productURL = @"https://store.google.com/search?q=pixel";
-                   break;
-               case 1:
-                   self.productURL = @"https://store.google.com/search?q=pixel%20xl";
-                   break;
-               case 2:
-                   self.productURL = @"https://store.google.com/search?q=pixel%20c";
-                   break;
-               default:
-                   break;
-           }
-       }
-    //LG Products
-       else {
-           switch (indexPath.row) {
-               case 0:
-                   self.productURL = @"http://www.lg.com/us/mobile-phones/v10";
-                   break;
-               case 1:
-                   self.productURL = @"http://www.lg.com/us/mobile-phones/v20";
-                   break;
-               case 2:
-                   self.productURL = @"http://www.lg.com/us/mobile-phones/g5#G5Modularity";
-                   break;
-               default:
-                   break;
-           }
-       }
+    //SET URL VARIABLE FOR PRODUCTSURL
+    self.productURL = currentProduct.productURL;
     
-    
+   
     //SETS THE NEXT VIEW'S WEBURL TO BE WHAT WE SELECTED IT HERE ON THIS PAGE
     webVC.webURL = self.productURL;
     
@@ -261,27 +169,30 @@
 {
     
     //REMOVES THE ACTUAL OBJECT FROM THE NSMUTABLE ARRAY THE TABLEVIEW USES
-   [_mutableProductList removeObjectAtIndex:indexPath.row];
+    [self.dataManager.companyListDAO[self.dataManager.indexOfLastCompanyTouched].companyProductList removeObjectAtIndex:indexPath.row];
     
     //CALL TO REFRESH THE DATA AND UPDATE NUMBER OF ITEMS
     [tableView reloadData];
-}
-
-//********************************************************************************************
-//ALLOW REORDER OF CELLS
--(UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath{
-    return UITableViewCellEditingStyleNone;
-}
-
--(BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    return YES;
-}
-
--(void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)sourceIndexPath toIndexPath:(NSIndexPath *)destinationIndexPath{
     
-}
-//********************************************************************************************
 
+}
+
+//********************************************************************************************
+//PUSH TO THE VIEW TO ADD PRODUCTS
+-(void)segueToAddProductView{
+    
+    //INIT A VIEW CONTROLLER OF THE KIND NEWPRODUCT
+    NewProductsViewController *addNewProductView = [[NewProductsViewController alloc]init];
+    
+    //SEGUE TO THAT NEW PRODUCTS VIEW CONTROLLER
+    [self.navigationController pushViewController:addNewProductView animated:YES];
+}
+
+////********************************************************************************************
+//MOVE BACK TO MAIN COMPANYVIEW
+-(void)segueToCompanyView{
+    
+    [self.navigationController popToRootViewControllerAnimated:YES];
+}
 
 @end

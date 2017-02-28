@@ -14,6 +14,6 @@
 @property (strong,nonatomic)NSString *companyName;
 @property (strong,nonatomic)UIImage *companyImage;
 @property (strong,nonatomic)NSMutableArray *companyProductList;
-
+@property (strong,nonatomic)NSURL *companyLogoURL;
 
 @end

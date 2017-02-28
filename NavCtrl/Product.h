@@ -14,4 +14,5 @@
 @property (strong,nonatomic)NSString *productName;
 @property (strong,nonatomic)NSURL *productURL;
 
+
 @end

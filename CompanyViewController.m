@@ -8,10 +8,10 @@
 
 #import "CompanyViewController.h"
 #import "ProductViewController.h"
-
+#import "NewCompanyViewController.h"
 @interface CompanyViewController ()
 
-@property (retain,nonatomic) NSMutableArray *mutableCompanyList;
+@property (nonatomic) DAO *dataManager;   //<---- USE DAO AS PROPERTY ******
 
 @end
 
@@ -30,22 +30,43 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
+    
+    //SET THE DAO PROPERTY OF THIS VIEW(self.dataManager) AS DAO OF THE DAO CLASS(sharedManager)
+    self.dataManager = [DAO sharedManager];                                                     //<---- *LOOK OVER ******
+    
     // Uncomment the following line to preserve selection between presentations.
-     self.clearsSelectionOnViewWillAppear = NO;
+    self.clearsSelectionOnViewWillAppear = NO;
  
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    self.navigationItem.rightBarButtonItem = self.editButtonItem;
+   // self.navigationItem.rightBarButtonItem = self.editButtonItem;
     
-    //NSARRAY COMPANY LISR
-    self.companyList = @[@"Apple mobile",@"Samsung mobile devices",@"Google mobile devices",@"LG mobile devices"];
-    self.title = @"Mobile companies";
+    //DISPLAY EDIT BUTTON ON LEFTSIDE OF BAR
+    self.navigationItem.leftBarButtonItem = self.editButtonItem;
     
-    //NS MUTABLE ARRAY COMPANY LIST
-    _mutableCompanyList = [self createMutableArray:self.companyList];
+    //DISPLAY ADD + BUTTON TO RIGHT SIDE OF BAR
+    self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc]
+                                               initWithBarButtonSystemItem:UIBarButtonSystemItemAdd
+                                               target:self
+                                               action:@selector(segueToAddCompanyView)]  //<---MAKE & DEFINE METHOD
+                                               autorelease];
+    
+    //SET TITLE OF HEADER
+    self.title = @"Company";
+    
     
     
 }
+
+
+//****************************************************************************************
+-(void)viewWillAppear:(BOOL)animated{
+    
+    [self.tableView reloadData];
+    
+}
+//****************************************************************************************
+
+
 
 - (void)didReceiveMemoryWarning
 {
@@ -66,7 +87,7 @@
 {
 #warning Incomplete method implementation.
     // Return the number of rows in the section.
-    return [_mutableCompanyList count];
+    return self.dataManager.companyListDAO.count;     //<---- *LOOK OVER ******
 }
 
 
@@ -78,20 +99,32 @@
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
     
-    // Configure the cell...
+    //ASSIGN COMPANY FROM ARRAY TO TABLE CELLS DEPENDING ON INDEX... "COMPANYARRAY[1] goes in INDEXPATH[1] etc"
     
-    cell.textLabel.text = [_mutableCompanyList objectAtIndex:[indexPath row]];
+    Company *currentCompany = self.dataManager.companyListDAO[indexPath.row];
     
-    if (indexPath.row == 0){
-        [[cell imageView] setImage:[UIImage imageNamed:@"appleLogo"]];
-    } else if (indexPath.row == 1){
-        [[cell imageView] setImage:[UIImage imageNamed:@"samsungLogo"]];
-    } else if (indexPath.row == 2){
-        [[cell imageView] setImage:[UIImage imageNamed:@"googleLogo"]];
-    } else {
-        [[cell imageView] setImage:[UIImage imageNamed:@"lgLogo"]];
-    }
+    //ASSIGN COMPANY NAME TO THE CELL TEXT LABEL
+    cell.textLabel.text = currentCompany.companyName;
     
+    //ALIGN TEXT LABEL TO LEFT/CENTER/RIGHT
+    cell.textLabel.textAlignment = NSTextAlignmentLeft;
+    
+    //ASSIGN COMPANY LOGO TO CELL...
+    [cell.imageView setImage:[UIImage imageWithData:[NSData dataWithContentsOfURL:currentCompany.companyLogoURL]]];
+    
+    //ASSIGN CUSTOM BUTTON TO ACCESSORY VIEW CELL TO EDIT NAMES AND URL...
+        //NOTE: cell.editingAccessoryView(SHOWS UP ON CELL WHEN "EDIT" IS CLICKED)
+        //NOTE: cell.accessoryView(SHOWS UP ON CELL WITHOUT "EDIT" BEING CLICKED)
+    UIButton *editButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    [editButton setImage:[UIImage imageNamed:@"editPencil(48x48)"] forState:UIControlStateNormal];
+    [editButton setFrame:CGRectMake(0, 0, 24, 24)];
+        //ADD METHOD TO THE BUTTON;
+    [editButton addTarget:self                                  
+                action:@selector(segueToEditCompanyScreen)  // <--- NEED TO CREATE METHOD*****************
+                forControlEvents:UIControlEventTouchUpInside];
+    
+    //cell.accessoryView = editButton;                // <--- SHOW ON CELL RIGHT AWAY
+    cell.editingAccessoryView = editButton;       // <--- SHOW ON CELL ONCE EDIT BUTTON CLICKED
     
     
     return cell;
@@ -100,28 +133,35 @@
 }
 
 
-/*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
-}
-*/
 
-/*
-// Override to support editing the table view.
+
+ //Override to support conditional editing of the table view.
+//- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
+//{
+//     //Return NO if you do not want the specified item to be editable.
+//    return YES;
+//}
+
+
+
+// Override to support EDITING the table view.
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
+   if (editingStyle == UITableViewCellEditingStyleDelete) {
+        [self.dataManager.companyListDAO removeObjectAtIndex:indexPath.row];
         [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
     }   
-    else if (editingStyle == UITableViewCellEditingStyleInsert) {
+    
+   else if (editingStyle == UITableViewCellEditingStyleInsert) {
         // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
+       
+    }
+  
+
+
 }
-*/
+ 
+ 
 
 /*
 // Override to support rearranging the table view.
@@ -147,20 +187,23 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     
+    //DEFINE THE COMPANY THAT IS CLICKED
     
-    //NOTE: PRODUCT VIEW CONTROLLER, NOT COMPANY, SIMPLY SETS THE TITLE FOR THE NEXT PAGE
-    if (indexPath.row == 0){
-        
-        self.productViewController.title = @"Apple mobile devices";
-    } else if (indexPath.row == 1) {
-        self.productViewController.title = @"Samsung mobile devices";
-    } else if (indexPath.row == 2){
-        self.productViewController.title = @"Google mobile devices";
-    }else {
-        self.productViewController.title = @"LG mobile devices";
-    }
+    Company *selectedCompany = self.dataManager.companyListDAO[indexPath.row];
     
-    // PUSHES TO THE DIFFERENT PRODUCTS FROM THE COMPANY
+    //INIT A VIEW CONTROLLER "CLICK A ROW AND GET A NEW VIEW W/ LIST OF DIFFERENT PRODUCTS"
+    
+    self.productViewController = [[ProductViewController alloc]init];   // <--- Order Matters*
+   
+    //SET THE HEADER TITLE OF THE PRODUCT VIEW CONTROLLER NEXT PAGE
+    
+    self.productViewController.title = [NSString stringWithFormat:@"%@ Products", selectedCompany.companyName];
+    
+    //***SAVE LAST KNOW INDEXPATH SELECTED FOR USE TO ADD PRODUCTS***
+    self.dataManager.indexOfLastCompanyTouched = [indexPath row];
+    
+    // PUSHES TO THE DIFFERENT PRODUCTS FROM THE COMPANY TO THE PRODUCT VIEW CONTROLLER
+    
     [self.navigationController
         pushViewController:self.productViewController
         animated:YES];
@@ -168,27 +211,41 @@
     
 
 }
- 
-
-//CONVERT NSARRAY INTO NSMUTABLE ARRAY
-- (NSMutableArray *)createMutableArray:(NSArray *)array
-{
-    return [NSMutableArray arrayWithArray:array];
-}
-
-
 
 
 //DELETE FUNCTION TO DELETE ROW OF COMPANIES
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-{
+//- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
+//{
+//    
+//    //REMOVES THE ACTUAL OBJECT FROM THE NSMUTABLE ARRAY THE TABLEVIEW USES
+//    [self.dataManager.companyListDAO removeObjectAtIndex:indexPath.row];
+//    
+//    //CALL TO REFRESH THE DATA AND UPDATE NUMBER OF ITEMS
+//    [tableView reloadData];
+//}
+
+//METHOD TO GO TO NEW COMPANY TABLE VIEW SCREEN
+-(void)segueToAddCompanyView{
     
-    //REMOVES THE ACTUAL OBJECT FROM THE NSMUTABLE ARRAY THE TABLEVIEW USES
-    [_mutableCompanyList removeObjectAtIndex:indexPath.row];
+    //INITIALIZE THE VIEW YOU'RE TRYING TO SEND TO
+    NewCompanyViewController *addNewCompanyView = [[NewCompanyViewController alloc]init];
     
-    //CALL TO REFRESH THE DATA AND UPDATE NUMBER OF ITEMS
-    [tableView reloadData];
+    //SEGUE TO NewComapanyViewController
+    [self.navigationController pushViewController:addNewCompanyView animated:YES];
+     
+}
+
+//METHOD TO SEGUE TO EDIT COMPANY NAME AND LOGO URL
+-(void)segueToEditCompanyScreen{
+    
+    //INITALIZE THE VIEW YOU'RE TRYING TO GO TO
+    
+    //SEGUE TO THE NEW VIEW
+    
 }
 
 
+
 @end
+    
+
