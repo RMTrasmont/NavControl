@@ -70,6 +70,7 @@
     //apple.companyProductList = appleProducts;
     apple.companyLogoURL = [NSURL URLWithString:@"https://cdn3.iconfinder.com/data/icons/picons-social/57/56-apple-48.png"];
     apple.companyProductList = [NSMutableArray arrayWithObjects:iPad,iPod,iphone, nil];
+    apple.companyStockSymbol = @"AAPL";
     
     //ADD COMPANY TO DAO ARRAY OF COMPANIES
     [self.companyListDAO addObject:apple];
@@ -103,6 +104,7 @@
     //samsung.companyProductList = samsungProducts;
     samsung.companyLogoURL = [NSURL URLWithString:@"https://cdn2.iconfinder.com/data/icons/well-known-1/1024/Android-48.png"];
     samsung.companyProductList = [NSMutableArray arrayWithObjects:galaxyS4,galaxyNote,galaxyTab, nil];
+    samsung.companyStockSymbol = @"SSU.DE"; //<--- German Stock Index
     
     //ADD COMPANY TO DAO ARRAY OF COMAPANIES
     [self.companyListDAO addObject:samsung];
@@ -136,6 +138,7 @@
     //google.companyProductList = googleProducts;
     google.companyLogoURL = [NSURL URLWithString:@"https://cdn4.iconfinder.com/data/icons/picons-social/57/40-google-plus-3-48.png"];
     google.companyProductList = [NSMutableArray arrayWithObjects:pixel,pixelXL,pixelC, nil];
+    google.companyStockSymbol = @"GOOG";
     
     //ADD COMPANY TO DAO ARRAY OF COMPANIES
     [self.companyListDAO addObject:google];
@@ -171,8 +174,9 @@
     //lg.companyProductList = lgProducts;
     lg.companyLogoURL = [NSURL URLWithString:@"https://cdn4.iconfinder.com/data/icons/flat-brand-logo-2/512/lg-48.png"];
     lg.companyProductList = [NSMutableArray arrayWithObjects:v10,v20,g5, nil];
-    //ADD COMPANY TO DAO ARRAY OF COMPANIES
+    lg.companyStockSymbol = @"LGLG.F"; // <--- German Stock Index
     
+    //ADD COMPANY TO DAO ARRAY OF COMPANIES
     [self.companyListDAO addObject:lg];
     
 }
@@ -201,11 +205,12 @@
 
 //****************************************************************************************
 //CREATE NEW COMPANY METHOD
--(Company *)makeNewCompanyWithName:(NSString *)name andLogoURL:(NSURL *)logoURL{
+-(Company *)makeNewCompanyWithName:(NSString *)name withLogoURL:(NSURL *)logoURL andStockSymbol:(NSString *)ticker{
     Company *newCompany = [[Company alloc]init];
     if(self = [super init]){
         newCompany.companyName = name;
         newCompany.companyLogoURL = logoURL;
+        newCompany.companyStockSymbol = ticker;
     }
     
     return newCompany;
@@ -253,6 +258,101 @@
 //UIImage * imageFromWeb = [self loadImage:@"My Image" ofType:@"png" inDirectory:documentsDirectoryPath];
 
 //****************************************************************************************
+
+//****************************************************************************************
+// METHOD TO GET STOCK QUOTE
+-(void)getAPIFinancialData{
+    //LET COMPANY VIEWCONTROLLER KNOW TO RELOAD ITS DATA <---
+    //[[NSNotificationCenter defaultCenter] postNotificationName:@"GetFinancialDataFromDAO" object:nil];
+
+    //************************************
+    //GET ARRAY OF COMPANY SYMBOLS
+    NSMutableArray *tickerArray = [[NSMutableArray alloc]init];
+    
+    //GET STOCK SYMBOLS AND ADD TO ARRAY
+    for(Company *company in self.companyListDAO){
+        [tickerArray addObject:company.companyStockSymbol];
+    }
+    
+    //CONVERT ARRAY OF TICKERS INTO STRING
+    NSString *tickerString = [tickerArray componentsJoinedByString:@","];
+    
+    //REPLACE COMMAS WITH PLUS SIGNS
+    NSString *tickerForFinanceSearch =[tickerString stringByReplacingOccurrencesOfString:@"," withString:@"+"];
+    
+    //1*. ADD TICKER SYMBOLS TO API URL
+    NSString *financeURLString = [NSString stringWithFormat:@"http://finance.yahoo.com/d/quotes.csv?s=%@&f=sap2",tickerForFinanceSearch];
+    
+    NSURL *financeURL = [NSURL URLWithString:financeURLString];
+    
+    
+    //****************************************
+    
+    //2*.NOTE: NSURLSESSION WORKS ASYNCHRONUSLY, DOWNLOAD TASK GETS HIT BEFORE THE DATA INSIDE THE BLOCK. NOTE THE NUMBERS
+    //TO USE THE INFO THAT IS RETRIEVED FROM INSIDE THE  NSURLSESSION BLOCK, YOU NEED TO EMPLOY "COMPLETION BLOCK PATTERN"
+    //THIS METHOD SHOULD *NOT* RETURN ANYTHING, BUT RATHER PASS THE DATA BACK IN A "COMPLETION BLOCK"
+    NSURLSessionDataTask *dataTask = [[NSURLSession sharedSession]     // <--- use "Delegate based" or "Block based" style
+                                        dataTaskWithURL:financeURL
+                                        completionHandler:^(NSData *data,
+                                                            NSURLResponse *response,
+                                                            NSError *error){
+                                              
+                                        //4*: HANDLE RESPONSE  **ASYNCHRONIZATION STARTS HERE**
+                                            //check for error
+                                        if(!error){
+                                                
+                                        //GET THE DATA FROM THE URL DATA IS "CSV"
+                                        NSData *financialData = [NSData dataWithContentsOfURL:financeURL];
+                                        
+                                        //TURN FINANCIAL DATA INTO STRING note: returns "Symbol,Price,Change"
+                                        NSString *stringData = [[NSString alloc]initWithData:financialData encoding:NSUTF8StringEncoding];
+                                        //FURTHER REMOVE THE QUOTATION MARKS ""
+                                        NSString *stringDataWOQuotes = [stringData stringByReplacingOccurrencesOfString:@"\"" withString:@""];
+                                              
+                                        //TURN INTO AN ARRAY (of symbol,prices,change)
+                                        NSArray *dataArray = [stringDataWOQuotes componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"\n"]];
+                                         
+                                        //variable to count data recieved
+                                        int stockDataTransfered = 0;
+                                        
+                                        //IMPLEMENT do{}while() completion handler
+                                        //ASSIGN EACH STRING TO A COMPANY FINANCIAL DATA STRING
+                                        //IMPLEMENT NSNOTIFICATION
+                                            do{
+                                                    for (int i = 0; i < self.companyListDAO.count; i++) {
+                                                if(dataArray[i] != nil){
+                                                    self.companyListDAO[i].financialDataString = dataArray[i];
+                                                    stockDataTransfered++;
+                                                }else {
+                                                    break;
+                                                  }
+                                                }
+                                            }while (stockDataTransfered < (dataArray.count));
+                                        
+                                                //NSNOTIFICATION HERE IF NO ERROR, DO SOMETHING
+                                                // "dispatch_async" takes you to main thread
+                                        dispatch_async(dispatch_get_main_queue(), ^{
+                                                [[NSNotificationCenter defaultCenter]postNotificationName:@"Recieved All Data" object:self];
+                                            });
+                                        } else {
+                                        //if theres error
+                                                //NSNOTIFICATION HERE IF THERES ERROR
+                                            dispatch_async(dispatch_get_main_queue(),^{
+                                                [[NSNotificationCenter defaultCenter]postNotificationName:@"Data Missing" object:self];
+                                            });
+                                        }
+                                }];
+    //3*.
+    [dataTask resume];
+}
+
+
+//*************************************************************************************************************************************
+
+
+
+//*************************************************************************************************************************************
+
 
 
 

@@ -7,15 +7,17 @@
 //
 
 #import "NewCompanyViewController.h"
-#define kOFFSET_FOR_KEYBOARD 80.0
+
 @interface NewCompanyViewController ()
 
 @property (nonatomic)float textFieldWidth;
 @property (nonatomic)float textFieldHeight;
 @property (strong,nonatomic)UITextField *theNewCompanyNameTextField;
 @property (strong,nonatomic)UITextField *theNewCompanyLogoURLTextField;
+@property (strong,nonatomic)UITextField *theNewCompanyStockSymbolTextField;
 @property (strong,nonatomic)UILabel *companyNameLabel;
 @property (strong,nonatomic)UILabel *companyURLLabel;
+@property (strong,nonatomic)UILabel *companyTickerLabel;
 @property (nonatomic) DAO *dataManager;
 
 @end
@@ -26,6 +28,11 @@
     [super viewDidLoad];
     
     self.dataManager = [DAO sharedManager];
+    
+    //CALL THE LOGOURL TEXTFIELD(DELEGATING) AND SET THIS VIEW(DELEGATE) AS IT'S DELEGATE
+    self.theNewCompanyNameTextField.delegate = self;
+    self.theNewCompanyLogoURLTextField.delegate = self;
+    self.theNewCompanyStockSymbolTextField.delegate = self;
     
     //ADD BACKGROUND COLOR
     [self.view setBackgroundColor:[UIColor whiteColor]];
@@ -52,20 +59,50 @@
     [self proportionalHeight:0.075f];
     
     //ADD TEXTFIELD FOR NEW COMPANY
-    self.theNewCompanyNameTextField = [self createTextFieldNamed:@"ENTER COMPANY NAME" withXLocation:20.0f withYLocation:130.0f withWidth:self.textFieldWidth andHeight:self.textFieldHeight withIDTag:0];   // <---CAN USE ID TAG TO REFER TO THE TEXT FIELD
+    self.theNewCompanyNameTextField = [self createTextFieldNamed:@"ENTER COMPANY NAME" withXLocation:20.0f withYLocation:100.0f withWidth:self.textFieldWidth andHeight:self.textFieldHeight withIDTag:0];   // <---CAN USE ID TAG TO REFER TO THE TEXT FIELD
     
     //ADD TEXTFIELD FOR COMPANY LOGO URL
-     self.theNewCompanyLogoURLTextField = [self createTextFieldNamed:@"ENTER COMPANY LOGO URL" withXLocation:20.0F withYLocation:210.0f withWidth:self.textFieldWidth andHeight:self.textFieldHeight withIDTag:1];  // <--- CAN USE ID TAG TO REFER TO THE TEXT FIELD
+     self.theNewCompanyLogoURLTextField = [self createTextFieldNamed:@"ENTER COMPANY LOGO URL" withXLocation:20.0F withYLocation:180.0f withWidth:self.textFieldWidth andHeight:self.textFieldHeight withIDTag:1];  // <--- CAN USE ID TAG TO REFER TO THE TEXT FIELD
+    
+    //ADD TEXTFIELD FOR COMPANY STOCK SYMBOL
+    self.theNewCompanyStockSymbolTextField = [self createTextFieldNamed:@"ENTER TICKER SYMBOL" withXLocation:20.0f withYLocation:260.0f withWidth:self.textFieldWidth andHeight:self.textFieldHeight withIDTag:2];
     
     //ADD LABEL FOR COMPANY NAME
-    self.companyNameLabel = [self createLabelNamed:@"New Company:" withXLocation:20.0f withYLocation:100.0f withWidth:250.0f andHeight:20.0f];
+    self.companyNameLabel = [self createLabelNamed:@"New Company:" withXLocation:20.0f withYLocation:70.0f withWidth:250.0f andHeight:20.0f];
     [self.companyNameLabel setFont:[UIFont boldSystemFontOfSize:16]];
     
     //ADD LABEL FOR URL
-    self.companyURLLabel = [self createLabelNamed:@"New Logo URL:" withXLocation:20.0f withYLocation:180.0f withWidth:250.0f andHeight:20.0f];
+    self.companyURLLabel = [self createLabelNamed:@"New Logo URL:" withXLocation:20.0f withYLocation:150.0f withWidth:250.0f andHeight:20.0f];
     [self.companyURLLabel setFont:[UIFont boldSystemFontOfSize:16]];
     
+    //ADD LABEL FOR STOCK SYMBOL
+    self.companyTickerLabel = [self createLabelNamed:@"Stock Ticker:" withXLocation:20.0f withYLocation:230.0f withWidth:250.0f andHeight:20.0f];
+    [self.companyTickerLabel setFont:[UIFont boldSystemFontOfSize:16]];
     
+   //SET TEXTFIELD AS DELEGATE
+    self.theNewCompanyLogoURLTextField.delegate = self;      //<------
+    self.theNewCompanyStockSymbolTextField.delegate = self;  //<------
+    
+
+    
+}
+
+//************************************************************************************
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+
+}
+
+//************************************************************************************
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    
+
 }
 
 //************************************************************************************
@@ -95,9 +132,10 @@
     //SET THE TEXTFIELD INPUT TO LOCAL VARIABLES COMPANY NAME & URL VARIABLE
     self.theNewCompanyName = self.theNewCompanyNameTextField.text;
     self.theNewCompanyURL = [NSURL URLWithString:(self.theNewCompanyLogoURLTextField.text)];
+    self.theNewCompanyStockSymbol = self.theNewCompanyStockSymbolTextField.text;
     
     //CREATE A NEW COMPANY USING DAO METHOD AND GIVE IT THE LOCAL NAME & URL
-    Company *madeCompany = [self.dataManager makeNewCompanyWithName:self.theNewCompanyName andLogoURL:self.theNewCompanyURL];
+    Company *madeCompany = [self.dataManager makeNewCompanyWithName:self.theNewCompanyName withLogoURL:self.theNewCompanyURL andStockSymbol:self.theNewCompanyStockSymbol];
     
     //ADD COMPANY DAO ARRAY
     [self.dataManager.companyListDAO addObject:madeCompany];
@@ -139,11 +177,11 @@
 }
 
 //************************************************************************************
-//OVERRIDE METHOD TO MAKE KEYBOARD DISAPEAR WHEN BACKGROUND IS TOUCHED
-- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
-    [self.view endEditing:YES];
-    [super touchesBegan:touches withEvent:event];
-}
+//OVERRIDE METHOD TO MAKE KEYBOARD DISAPEAR WHEN CLICKING OUTSIDE OF TEXTFIELD
+//- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
+//    [self.view endEditing:YES];
+//    [super touchesBegan:touches withEvent:event];
+//}
 
 //************************************************************************************
 //METHOD TO CREATE LABEL
@@ -155,96 +193,44 @@
     return newLabel;
 }
 
+
+
+
 //************************************************************************************
-//METHODS TO MOVE OBJECT UP ABOVE KEYBOARD
--(void)keyboardWillShow {
-    // Animate the current view out of the way
-    if (self.view.frame.origin.y >= 0)
-    {
-        [self setViewMovedUp:YES];
-    }
-    else if (self.view.frame.origin.y < 0)
-    {
-        [self setViewMovedUp:NO];
-    }
-}
-
--(void)keyboardWillHide {
-    if (self.view.frame.origin.y >= 0)
-    {
-        [self setViewMovedUp:YES];
-    }
-    else if (self.view.frame.origin.y < 0)
-    {
-        [self setViewMovedUp:NO];
-    }
-}
-
--(void)textFieldDidBeginEditing:(UITextField *)sender
+//TEXTFIELD & KEYBOARD METHODS
+//METHOD TO MOVE TEXTFIELD UP WHEN CLICKED
+-(void)textFieldDidBeginEditing:(UITextField *)textField
 {
-    if ([sender isEqual:self.theNewCompanyLogoURLTextField])   // <--- ONLY NEED TO MOVE BOTTOM TEXT FIELD
+    
+    if (textField.tag > 0)   // <--- ONLY AFFECTS THE BOTTOM TWO
     {
-        //move the main view, so that the keyboard does not hide it.
-        if  (self.view.frame.origin.y >= 0)
-        {
-            [self setViewMovedUp:YES];
-        }
+        [UIView beginAnimations:nil context:NULL];
+        [UIView setAnimationDelegate:self];
+        [UIView setAnimationDuration:0.5];
+        [UIView setAnimationBeginsFromCurrentState:YES];
+        self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y-80.0,
+                                     self.view.frame.size.width, self.view.frame.size.height);
+        [UIView commitAnimations];
     }
 }
 
-//method to move the view up/down whenever the keyboard is shown/dismissed
--(void)setViewMovedUp:(BOOL)movedUp
+//METHOD TO MOVE TEXTFIELD BACK DOWN WHEN CLICKED "DONE"
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
-    [UIView beginAnimations:nil context:NULL];
-    [UIView setAnimationDuration:0.3]; // if you want to slide up the view
     
-    CGRect rect = self.view.frame;
-    if (movedUp)
+    if (textField.tag > 0)
     {
-        // 1. move the view's origin up so that the text field that will be hidden come above the keyboard
-        // 2. increase the size of the view so that the area behind the keyboard is covered up.
-        rect.origin.y -= kOFFSET_FOR_KEYBOARD;
-        rect.size.height += kOFFSET_FOR_KEYBOARD;
+        [UIView beginAnimations:nil context:NULL];
+        [UIView setAnimationDelegate:self];
+        [UIView setAnimationDuration:0.5];
+        [UIView setAnimationBeginsFromCurrentState:YES];
+        self.view .frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y+80.0,
+                                      self.view.frame.size.width, self.view.frame.size.height);
+        [UIView commitAnimations];
+        
     }
-    else
-    {
-        // revert back to the normal state.
-        rect.origin.y += kOFFSET_FOR_KEYBOARD;
-        rect.size.height -= kOFFSET_FOR_KEYBOARD;
-    }
-    self.view.frame = rect;
-    
-    [UIView commitAnimations];
-    
-}
-
-
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-    // register for keyboard notifications
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(keyboardWillShow)
-                                                 name:UIKeyboardWillShowNotification
-                                               object:nil];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(keyboardWillHide)
-                                                 name:UIKeyboardWillHideNotification
-                                               object:nil];
-}
-
-- (void)viewWillDisappear:(BOOL)animated
-{
-    [super viewWillDisappear:animated];
-    // unregister for keyboard notifications while not visible.
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:UIKeyboardWillShowNotification
-                                                  object:nil];
-    
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:UIKeyboardWillHideNotification
-                                                  object:nil];
+    [textField resignFirstResponder];
+    return YES;
 }
 //************************************************************************************
 

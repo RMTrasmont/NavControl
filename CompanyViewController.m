@@ -31,8 +31,9 @@
 {
     [super viewDidLoad];
     
+    
     //SET THE DAO PROPERTY OF THIS VIEW(self.dataManager) AS DAO OF THE DAO CLASS(sharedManager)
-    self.dataManager = [DAO sharedManager];                                                     //<---- *LOOK OVER ******
+    self.dataManager = [DAO sharedManager];//<---- *LOOK OVER ******
     
     // Uncomment the following line to preserve selection between presentations.
     self.clearsSelectionOnViewWillAppear = NO;
@@ -53,21 +54,31 @@
     //SET TITLE OF HEADER
     self.title = @"Company";
     
+    //NSNOTIFICATIONCENTER OBSERVER WHEN DATA FROM WED ARE ALL TRANSFERED IN DAO
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getAPIFinancialData) name:@"Data Recieved" object:nil];
     
-    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getAPIFinancialData) name:@"Data Not Found" object:nil];
+    [self.dataManager getAPIFinancialData];
 }
 
 
 //****************************************************************************************
 -(void)viewWillAppear:(BOOL)animated{
     
+   [self.dataManager getAPIFinancialData];
     [self.tableView reloadData];
     
 }
 //****************************************************************************************
 
+-(void)viewDidAppear:(BOOL)animated{
+    
+    [self.dataManager getAPIFinancialData];
+    [self.tableView reloadData];
 
+}
 
+//****************************************************************************************
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
@@ -87,7 +98,7 @@
 {
 #warning Incomplete method implementation.
     // Return the number of rows in the section.
-    return self.dataManager.companyListDAO.count;     //<---- *LOOK OVER ******
+    return self.dataManager.companyListDAO.count;
 }
 
 
@@ -96,7 +107,7 @@
     static NSString *CellIdentifier = @"Cell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
     }
     
     //ASSIGN COMPANY FROM ARRAY TO TABLE CELLS DEPENDING ON INDEX... "COMPANYARRAY[1] goes in INDEXPATH[1] etc"
@@ -109,9 +120,9 @@
     //ALIGN TEXT LABEL TO LEFT/CENTER/RIGHT
     cell.textLabel.textAlignment = NSTextAlignmentLeft;
     
-    //ASSIGN COMPANY LOGO TO CELL...
+    //ASSIGN COMPANY LOGO TO CELL...make ImageViewFrame 48x48
     [cell.imageView setImage:[UIImage imageWithData:[NSData dataWithContentsOfURL:currentCompany.companyLogoURL]]];
-    
+    [cell.imageView setFrame:CGRectMake(0,0,48,48)];
     //ASSIGN CUSTOM BUTTON TO ACCESSORY VIEW CELL TO EDIT NAMES AND URL...
         //NOTE: cell.editingAccessoryView(SHOWS UP ON CELL WHEN "EDIT" IS CLICKED)
         //NOTE: cell.accessoryView(SHOWS UP ON CELL WITHOUT "EDIT" BEING CLICKED)
@@ -120,12 +131,18 @@
     [editButton setFrame:CGRectMake(0, 0, 24, 24)];
         //ADD METHOD TO THE BUTTON;
     [editButton addTarget:self                                  
-                action:@selector(segueToEditCompanyScreen)  // <--- NEED TO CREATE METHOD*****************
+                action:@selector(segueToEditCompanyScreen)
                 forControlEvents:UIControlEventTouchUpInside];
     
-    //cell.accessoryView = editButton;                // <--- SHOW ON CELL RIGHT AWAY // USE FOR PRODUCTS
-    cell.editingAccessoryView = editButton;       // <--- SHOW ON CELL ONCE EDIT BUTTON CLICKED // SAFER B/C COMPANY HOLDS ARRAY
+    //cell.accessoryView = editButton;        // <--- SHOW ON CELL RIGHT AWAY // USE FOR PRODUCTS
+    cell.editingAccessoryView = editButton;   // <--- SHOW ON CELL ONCE EDIT BUTTON CLICKED // SAFER B/C COMPANY HOLDS ARRAY
     
+    //[self.dataManager getAPIFinancialData];
+    //ADD STOCK INFO ON DETAIL TEXT LABEL
+    cell.detailTextLabel.text = [NSString stringWithFormat:@"%@",currentCompany.financialDataString];
+    
+    //CHANGE TEXT COLOR DETAILTEXTLABEL
+    cell.detailTextLabel.textColor = [UIColor redColor];
     
     return cell;
 
@@ -248,6 +265,8 @@
     [self.navigationController pushViewController:editScreen animated:YES];
     
 }
+
+
 
 
 

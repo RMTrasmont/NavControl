@@ -7,7 +7,7 @@
 //
 
 #import "NewProductsViewController.h"
-#define kOFFSET_FOR_KEYBOARD 80.0
+#define kOFFSET_FOR_KEYBOARD 50.0
 @interface NewProductsViewController ()
 
 @property (nonatomic)float textFieldWidth;
@@ -204,7 +204,8 @@
 
 -(void)textFieldDidBeginEditing:(UITextField *)sender
 {
-    if ([sender isEqual:self.theNewProductURLTextField])   // <--- ONLY NEED TO MOVE BOTTOM TEXT FIELD
+    //ENTER MOST BOTTOM TEXTFIELD
+    if ([sender isEqual:self.theNewProductURLTextField])
     {
         //move the main view, so that the keyboard does not hide it.
         if  (self.view.frame.origin.y >= 0)
