@@ -7,7 +7,6 @@
 //
 
 #import "EditProductViewController.h"
-#define kOFFSET_FOR_KEYBOARD 80.0
 @interface EditProductViewController ()
 @property (nonatomic)float textFieldWidth;
 @property (nonatomic)float textFieldHeight;
@@ -64,6 +63,10 @@
     //ADD EDIT PRODUCT URL LABEL
     self.editURLLabel = [self createLabelNamed:@"Product URL:" withXLocation:20.0f withYLocation:180.0f withWidth:250.0f andHeight:20.0f];
     [self.editURLLabel setFont:[UIFont boldSystemFontOfSize:16]];
+    
+    //SET KEYBOARD AS DELEGATE FOR KEYBOARD HANDLING
+    self.editNameTextField.delegate = self;
+    self.editURLTextField.delegate = self;
 
 }
 
@@ -74,15 +77,13 @@
 }
 
 //************************************************************************************
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+- (void)viewWillAppear:(BOOL)animated{
+    //DISPLAY CURRENT VALUES BEFORE EDIT
+    self.editNameTextField.text = self.currentProduct.productName;
+    self.editURLTextField.text = [self.currentProduct.productURL absoluteString];
 }
-*/
+
+
 
 //METHOD TO PROPORTIONALLY ADJUST WIDTH & HEIGHT OF TEXTFIELD IN RELATION TO VIEW
 -(void)proportionalWidth:(float)percent{
@@ -116,12 +117,6 @@
 }
 
 //************************************************************************************
-//OVERRIDE METHOD TO MAKE KEYBOARD DISAPEAR WHEN BACKGROUND IS TOUCHED
-- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
-    [self.view endEditing:YES];
-    [super touchesBegan:touches withEvent:event];
-}
-//************************************************************************************
 //METHOD TO POP OUT OF EDIT SCREEN
 -(void)popToProductViewController{
     [self.navigationController popViewControllerAnimated:YES];
@@ -129,31 +124,39 @@
 //************************************************************************************
 //METHOD TO SAVE EDITED PRODUCT
 -(void)saveEditedProduct{
-    
+    //NEW VALUES
     NSString *editedName = self.editNameTextField.text;
-    NSLog(@"%@",editedName);
-    
     NSURL *editedURL = [NSURL URLWithString:self.editURLTextField.text];
-    NSLog(@"%@",editedURL);
     
-    Product *lastTouchedProduct = self.dataManager.companyListDAO[self.dataManager.indexOfLastCompanyTouched].companyProductList[self.dataManager.indexOfLastProductTouched];
+    //OLD VALUES
+    NSString *originalName = self.currentProduct.productName;
+    NSURL *originalURL = self.currentProduct.productURL;
     
-    NSString *originalName = lastTouchedProduct.productName;
-    NSURL *originalURL = lastTouchedProduct.productURL;
-    
+    //SEND OLD AND NEW VALUES TO DAO
+    self.dataManager.editedProductNameDAO = editedName;
+    self.dataManager.editedProductURLDAO = editedURL;
+    self.dataManager.originalProductNameDAO = originalName;
+    self.dataManager.originalProductURLDAO = originalURL;
     
     if([self.editNameTextField isEditing]){
-        lastTouchedProduct.productName = editedName;
+        self.currentProduct.productName = editedName;
+        self.dataManager.editingProductNameDAO = YES;
     } else {
-        lastTouchedProduct.productName = originalName;
+        self.currentProduct.productName = originalName;
+        self.dataManager.editingProductNameDAO = NO;
     }
 
     if([self.editURLTextField isEditing]){
-        lastTouchedProduct.productURL = editedURL;
+        self.currentProduct.productURL = editedURL;
+        self.dataManager.editingProductURLDAO = YES;
     } else {
-        lastTouchedProduct.productURL = originalURL;
+        self.currentProduct.productURL = originalURL;
+        self.dataManager.editingProductURLDAO = NO;
     }
-        
+    
+    //SAVE EDITED PRODUCT TO CORE DATA
+    [self.dataManager saveEditedProductToCoreData];
+    
     [self.navigationController popViewControllerAnimated:YES];
 
 }
@@ -168,97 +171,66 @@
     return newLabel;
 }
 
-//************************************************************************************
-//METHODS TO MOVE OBJECT UP ABOVE KEYBOARD
--(void)keyboardWillShow {
-    // Animate the current view out of the way
-    if (self.view.frame.origin.y >= 0)
-    {
-        [self setViewMovedUp:YES];
-    }
-    else if (self.view.frame.origin.y < 0)
-    {
-        [self setViewMovedUp:NO];
-    }
+//*************************KEYBOARD HANDLING **********************************************
+//OVERRIDE METHOD TO MAKE KEYBOARD DISAPEAR WHEN CLICKING OUTSIDE OF TEXTFIELD
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
+    [self.view endEditing:YES];
+    [super touchesBegan:touches withEvent:event];
 }
 
--(void)keyboardWillHide {
-    if (self.view.frame.origin.y >= 0)
-    {
-        [self setViewMovedUp:YES];
-    }
-    else if (self.view.frame.origin.y < 0)
-    {
-        [self setViewMovedUp:NO];
-    }
-}
-
--(void)textFieldDidBeginEditing:(UITextField *)sender
+//TEXTFIELD & KEYBOARD METHODS
+//METHOD TO MOVE TEXTFIELD UP WHEN CLICKED
+-(void)textFieldDidBeginEditing:(UITextField *)textField
 {
-    if ([sender isEqual:self.editURLTextField])   //*****  <--- ONLY NEED TO MOVE BOTTOM TEXT FIELD
+    
+    if (textField.tag > 0)   // <--- ONLY AFFECTS THE BOTTOM
     {
-        //move the main view, so that the keyboard does not hide it.
-        if  (self.view.frame.origin.y >= 0)
-        {
-            [self setViewMovedUp:YES];
-        }
+        [UIView beginAnimations:nil context:NULL];
+        [UIView setAnimationDelegate:self];
+        [UIView setAnimationDuration:0.5];
+        [UIView setAnimationBeginsFromCurrentState:YES];
+        self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y-80.0,
+                                     self.view.frame.size.width, self.view.frame.size.height);
+        [UIView commitAnimations];
     }
 }
-
-//method to move the view up/down whenever the keyboard is shown/dismissed
--(void)setViewMovedUp:(BOOL)movedUp
-{
-    [UIView beginAnimations:nil context:NULL];
-    [UIView setAnimationDuration:0.3]; // if you want to slide up the view
+//METHOD TO MOVE TEXTFIELD BACK DOWN WHEN CLICKED "DONE"
+-(void)textFieldDidEndEditing:(UITextField *)textField{
     
-    CGRect rect = self.view.frame;
-    if (movedUp)
+    if (textField.tag > 0)
     {
-        // 1. move the view's origin up so that the text field that will be hidden come above the keyboard
-        // 2. increase the size of the view so that the area behind the keyboard is covered up.
-        rect.origin.y -= kOFFSET_FOR_KEYBOARD;
-        rect.size.height += kOFFSET_FOR_KEYBOARD;
+        [UIView beginAnimations:nil context:NULL];
+        [UIView setAnimationDelegate:self];
+        [UIView setAnimationDuration:0.5];
+        [UIView setAnimationBeginsFromCurrentState:YES];
+        self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y + 80.0,
+                                     self.view.frame.size.width, self.view.frame.size.height);
+        [UIView commitAnimations];
     }
-    else
-    {
-        // revert back to the normal state.
-        rect.origin.y += kOFFSET_FOR_KEYBOARD;
-        rect.size.height -= kOFFSET_FOR_KEYBOARD;
-    }
-    self.view.frame = rect;
-    
-    [UIView commitAnimations];
+    [textField resignFirstResponder];
 }
 
 
-- (void)viewWillAppear:(BOOL)animated
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
-    [super viewWillAppear:animated];
-    // register for keyboard notifications
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(keyboardWillShow)
-                                                 name:UIKeyboardWillShowNotification
-                                               object:nil];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(keyboardWillHide)
-                                                 name:UIKeyboardWillHideNotification
-                                               object:nil];
-}
-
-- (void)viewWillDisappear:(BOOL)animated
-{
-    [super viewWillDisappear:animated];
-    // unregister for keyboard notifications while not visible.
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:UIKeyboardWillShowNotification
-                                                  object:nil];
-    
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:UIKeyboardWillHideNotification
-                                                  object:nil];
+    if (textField.tag > 0)
+    {
+        [UIView beginAnimations:nil context:NULL];
+        [UIView setAnimationDelegate:self];
+        [UIView setAnimationDuration:0.5];
+        [UIView setAnimationBeginsFromCurrentState:YES];
+        self.view .frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y+80.0,
+                                      self.view.frame.size.width, self.view.frame.size.height);
+        [UIView commitAnimations];
+        
+        
+    }
+    [textField resignFirstResponder];
+    return YES;
 }
 //************************************************************************************
+
 
 
 @end

@@ -7,7 +7,6 @@
 //
 
 #import "EditCompanyViewController.h"
-#define kOFFSET_FOR_KEYBOARD 80.0
 @interface EditCompanyViewController ()
 @property (nonatomic)float textFieldWidth;
 @property (nonatomic)float textFieldHeight;
@@ -62,7 +61,18 @@
     //ADD EDIT COMPANY LOGO URL LABEL
     self.editURLLabel = [self createLabelNamed:@"Logo URL:" withXLocation:20.0f withYLocation:180.0f withWidth:250.0f andHeight:20.0f];
     [self.editURLLabel setFont:[UIFont boldSystemFontOfSize:16]];
+    
+    //SET TEXTFIELD DELEGATE FOR KEYBOARD HANDLING
+    self.editNameTextField.delegate = self;
+    self.editLogoURLTextField.delegate = self;
+    
 
+}
+
+-(void)viewWillAppear:(BOOL)animated {
+    //DISPLAY CURRENT VALUES BEFORE EDIT
+    self.editNameTextField.text = self.currentCompany.companyName;
+    self.editLogoURLTextField.text = [self.currentCompany.companyLogoURL absoluteString];
 }
 
 //************************************************************************************
@@ -114,13 +124,6 @@
 }
 
 //************************************************************************************
-//OVERRIDE METHOD TO MAKE KEYBOARD DISAPEAR WHEN BACKGROUND IS TOUCHED
-- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
-    [self.view endEditing:YES];
-    [super touchesBegan:touches withEvent:event];
-}
-
-//************************************************************************************
 //METHOD TO POP OUT OF EDIT SCREEN
 -(void)popToCompanyViewController{
     [self.navigationController popViewControllerAnimated:YES];
@@ -128,33 +131,75 @@
 
 //************************************************************************************
 //METHOD TO SAVE INFO IN EDIT COMPANY SCREEN
+#pragma mark - WORKING EDIT COMPANY
 -(void)saveEditedCompany{
+    //NEW/EDITED VALUES
     NSString *editedCompanyName = self.editNameTextField.text;
-    NSLog(@"%@",editedCompanyName);
-    
     NSURL *editedCompanyLogoURL = [NSURL URLWithString:self.editLogoURLTextField.text];
-    NSLog(@"%@",editedCompanyLogoURL);
+
+    //ORIGINAL VALUES OF THE COMPANY
+    NSString *originalName = self.currentCompany.companyName;
+    NSURL *originalLogoURL = self.currentCompany.companyLogoURL;
     
-    
-    
-    NSString *originalName = self.dataManager.companyListDAO[self.dataManager.indexOfLastCompanyTouched].companyName;
-    NSURL *originalLogoURL = self.dataManager.companyListDAO[self.dataManager.indexOfLastCompanyTouched].companyLogoURL;
-    
-    Company *lastCompanyTouched = self.dataManager.companyListDAO[self.dataManager.indexOfLastCompanyTouched];
+    //SEND PROPERTY VALUES TO DAO
+    self.dataManager.editedCompanyNameDAO = editedCompanyName;
+    self.dataManager.editedCompanyLogoURLDAO = editedCompanyLogoURL;
+    self.dataManager.originalCompanyNameDAO = originalName;
+    self.dataManager.originalCompanyLogoURLDAO = originalLogoURL;
     
     //SET THE EDITED NEW NAME TO THE COMPANY //IF THERE'S INPUT CHANGE IT, IF NO INPUT, DON'T CHANGE THE NAME
     if([self.editNameTextField isEditing]){
-        lastCompanyTouched.companyName = editedCompanyName;
+        self.currentCompany.companyName = editedCompanyName;
+        self.dataManager.editingCompanyNameDAO = YES;
     } else {
-        lastCompanyTouched.companyName = originalName;
+        self.currentCompany.companyName = originalName;
+        self.dataManager.editingCompanyNameDAO = NO;
     }
 
     //SET THE EDITED NEW LOGO URL TO THE COMPANY //IF THERE'S INPUT CHANGE IT, IF NO INPUT, DON'T CHANGE THE URL
     if([self.editLogoURLTextField isEditing]){
-        lastCompanyTouched.companyLogoURL = editedCompanyLogoURL;
+        self.currentCompany.companyLogoURL = editedCompanyLogoURL;
+        self.dataManager.editingCompanyLogoURLDAO = YES;
     } else {
-        lastCompanyTouched.companyLogoURL = originalLogoURL;
+        self.currentCompany.companyLogoURL = originalLogoURL;
+        self.dataManager.editingCompanyLogoURLDAO = NO;
     }
+    
+    
+//    //CORE DATA HANDLING
+//    
+//    //EDIT MANAGED PRODUCT
+//    ManagedCompany *currentManagedCompany = [self.dataManager.managedCompanyListDAO objectAtIndex:self.dataManager.indexOfLastCompanyTouched];
+//    
+//    //ORIGINAL VALUES OF CURRENT MANAGED COMPANY
+//    NSString *originalMCName = currentManagedCompany.mCName;
+//    NSString *originalMCLogoURL = currentManagedCompany.mCLogoURL;
+//    
+//    //NEW VALUES OF CURRENT MANGED COMPANY
+//    NSString *newMCName = editedCompanyName;
+//    NSString *newLogoURL = [NSString stringWithFormat:@"%@",editedCompanyLogoURL];
+//    
+//    //SET THE EDITED NEW MANAGED COMPANY NAME TO REPLACE  ORIGINAL ONE
+//    //IF THERE'S INPUT CHANGE IT, IF NO INPUT, DON'T CHANGE THE NAME
+//    if([self.editNameTextField isEditing]){
+//        currentManagedCompany.mCName = newMCName;
+//    } else {
+//        currentManagedCompany.mCName = originalMCName;
+//    }
+//    
+//    // SET THE EDITED NEW MANAGED COMPANY LOGO URL TO REPLACE ORIGINAL ONE
+//    // IF THERE'S INPUT CHANGE IT, IF NO INPUT, DON'T CHANGE URL
+//    if([self.editLogoURLTextField isEditing]){
+//        currentManagedCompany.mCLogoURL = newLogoURL;
+//    } else {
+//        currentManagedCompany.mCLogoURL = originalMCLogoURL;
+//    }
+//    
+//    //SAVE MANAGED OBJECT
+//    [self.dataManager saveManagedObject];
+//
+    //SAVE EDITED COMPANY TO CORE DATA
+    [self.dataManager saveEditedCompanyToCoreData];
     
     //POP OUT OF THE VIEW
     [self.navigationController popViewControllerAnimated:YES];
@@ -171,95 +216,63 @@
     return newLabel;
 }
 
-//************************************************************************************
-//METHODS TO MOVE OBJECT UP ABOVE KEYBOARD
--(void)keyboardWillShow {
-    // Animate the current view out of the way
-    if (self.view.frame.origin.y >= 0)
-    {
-        [self setViewMovedUp:YES];
-    }
-    else if (self.view.frame.origin.y < 0)
-    {
-        [self setViewMovedUp:NO];
-    }
+//*************************KEYBOARD HANDLING **********************************************
+//OVERRIDE METHOD TO MAKE KEYBOARD DISAPEAR WHEN CLICKING OUTSIDE OF TEXTFIELD
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
+    [self.view endEditing:YES];
+    [super touchesBegan:touches withEvent:event];
 }
 
--(void)keyboardWillHide {
-    if (self.view.frame.origin.y >= 0)
-    {
-        [self setViewMovedUp:YES];
-    }
-    else if (self.view.frame.origin.y < 0)
-    {
-        [self setViewMovedUp:NO];
-    }
-}
-
--(void)textFieldDidBeginEditing:(UITextField *)sender
+//TEXTFIELD & KEYBOARD METHODS
+//METHOD TO MOVE TEXTFIELD UP WHEN CLICKED
+-(void)textFieldDidBeginEditing:(UITextField *)textField
 {
-    if ([sender isEqual:self.editLogoURLTextField])   //*****  <--- ONLY NEED TO MOVE BOTTOM TEXT FIELD
+    
+    if (textField.tag > 0)   // <--- ONLY AFFECTS THE BOTTOM
     {
-        //move the main view, so that the keyboard does not hide it.
-        if  (self.view.frame.origin.y >= 0)
-        {
-            [self setViewMovedUp:YES];
-        }
+        [UIView beginAnimations:nil context:NULL];
+        [UIView setAnimationDelegate:self];
+        [UIView setAnimationDuration:0.5];
+        [UIView setAnimationBeginsFromCurrentState:YES];
+        self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y-80.0,
+                                     self.view.frame.size.width, self.view.frame.size.height);
+        [UIView commitAnimations];
     }
 }
-
-//method to move the view up/down whenever the keyboard is shown/dismissed
--(void)setViewMovedUp:(BOOL)movedUp
-{
-    [UIView beginAnimations:nil context:NULL];
-    [UIView setAnimationDuration:0.3]; // if you want to slide up the view
+//METHOD TO MOVE TEXTFIELD BACK DOWN WHEN CLICKED "DONE"
+-(void)textFieldDidEndEditing:(UITextField *)textField{
     
-    CGRect rect = self.view.frame;
-    if (movedUp)
+    if (textField.tag > 0)
     {
-        // 1. move the view's origin up so that the text field that will be hidden come above the keyboard
-        // 2. increase the size of the view so that the area behind the keyboard is covered up.
-        rect.origin.y -= kOFFSET_FOR_KEYBOARD;
-        rect.size.height += kOFFSET_FOR_KEYBOARD;
+        [UIView beginAnimations:nil context:NULL];
+        [UIView setAnimationDelegate:self];
+        [UIView setAnimationDuration:0.5];
+        [UIView setAnimationBeginsFromCurrentState:YES];
+        self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y + 80.0,
+                                     self.view.frame.size.width, self.view.frame.size.height);
+        [UIView commitAnimations];
     }
-    else
-    {
-        // revert back to the normal state.
-        rect.origin.y += kOFFSET_FOR_KEYBOARD;
-        rect.size.height -= kOFFSET_FOR_KEYBOARD;
-    }
-    self.view.frame = rect;
-    
-    [UIView commitAnimations];
+    [textField resignFirstResponder];
 }
 
 
-- (void)viewWillAppear:(BOOL)animated
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
-    [super viewWillAppear:animated];
-    // register for keyboard notifications
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(keyboardWillShow)
-                                                 name:UIKeyboardWillShowNotification
-                                               object:nil];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(keyboardWillHide)
-                                                 name:UIKeyboardWillHideNotification
-                                               object:nil];
-}
-
-- (void)viewWillDisappear:(BOOL)animated
-{
-    [super viewWillDisappear:animated];
-    // unregister for keyboard notifications while not visible.
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:UIKeyboardWillShowNotification
-                                                  object:nil];
-    
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:UIKeyboardWillHideNotification
-                                                  object:nil];
+    if (textField.tag > 0)
+    {
+        [UIView beginAnimations:nil context:NULL];
+        [UIView setAnimationDelegate:self];
+        [UIView setAnimationDuration:0.5];
+        [UIView setAnimationBeginsFromCurrentState:YES];
+        self.view .frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y+80.0,
+                                      self.view.frame.size.width, self.view.frame.size.height);
+        [UIView commitAnimations];
+        
+        
+    }
+    [textField resignFirstResponder];
+    return YES;
 }
 //************************************************************************************
 

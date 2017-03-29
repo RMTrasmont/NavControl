@@ -8,6 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import "DAO.h"
-@interface EditProductViewController : UIViewController
+@interface EditProductViewController : UIViewController <UITextFieldDelegate>
+
+@property (strong,nonatomic) Company *currentParentCompany;
+@property (strong,nonatomic) Product *currentProduct;
 
 @end

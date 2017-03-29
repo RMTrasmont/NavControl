@@ -61,9 +61,9 @@
     
    //CUSTOM "SHOOT BACK" BUTTON
     UIButton *backButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    backButton.frame = CGRectMake(0, 0, 60, 48);
+    backButton.frame = CGRectMake(0, 0, 36, 36);
     backButton.showsTouchWhenHighlighted = YES;
-    [backButton setImage:[UIImage imageNamed:@"shootBack"] forState:UIControlStateNormal];
+    [backButton setImage:[UIImage imageNamed:@"simpleBackArrow"] forState:UIControlStateNormal];
     backButton.imageEdgeInsets = UIEdgeInsetsMake(10, 10, 10, 10);
     //ADD ACTION TO BUTTON
     [backButton addTarget:self action:@selector(segueToCompanyView) forControlEvents:UIControlEventTouchUpInside];
@@ -114,6 +114,7 @@
 }
 
 //********************************************************************************************
+#pragma mark - Table View Cells
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -139,11 +140,14 @@
     [editButton setFrame:CGRectMake(0, 0, 24, 24)];
     //ADD METHOD TO THE BUTTON;
     [editButton addTarget:self
-                   action:@selector(segueToEditProductScreen)  // <--- NEED TO CREATE METHOD*****************
+                   action:@selector(segueToEditProductScreen:)
          forControlEvents:UIControlEventTouchUpInside];
     
-    cell.accessoryView = editButton;                // <--- SHOW ON CELL RIGHT AWAY // USE FOR PRODUCTS
-    //cell.editingAccessoryView = editButton;       // <--- SHOW ON CELL ONCE EDIT BUTTON CLICKED // SAFER B/C COMPANY HOLDS ARRAY
+    //***ADD TAG TO THE BUTTON THAT IS INDEXPATH.ROW***
+    [editButton setTag:indexPath.row];
+    
+    cell.accessoryView = editButton;           // <--- SHOW ON CELL RIGHT AWAY
+    //cell.editingAccessoryView = editButton;  // <--- SHOW ON CELL ONCE EDIT BUTTON CLICKED
 
     
     return cell;
@@ -209,11 +213,56 @@
 }
 
 //METHOD TO SEGUE "PUSH" TO EDIT PRODUCT SCREEN
--(void)segueToEditProductScreen{
+-(void)segueToEditProductScreen:(UIButton *)sender{
+    
+    //TEST
+    NSLog(@"INDEX OF SELECTED ACC. BUTTON = %ld", (long)sender.tag);
     
     EditProductViewController *editScreen = [[EditProductViewController alloc]init];
     
+    //ASSIGN VALUES TO THE CURRENT PARENT COMPANY AND CURRENT PRODUCT TO EDIT SCREEN
+    Company *currentCompany = [self.dataManager.companyListDAO objectAtIndex:self.dataManager.indexOfLastCompanyTouched];
+    editScreen.currentParentCompany = currentCompany;
+    
+    Product *currentProduct = [currentCompany.companyProductList objectAtIndex:sender.tag];
+    editScreen.currentProduct = currentProduct;
+    
+    //SET THE VALUE OF THE LAST EDIT BUTTON TOUCHED
+    self.dataManager.indexOfLastAccessoryButtonTouched = sender.tag;
+    
     [self.navigationController pushViewController:editScreen animated:YES];
 }
+
+////********************************************************************************************
+////ADD FOOTERVIEW
+
+- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section{
+    
+    UIView *footerView=[[UIView alloc]initWithFrame:CGRectMake(0, 0,self.view.frame.size.width,self.view.frame.size.height)];
+    footerView.backgroundColor = [UIColor redColor];
+    [self tableView:self.tableView heightForFooterInSection:self.view.frame.size.height * 0.05];
+    UIButton *undoButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    [undoButton setTitle:@"Undo" forState:UIControlStateNormal];
+    //[undoButton addTarget:self action:@selector(undoChnages) forControlEvents:UIControlEventTouchUpInside];
+    undoButton.frame=CGRectMake( (footerView.frame.size.width / 8) , -5, 70, 35);
+    [undoButton.titleLabel setFont:[UIFont boldSystemFontOfSize:16]];
+    [footerView addSubview:undoButton];
+    
+    UIButton *redoButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    [redoButton setTitle:@"Redo" forState:UIControlStateNormal];
+    //[redoButton addTarget:self action:@selector(redoChange) forControlEvents:UIControlEventTouchUpInside];
+    redoButton.frame = CGRectMake((footerView.frame.size.width /1.6)  , -5, 70, 35);
+    [redoButton.titleLabel setFont:[UIFont boldSystemFontOfSize:16]];
+    
+    [footerView addSubview:redoButton];
+    
+    return footerView;
+    
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section{
+    return self.view.frame.size.height * 0.05;
+}
+
 
 @end

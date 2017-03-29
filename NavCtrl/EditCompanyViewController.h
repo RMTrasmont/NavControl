@@ -8,8 +8,10 @@
 
 #import <UIKit/UIKit.h>
 #import "DAO.h"
+#import "Company.h"
 #import "CompanyViewController.h"
-@interface EditCompanyViewController : UIViewController
-//@property (strong,nonatomic)NSString *editedCompanyName;
-//@property (strong,nonatomic)NSURL *editedCompanyLogoURL;
+@interface EditCompanyViewController : UIViewController <UITextFieldDelegate>
+
+@property (strong, nonatomic) Company *currentCompany;
+
 @end

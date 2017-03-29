@@ -16,14 +16,6 @@
 #import "EditProductViewController.h"
 @interface ProductViewController : UITableViewController
 
-//@property (retain,nonatomic)NSMutableArray *productsInVC;
-
-//@property (strong,nonatomic) NSURL *productURL;
-
-//************************************************************************************
 @property(strong,nonatomic) WKWebView *webView;
-//************************************************************************************
-
-
 
 @end

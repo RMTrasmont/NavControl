@@ -14,7 +14,7 @@
 #import "EditCompanyViewController.h"
 @class ProductViewController;
 
-@interface CompanyViewController : UITableViewController 
+@interface CompanyViewController : UITableViewController;
 
 @property (nonatomic,retain) IBOutlet  ProductViewController *productViewController;
 

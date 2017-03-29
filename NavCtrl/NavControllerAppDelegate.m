@@ -11,8 +11,11 @@
 
 @implementation NavControllerAppDelegate
 
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    self.dataManager = [DAO sharedManager];
+    
     
     // Override point for customization after application launch.
     UIViewController *rootController =
