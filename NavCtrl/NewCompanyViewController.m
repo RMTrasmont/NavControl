@@ -29,11 +29,6 @@
     
     self.dataManager = [DAO sharedManager];
     
-    //CALL THE LOGOURL TEXTFIELD(DELEGATING) AND SET THIS VIEW(DELEGATE) AS IT'S DELEGATE
-    //self.theNewCompanyNameTextField.delegate = self;
-    //self.theNewCompanyLogoURLTextField.delegate = self;
-    //self.theNewCompanyStockSymbolTextField.delegate = self;
-    
     //ADD BACKGROUND COLOR
     [self.view setBackgroundColor:[UIColor whiteColor]];
     
@@ -44,13 +39,13 @@
     self.navigationItem.leftBarButtonItem = [[[UIBarButtonItem alloc]
                                                initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
                                                target:self
-                                               action:@selector(popToCompanyViewController)]   //<---MAKE & DEFINE METHOD
+                                               action:@selector(popToCompanyViewController)]
                                               autorelease];
 
     //ADD SAVE BUTTON TO TOP RIGHT BAR
     self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc]
                                                initWithBarButtonSystemItem:UIBarButtonSystemItemSave
-                                               target:self action:@selector(saveNewCompany)]  // <--- MAKE & DEFINE METHOD
+                                               target:self action:@selector(saveNewCompany)]
                                                autorelease];
     
     
@@ -113,10 +108,12 @@
 }
 
 //************************************************************************************
-//METHOD TO POP BACK TO COMPANY VIEW CONTROLLER / SEGUE WILL ONLY ADD ANOTHER LAYER OF THE SAME VIEW
+//METHOD TO POP BACK TO COMPANY VIEW CONTROLLER / SEGUE WILL ONLY ADD ANOTHER LAYER OF THE SAME VIEW USED IN "CANCEL" BUTTON
 -(void)popToCompanyViewController{
-    
     [self.navigationController popViewControllerAnimated:YES];
+    
+    //REGISTER FOR UNDO MANAGER
+    [self.dataManager.managedObjectContext.undoManager registerUndoWithTarget:self selector:@selector(saveNewCompany) object:self.navigationItem.rightBarButtonItem];
 }
 
 //************************************************************************************
@@ -142,8 +139,13 @@
     //SAVE THE NEW COMPANY TO CORE DATA
     [self.dataManager saveNewCompanyToCoreData];
     
+    //REGISTER FOR UNDO MANAGER
+    [self.dataManager.managedObjectContext.undoManager registerUndoWithTarget:self selector:@selector(popToCompanyViewController) object:self.navigationItem.leftBarButtonItem];
+    
     //POP BACK TO COMPANY VIEW CONTROLLER // PUSHING ONLY ADDS ANOTHER LAYER OF THE SAME VIEW
     [self.navigationController popViewControllerAnimated:YES];
+    
+    
 }
 
 //************************************************************************************

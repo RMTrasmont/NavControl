@@ -31,7 +31,7 @@
         [self initializeCoreData];
         if ([[NSUserDefaults standardUserDefaults]boolForKey:@"DidFirstRun"]){
             [self loadFetchedFromCoreData];
-            NSLog(@"LOADING FROM CORE DATA");
+            NSLog(@"FIRST RUN DONE, NOW LOADING FROM CORE DATA");
         } else {
             [self firstRun];
             NSLog(@"FIRST RUN");
@@ -76,7 +76,7 @@
     apple.companyName = @"Apple";
     apple.companyImage = [UIImage imageNamed:@"appleLogo"];
     //apple.companyProductList = appleProducts;
-    apple.companyLogoURL = [NSURL URLWithString:@"https://cdn3.iconfinder.com/data/icons/picons-social/57/56-apple-48.png"];
+    apple.companyLogoURL = [NSURL URLWithString:@"https://cdn2.iconfinder.com/data/icons/social-media-2046/32/apple_social_media_online-256.png"];
     apple.companyProductList = [NSMutableArray arrayWithObjects:iPad,iPod,iphone, nil];
     apple.companyStockSymbol = @"AAPL";
     
@@ -110,7 +110,7 @@
     samsung.companyName = @"Samsung";
     samsung.companyImage = [UIImage imageNamed:@"samsungLogo"];
     //samsung.companyProductList = samsungProducts;
-    samsung.companyLogoURL = [NSURL URLWithString:@"https://cdn2.iconfinder.com/data/icons/well-known-1/1024/Android-48.png"];
+    samsung.companyLogoURL = [NSURL URLWithString:@"https://cdn0.iconfinder.com/data/icons/flat-round-system/512/android-256.png"];
     samsung.companyProductList = [NSMutableArray arrayWithObjects:galaxyS4,galaxyNote,galaxyTab, nil];
     samsung.companyStockSymbol = @"SSU.DE"; //<--- German Stock Index
     
@@ -144,7 +144,7 @@
     google.companyName = @"Google";
     google.companyImage = [UIImage imageNamed:@"googleLogo"];
     //google.companyProductList = googleProducts;
-    google.companyLogoURL = [NSURL URLWithString:@"https://cdn4.iconfinder.com/data/icons/picons-social/57/40-google-plus-3-48.png"];
+    google.companyLogoURL = [NSURL URLWithString:@"https://cdn4.iconfinder.com/data/icons/new-google-logo-2015/400/new-google-favicon-256.png"];
     google.companyProductList = [NSMutableArray arrayWithObjects:pixel,pixelXL,pixelC, nil];
     google.companyStockSymbol = @"GOOG";
     
@@ -181,7 +181,7 @@
     lg.companyName = @"LG";
     lg.companyImage = [UIImage imageNamed:@"lgLogo"];
     //lg.companyProductList = lgProducts;
-    lg.companyLogoURL = [NSURL URLWithString:@"https://cdn4.iconfinder.com/data/icons/flat-brand-logo-2/512/lg-48.png"];
+    lg.companyLogoURL = [NSURL URLWithString:@"http://icons.iconarchive.com/icons/blackvariant/button-ui-requests-5/256/LG-icon.png"];
     lg.companyProductList = [NSMutableArray arrayWithObjects:v10,v20,g5, nil];
     lg.companyStockSymbol = @"LGLG.F"; // <--- German Stock Index
     
@@ -222,7 +222,7 @@
         
         
         [self saveManagedObject];
-        [self saveContext];
+        //[self saveContext];
         
         
     }
@@ -277,8 +277,6 @@
 //******************************METHOD TO GET STOCK QUOTE******************************
 
 -(void)getAPIFinancialData{
-    //LET COMPANY VIEWCONTROLLER KNOW TO RELOAD ITS DATA <---
-    //[[NSNotificationCenter defaultCenter] postNotificationName:@"GetFinancialDataFromDAO" object:nil];
 
     //************************************
     //GET ARRAY OF COMPANY SYMBOLS
@@ -359,11 +357,31 @@
                                 }];
     //3*.
     [dataTask resume];
+    
+
+}
+
+//GET FINANCIAL DATA EVERY 5 MINUTES
+-(void)timedFinancialFetch{
+    NSTimer *myTimer = [[NSTimer alloc]init];
+    myTimer = [NSTimer scheduledTimerWithTimeInterval: 60.0 target: self
+                                                      selector: @selector(getAPIFinancialData) userInfo: nil repeats: YES];
+
+    
+}
+//LOAD FINANCIAL DATA,"getAPIFinancialData" FIRST THEN "timedFinancialFetch" AFTER
+-(void)financialData{
+    if ([[NSUserDefaults standardUserDefaults]boolForKey:@"DidFirstRun"]){
+        [self getAPIFinancialData];
+    }else{
+        [self timedFinancialFetch];
+    }
 }
 
 
-//****************************INITIALIZE CORE DATA**********************************
 
+//****************************INITIALIZE CORE DATA**********************************
+#pragma mark Init Core Data
 
 - (void)initializeCoreData
 {
@@ -378,6 +396,10 @@
     NSManagedObjectContext *moc = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSMainQueueConcurrencyType];
     [moc setPersistentStoreCoordinator:psc];
     [self setManagedObjectContext:moc];
+    
+    //**** UNDO REDO *****
+    self.managedObjectContext.undoManager = [[NSUndoManager alloc]init];
+
     NSFileManager *fileManager = [NSFileManager defaultManager];
     NSURL *documentsURL = [[fileManager URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
     NSURL *storeURL = [documentsURL URLByAppendingPathComponent:@"DataModel.sqlite"];
@@ -413,7 +435,7 @@ if ([[self managedObjectContext] save:&error] == NO) {
 
 //SAVE CONTEXT
 #pragma mark - Save Context
-
+//ONLY USE IN APPDELEGATE APP TERMINATES, SAVING CONTEXT OTHERWISE DISALLOWS UNDO/REDO
 - (void)saveContext
 {
     NSError *error = nil;
@@ -466,10 +488,10 @@ if ([[self managedObjectContext] save:&error] == NO) {
         
         }
     [self saveManagedObject];
-    [self saveContext];
+    //[self saveContext];
 
-    }
-
+    [[NSUserDefaults standardUserDefaults]setBool:YES forKey:@"didLoadFetchFromCoreData"];
+}
 
 //***********************************************************************************
 #pragma mark - Saving to Core Data
@@ -486,7 +508,7 @@ if ([[self managedObjectContext] save:&error] == NO) {
     //ADD MANAGED COMPANY TO MANAGED COMPANY ARRAY
     [self.managedCompanyListDAO addObject:mC];
     
-    [self saveContext];
+    //[self saveContext];
 }
 
 -(void)saveNewProductToCoreData{
@@ -505,7 +527,7 @@ if ([[self managedObjectContext] save:&error] == NO) {
     
     //SAVE TO CORE DATA
     [self saveManagedObject];
-    [self saveContext];
+    //[self saveContext];
     
 }
 #pragma mark - WORKING EDIT COMPANY
@@ -540,7 +562,7 @@ if ([[self managedObjectContext] save:&error] == NO) {
     
     //SAVE MANAGED OBJECT
     [self saveManagedObject];
-    [self saveContext];
+    //[self saveContext];
     
 }
 
@@ -577,7 +599,7 @@ if ([[self managedObjectContext] save:&error] == NO) {
     
     //SAVE TO CORE DATA
     [self saveManagedObject];
-    [self saveContext];
+    //[self saveContext];
 
 }
 
@@ -595,8 +617,10 @@ if ([[self managedObjectContext] save:&error] == NO) {
     //DELETE CONTEXT
     [self.managedObjectContext deleteObject:companyToDelete];
     
-    [self saveContext];
+    //[self saveContext];
     
 }
+
+
 
 @end

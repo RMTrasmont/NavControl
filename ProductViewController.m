@@ -235,34 +235,34 @@
 
 ////********************************************************************************************
 ////ADD FOOTERVIEW
-
-- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section{
-    
-    UIView *footerView=[[UIView alloc]initWithFrame:CGRectMake(0, 0,self.view.frame.size.width,self.view.frame.size.height)];
-    footerView.backgroundColor = [UIColor redColor];
-    [self tableView:self.tableView heightForFooterInSection:self.view.frame.size.height * 0.05];
-    UIButton *undoButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    [undoButton setTitle:@"Undo" forState:UIControlStateNormal];
-    //[undoButton addTarget:self action:@selector(undoChnages) forControlEvents:UIControlEventTouchUpInside];
-    undoButton.frame=CGRectMake( (footerView.frame.size.width / 8) , -5, 70, 35);
-    [undoButton.titleLabel setFont:[UIFont boldSystemFontOfSize:16]];
-    [footerView addSubview:undoButton];
-    
-    UIButton *redoButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    [redoButton setTitle:@"Redo" forState:UIControlStateNormal];
-    //[redoButton addTarget:self action:@selector(redoChange) forControlEvents:UIControlEventTouchUpInside];
-    redoButton.frame = CGRectMake((footerView.frame.size.width /1.6)  , -5, 70, 35);
-    [redoButton.titleLabel setFont:[UIFont boldSystemFontOfSize:16]];
-    
-    [footerView addSubview:redoButton];
-    
-    return footerView;
-    
-}
-
-- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section{
-    return self.view.frame.size.height * 0.05;
-}
+//
+//- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section{
+//    
+//    UIView *footerView=[[UIView alloc]initWithFrame:CGRectMake(0, 0,self.view.frame.size.width,self.view.frame.size.height)];
+//    footerView.backgroundColor = [UIColor redColor];
+//    [self tableView:self.tableView heightForFooterInSection:self.view.frame.size.height * 0.05];
+//    UIButton *undoButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+//    [undoButton setTitle:@"Undo" forState:UIControlStateNormal];
+//    //[undoButton addTarget:self action:@selector(undoChnages) forControlEvents:UIControlEventTouchUpInside];
+//    undoButton.frame=CGRectMake( (footerView.frame.size.width / 8) , -5, 70, 35);
+//    [undoButton.titleLabel setFont:[UIFont boldSystemFontOfSize:16]];
+//    [footerView addSubview:undoButton];
+//    
+//    UIButton *redoButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+//    [redoButton setTitle:@"Redo" forState:UIControlStateNormal];
+//    //[redoButton addTarget:self action:@selector(redoChange) forControlEvents:UIControlEventTouchUpInside];
+//    redoButton.frame = CGRectMake((footerView.frame.size.width /1.6)  , -5, 70, 35);
+//    [redoButton.titleLabel setFont:[UIFont boldSystemFontOfSize:16]];
+//    
+//    [footerView addSubview:redoButton];
+//    
+//    return footerView;
+//    
+//}
+//
+//- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section{
+//    return self.view.frame.size.height * 0.05;
+//}
 
 
 @end

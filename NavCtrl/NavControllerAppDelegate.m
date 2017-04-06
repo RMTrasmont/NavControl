@@ -18,12 +18,16 @@
     
     
     // Override point for customization after application launch.
-    UIViewController *rootController =
-    [[CompanyViewController alloc]
-     initWithNibName:@"CompanyViewController" bundle:nil];
+//    UIViewController *rootController =
+//    [[CompanyViewController alloc]
+//     initWithNibName:@"CompanyViewController" bundle:nil];
     
-    self.navigationController = [[UINavigationController alloc]
-                            initWithRootViewController:rootController];
+    TheMainViewController *tMVC = [[TheMainViewController alloc]init];
+    self.navigationController = [[UINavigationController alloc]initWithRootViewController:tMVC];
+
+    //
+//    self.navigationController = [[UINavigationController alloc]
+//                            initWithRootViewController:rootController];
     
     self.window = [[UIWindow alloc]
                    initWithFrame:[[UIScreen mainScreen] bounds]];
@@ -67,6 +71,8 @@
 - (void)applicationWillTerminate:(UIApplication *)application
 {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+    DAO *dataManager = [DAO sharedManager];
+    [dataManager saveContext];
 }
 
 @end

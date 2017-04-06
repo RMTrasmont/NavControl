@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "DAO.h"
+#import "TheMainViewController.h"
 @interface NavControllerAppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow *window;

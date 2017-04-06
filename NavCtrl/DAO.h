@@ -47,15 +47,19 @@
 //REMOVE COMPANY METHOD
 -(void)removeCompanyFromList;
 
+//save
+-(void)saveContext;
+
 //GET STOCK QUOTE
 -(void)getAPIFinancialData;
-
+-(void)timedFinancialFetch;
+-(void)financialData;
 //CORE DATA STACK 
 @property (strong,nonatomic) NSManagedObjectContext *managedObjectContext;
-@property (strong,nonatomic) NSManagedObjectModel *managedObjectModel;
-@property (strong,nonatomic) NSPersistentStoreCoordinator *persistentStoreCoordinator;
-@property (strong,nonatomic) NSManagedObject *currentManagedObject;
-@property (strong,nonatomic) NSFetchedResultsController *fetchedController;
+//@property (strong,nonatomic) NSManagedObjectModel *managedObjectModel;
+//@property (strong,nonatomic) NSPersistentStoreCoordinator *persistentStoreCoordinator;
+@property (strong,nonatomic) NSManagedObject *currentManagedObject;//
+//@property (strong,nonatomic) NSFetchedResultsController *fetchedController;
 
 //METHODS FOR SAVING TO CORE DATA
 -(void)initializeCoreData;
@@ -89,5 +93,10 @@
 @property (strong,nonatomic)NSURL *originalProductURLDAO;
 @property (nonatomic)BOOL editingProductNameDAO;
 @property (nonatomic)BOOL editingProductURLDAO;
+
+////TESTING GIF
+//-(NSArray *)arrayOfApplesImages;
+//-(UIImage *)currentAppleImage;
+//@property(nonatomic)NSInteger appleCount;
 
 @end

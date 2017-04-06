@@ -15,6 +15,7 @@
 @property (strong,nonatomic)UIImage *companyImage;
 @property (strong,nonatomic)NSMutableArray *companyProductList;
 @property (strong,nonatomic)NSURL *companyLogoURL;
+@property (strong, nonatomic)UIImage *fetchedLogoImage;
 @property (strong,nonatomic)NSString *companyStockSymbol;   //< -- user provided
 @property (strong,nonatomic)NSString *stockPrice;
 @property (strong,nonatomic)NSString *stockChange;

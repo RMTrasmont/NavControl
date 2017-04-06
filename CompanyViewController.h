@@ -12,11 +12,12 @@
 #import "NewCompanyViewController.h"
 #import "DAO.h"
 #import "EditCompanyViewController.h"
+#import "MainViewController.h"
 @class ProductViewController;
 
 @interface CompanyViewController : UITableViewController;
 
-@property (nonatomic,retain) IBOutlet  ProductViewController *productViewController;
+@property (nonatomic,retain) IBOutlet MainViewController *productViewController;
 
 
 @end

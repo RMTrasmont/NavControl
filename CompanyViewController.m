@@ -17,15 +17,15 @@
 
 @implementation CompanyViewController
 
-- (id)initWithStyle:(UITableViewStyle)style
-{
-    self = [super initWithStyle:style];
-    
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
+//- (id)initWithStyle:(UITableViewStyle)style
+//{
+//    self = [super initWithStyle:style];
+//    
+//    if (self) {
+//        // Custom initialization
+//    }
+//    return self;
+//}
 
 - (void)viewDidLoad
 {
@@ -54,10 +54,10 @@
     self.title = @"Company";
     
     //NSNOTIFICATIONCENTER OBSERVER WHEN DATA FROM WED ARE ALL TRANSFERED IN DAO
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getAPIFinancialData) name:@"Data Recieved" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(financialData) name:@"Data Recieved" object:nil];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getAPIFinancialData) name:@"Data Not Found" object:nil];
-    [self.dataManager getAPIFinancialData];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(financialData) name:@"Data Not Found" object:nil];
+    [self.dataManager financialData];
     
     
 }
@@ -65,11 +65,11 @@
 //****************************************************************************************
 -(void)viewWillAppear:(BOOL)animated{
 
-    [self.dataManager getAPIFinancialData];
+    [self.dataManager financialData];
     [self.tableView reloadData];
     
     //FOOTERVIEW SHOWS UP WHEN EDIT BUTTON CLICKED
-    UIView *footerView = [[UIView alloc]initWithFrame:CGRectMake(0, 0,self.view.frame.size.width,self.view.frame.size.height)];
+    UIView *footerView = [[UIView alloc]initWithFrame:CGRectMake(0, 0,self.view.frame.size.width,self.view.frame.size.height/15)];
     footerView.backgroundColor = [UIColor redColor];
     
     
@@ -100,7 +100,7 @@
 
 -(void)viewDidAppear:(BOOL)animated{
     
-    [self.dataManager getAPIFinancialData];
+    [self.dataManager financialData];
     [self.tableView reloadData];
 
 }
@@ -239,13 +239,14 @@
     Company *selectedCompany = self.dataManager.companyListDAO[indexPath.row];
     
     //INIT A VIEW CONTROLLER "CLICK A ROW AND GET A NEW VIEW W/ LIST OF DIFFERENT PRODUCTS"
-    self.productViewController = [[ProductViewController alloc]init];
+    self.productViewController = [[MainViewController alloc]init];
    
     //SET THE HEADER TITLE OF THE PRODUCT VIEW CONTROLLER NEXT PAGE
     self.productViewController.title = [NSString stringWithFormat:@"%@ Products", selectedCompany.companyName];
     
     //***SAVE LAST KNOW INDEXPATH SELECTED FOR USE TO ADD PRODUCTS***
     self.dataManager.indexOfLastCompanyTouched = indexPath.row;
+    self.productViewController.companyToDisplay = selectedCompany;
     
     //PUSHES TO THE DIFFERENT PRODUCTS FROM THE COMPANY TO THE PRODUCT VIEW CONTROLLER
     
