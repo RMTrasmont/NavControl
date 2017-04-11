@@ -66,6 +66,8 @@
     self.editNameTextField.delegate = self;
     self.editLogoURLTextField.delegate = self;
     
+    NSLog(@"EDITING TEST ***** %@",self.currentCompany.companyName);
+    
 
 }
 
@@ -133,6 +135,7 @@
 //METHOD TO SAVE INFO IN EDIT COMPANY SCREEN
 #pragma mark - WORKING EDIT COMPANY
 -(void)saveEditedCompany{
+    
     //NEW/EDITED VALUES
     NSString *editedCompanyName = self.editNameTextField.text;
     NSURL *editedCompanyLogoURL = [NSURL URLWithString:self.editLogoURLTextField.text];
@@ -140,12 +143,6 @@
     //ORIGINAL VALUES OF THE COMPANY
     NSString *originalName = self.currentCompany.companyName;
     NSURL *originalLogoURL = self.currentCompany.companyLogoURL;
-    
-    //SEND PROPERTY VALUES TO DAO
-    self.dataManager.editedCompanyNameDAO = editedCompanyName;
-    self.dataManager.editedCompanyLogoURLDAO = editedCompanyLogoURL;
-    self.dataManager.originalCompanyNameDAO = originalName;
-    self.dataManager.originalCompanyLogoURLDAO = originalLogoURL;
     
     //SET THE EDITED NEW NAME TO THE COMPANY //IF THERE'S INPUT CHANGE IT, IF NO INPUT, DON'T CHANGE THE NAME
     if([self.editNameTextField isEditing]){
@@ -165,39 +162,10 @@
         self.dataManager.editingCompanyLogoURLDAO = NO;
     }
     
+    //LET DAO KNOW OF THE COMPANY BEING EDITED
+    self.dataManager.companyBeingEditedDAO = self.currentCompany;
+
     
-//    //CORE DATA HANDLING
-//    
-//    //EDIT MANAGED PRODUCT
-//    ManagedCompany *currentManagedCompany = [self.dataManager.managedCompanyListDAO objectAtIndex:self.dataManager.indexOfLastCompanyTouched];
-//    
-//    //ORIGINAL VALUES OF CURRENT MANAGED COMPANY
-//    NSString *originalMCName = currentManagedCompany.mCName;
-//    NSString *originalMCLogoURL = currentManagedCompany.mCLogoURL;
-//    
-//    //NEW VALUES OF CURRENT MANGED COMPANY
-//    NSString *newMCName = editedCompanyName;
-//    NSString *newLogoURL = [NSString stringWithFormat:@"%@",editedCompanyLogoURL];
-//    
-//    //SET THE EDITED NEW MANAGED COMPANY NAME TO REPLACE  ORIGINAL ONE
-//    //IF THERE'S INPUT CHANGE IT, IF NO INPUT, DON'T CHANGE THE NAME
-//    if([self.editNameTextField isEditing]){
-//        currentManagedCompany.mCName = newMCName;
-//    } else {
-//        currentManagedCompany.mCName = originalMCName;
-//    }
-//    
-//    // SET THE EDITED NEW MANAGED COMPANY LOGO URL TO REPLACE ORIGINAL ONE
-//    // IF THERE'S INPUT CHANGE IT, IF NO INPUT, DON'T CHANGE URL
-//    if([self.editLogoURLTextField isEditing]){
-//        currentManagedCompany.mCLogoURL = newLogoURL;
-//    } else {
-//        currentManagedCompany.mCLogoURL = originalMCLogoURL;
-//    }
-//    
-//    //SAVE MANAGED OBJECT
-//    [self.dataManager saveManagedObject];
-//
     //SAVE EDITED COMPANY TO CORE DATA
     [self.dataManager saveEditedCompanyToCoreData];
     

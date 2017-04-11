@@ -24,6 +24,7 @@
 @property (retain, nonatomic) IBOutlet UIView *emptyViewAndMessage;
 @property (retain, nonatomic) IBOutlet UILabel *emptyMessage;
 - (IBAction)emptyAddCompanyButton:(UIButton *)sender;
-
+//FETCHED FINANCE DATA
+@property(strong,nonatomic)NSMutableArray *fetchedFinancials;
 
 @end

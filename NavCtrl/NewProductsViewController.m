@@ -37,7 +37,7 @@
     self.navigationItem.leftBarButtonItem = [[[UIBarButtonItem alloc]
                                                initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
                                                target:self
-                                               action:@selector(segueBackProductsView)]   //<---MAKE & DEFINE METHOD
+                                               action:@selector(popBackProductsView)]   //<---MAKE & DEFINE METHOD
                                                autorelease];
     
     //ADD SAVE BUTTON W/ ACTION
@@ -94,37 +94,38 @@
 
 //************************************************************************************
 //METHOD TO SEGUE BACK TO PRODUCTS VIEW
--(void)segueBackProductsView{
+-(void)popBackProductsView{
     [self.navigationController popViewControllerAnimated:YES];
 }
 
 //************************************************************************************
 //METHOD TO SAVE NEW PRODUCT
 -(void)saveNewProduct{ 
-    
-    //INDEX OF LAST COMPANY TOUCHED
-    NSInteger lastCompanyTouchedIndex = self.dataManager.indexOfLastCompanyTouched;
-    
+
     //SET THE TEXT FIELD INPUT TO LOCAL VARIABLES PRODUCT NAME & URL
     self.productName = self.theNewProductTextField.text;
     self.productURL = [NSURL URLWithString:self.theNewProductURLTextField.text];
     
-    //SEND VALUES TO DAO
-    self.dataManager.theNewProductNameDAO = self.productName;
-    self.dataManager.theNewProductURLDAO = self.productURL;
-    
     //CREATE NEW PRODUCT USING DAO MEHTOD & GIVE IT LOCAL NAME & URL VARIABLE
     Product *madeProduct = [self.dataManager makeNewProductWithName:self.productName andURL:self.productURL];
     
-    //ADD PRODUCT TO COMPANY PRODUCTS ARRAY BY USING THE VARIABLE LAST TOUCHED INDEXPATH ROW IN COMPANY VIEWCONTROLLER
-
+    //LET DAO KNOW OF THE NEW PRODUCT
+    self.dataManager.theNewProductDAO = madeProduct;
+    
+    //CALL THE CURRENT COMPANY
+   // Company *currentCompany = self.dataManager.currentCompanyDAO;
+    
+//    NSMutableArray *productArray = [[NSMutableArray alloc]initWithArray:self.dataManager.currentCompanyDAO.companyProductList];
+//    [productArray addObject:madeProduct];
+//    self.dataManager.currentCompanyDAO.companyProductList = productArray;
+    
     
         //IF THE COMPANY PRODUCTS ARRAY IS EMPTY, MAKE A NEW ARRAY THEN ADD THE PRODUCT
-    if(self.dataManager.companyListDAO[lastCompanyTouchedIndex].companyProductList.count == 0 ){
-        self.dataManager.companyListDAO[lastCompanyTouchedIndex].companyProductList = [NSMutableArray arrayWithObject:madeProduct];
+    if(self.dataManager.currentCompanyDAO.companyProductList == 0 ){
+        self.dataManager.currentCompanyDAO.companyProductList = [NSMutableArray arrayWithObject:madeProduct];
     } else {
         //ADDS PRODUCTS TO ALREADY EXISTING COMPANY W/ EXISTING ARRAY OF PRODUCTS
-        [self.dataManager.companyListDAO[self.dataManager.indexOfLastCompanyTouched].companyProductList addObject:madeProduct];
+        [self.dataManager.currentCompanyDAO.companyProductList addObject:madeProduct];
     }
     
     

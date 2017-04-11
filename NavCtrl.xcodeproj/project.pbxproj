@@ -13,7 +13,6 @@
 		48A656BF18163BF200746D36 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 48A656BD18163BF200746D36 /* InfoPlist.strings */; };
 		48A656C118163BF200746D36 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 48A656C018163BF200746D36 /* main.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		48A656C518163BF200746D36 /* NavControllerAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 48A656C418163BF200746D36 /* NavControllerAppDelegate.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		48A656C718163BF200746D36 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 48A656C618163BF200746D36 /* Images.xcassets */; };
 		48A656CE18163BF200746D36 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 48A656CD18163BF200746D36 /* XCTest.framework */; };
 		48A656CF18163BF200746D36 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 48A656B418163BF200746D36 /* Foundation.framework */; };
 		48A656D018163BF200746D36 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 48A656B818163BF200746D36 /* UIKit.framework */; };
@@ -23,6 +22,7 @@
 		48A656E718163C1B00746D36 /* CompanyViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 48A656E518163C1B00746D36 /* CompanyViewController.xib */; };
 		48A656EB18163F8700746D36 /* ProductViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 48A656E918163F8700746D36 /* ProductViewController.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		48A656EE1816468000746D36 /* Sunflower.gif in Resources */ = {isa = PBXBuildFile; fileRef = 48A656ED1816468000746D36 /* Sunflower.gif */; };
+		530725A11E9D9F95004EEA2D /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 530725A01E9D9F95004EEA2D /* Images.xcassets */; };
 		530FD8EC1E3FF71700F7877D /* WebVCViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 530FD8EB1E3FF71700F7877D /* WebVCViewController.m */; };
 		537057401E7C545F00965D8F /* CoreDataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 5370573E1E7C545F00965D8F /* CoreDataModel.xcdatamodeld */; };
 		537057421E7C696700965D8F /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 537057411E7C696700965D8F /* CoreData.framework */; };
@@ -63,7 +63,6 @@
 		48A656C218163BF200746D36 /* NavCtrl-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NavCtrl-Prefix.pch"; sourceTree = "<group>"; };
 		48A656C318163BF200746D36 /* NavControllerAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NavControllerAppDelegate.h; sourceTree = "<group>"; };
 		48A656C418163BF200746D36 /* NavControllerAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NavControllerAppDelegate.m; sourceTree = "<group>"; };
-		48A656C618163BF200746D36 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		48A656CC18163BF200746D36 /* NavCtrlTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NavCtrlTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		48A656CD18163BF200746D36 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		48A656D518163BF200746D36 /* NavCtrlTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "NavCtrlTests-Info.plist"; sourceTree = "<group>"; };
@@ -75,6 +74,7 @@
 		48A656E818163F8700746D36 /* ProductViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ProductViewController.h; path = ../ProductViewController.h; sourceTree = "<group>"; };
 		48A656E918163F8700746D36 /* ProductViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ProductViewController.m; path = ../ProductViewController.m; sourceTree = "<group>"; };
 		48A656ED1816468000746D36 /* Sunflower.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = Sunflower.gif; sourceTree = "<group>"; };
+		530725A01E9D9F95004EEA2D /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = ../../../../.Trash/Images.xcassets; sourceTree = "<group>"; };
 		530FD8EA1E3FF71700F7877D /* WebVCViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebVCViewController.h; sourceTree = "<group>"; };
 		530FD8EB1E3FF71700F7877D /* WebVCViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WebVCViewController.m; sourceTree = "<group>"; };
 		5370573F1E7C545F00965D8F /* CoreDataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = CoreDataModel.xcdatamodel; sourceTree = "<group>"; };
@@ -205,10 +205,9 @@
 				53FBDE261E65E4970034DBCE /* EditCompanyViewController */,
 				53FBDE2A1E6618E00034DBCE /* EditProductViewController */,
 				53EA62C21E52592A00091583 /* DAO */,
-				48A656C618163BF200746D36 /* Images.xcassets */,
-				53D0E58C1E958CC800C63DEF /* StockMarket.png */,
 				48A656E518163C1B00746D36 /* CompanyViewController.xib */,
 				48A656BB18163BF200746D36 /* Supporting Files */,
+				530725A01E9D9F95004EEA2D /* Images.xcassets */,
 			);
 			path = NavCtrl;
 			sourceTree = "<group>";
@@ -216,6 +215,7 @@
 		48A656BB18163BF200746D36 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				53D0E58C1E958CC800C63DEF /* StockMarket.png */,
 				48A656ED1816468000746D36 /* Sunflower.gif */,
 				48A656BC18163BF200746D36 /* NavCtrl-Info.plist */,
 				48A656BD18163BF200746D36 /* InfoPlist.strings */,
@@ -428,7 +428,6 @@
 				53D0E58D1E958CC800C63DEF /* StockMarket.png in Resources */,
 				48A656BF18163BF200746D36 /* InfoPlist.strings in Resources */,
 				53D0E58A1E9555CE00C63DEF /* TheMainViewController.xib in Resources */,
-				48A656C718163BF200746D36 /* Images.xcassets in Resources */,
 				537346701E92BE4F002EF701 /* MainViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -438,6 +437,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				48A656D818163BF200746D36 /* InfoPlist.strings in Resources */,
+				530725A11E9D9F95004EEA2D /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

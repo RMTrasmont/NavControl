@@ -19,6 +19,6 @@
 @property (strong,nonatomic)NSString *companyStockSymbol;   //< -- user provided
 @property (strong,nonatomic)NSString *stockPrice;
 @property (strong,nonatomic)NSString *stockChange;
-@property (strong,nonatomic)NSString *financialDataString;
+@property (strong,nonatomic)NSString *financialDataString; //<-----***
 @property (strong,nonatomic)NSMutableArray *financialData; // [symbol,price,change]
 @end

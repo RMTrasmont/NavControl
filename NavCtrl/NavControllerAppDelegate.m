@@ -8,7 +8,7 @@
 
 #import "NavControllerAppDelegate.h"
 #import "CompanyViewController.h"
-
+#import "DAO.h"
 @implementation NavControllerAppDelegate
 
 
@@ -71,8 +71,9 @@
 - (void)applicationWillTerminate:(UIApplication *)application
 {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
-    DAO *dataManager = [DAO sharedManager];
-    [dataManager saveContext];
+//    DAO *dataManager = [DAO sharedManager];
+//    [dataManager saveContext];
+    [self.dataManager saveContext];
 }
 
 @end

@@ -1,5 +1,5 @@
 //
-//  TheMainViewController.m
+//  TheMainViewController.m  
 //  NavCtrl
 //
 //  Created by Rafael M. Trasmontero on 4/5/17.
@@ -34,17 +34,16 @@
     self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc]
                                                initWithBarButtonSystemItem:UIBarButtonSystemItemAdd
                                                target:self
-                                               action:@selector(segueToAddCompanyView)]
+                                               action:@selector(pushToAddCompanyView)]
                                               autorelease];
     
     //SET TITLE OF HEADER
     self.title = @"Company";
     
-    //NSNOTIFICATIONCENTER OBSERVER WHEN DATA FROM WED ARE ALL TRANSFERED IN DAO
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(financialData) name:@"Data Recieved" object:nil];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(financialData) name:@"Data Not Found" object:nil];
-    [self.dataManager financialData];
+    //NSNOTIFICATIONCENTER ADD OBSERVER WHEN DATA IS READY
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receivedNotification:) name:@"Data Ready" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receivedNotification:) name:@"Data Missing" object:nil];
+    //[self.dataManager getAPIFinancialData];
     
     //TEST
     NSLog(@"TEST*****TheMainViewController*****LOADED");
@@ -62,14 +61,43 @@
         [self.emptyViewAndMessage setHidden:YES];
     }
     
+    
+    
  
 }
 
 //****************************************************************************************
+
+- (void)receivedNotification:(NSNotification *) notification {
+    if ([[notification name] isEqualToString:@"Data is Ready"]) {
+        
+        [self.dataManager getAPIFinancialData];
+        
+    } else if ([[notification name] isEqualToString:@"Data is Missing"]) {
+        UIAlertController * alert = [UIAlertController
+                                     alertControllerWithTitle:@"Error"
+                                     message:@"Error Fetching Financial Data"
+                                     preferredStyle:UIAlertControllerStyleAlert];
+        
+        
+        
+        UIAlertAction* confirmButton = [UIAlertAction
+                                        actionWithTitle:@"Confirm"
+                                        style:UIAlertActionStyleDefault
+                                        handler:^(UIAlertAction * action) {
+                                            //Handle your yes please button action here
+                                        }];
+        
+        [alert addAction:confirmButton];
+        
+        [self presentViewController:alert animated:YES completion:nil];
+    }
+}
+
+
+//****************************************************************************************
+
 -(void)viewWillAppear:(BOOL)animated{
-    
-    [self.dataManager financialData];
-    [self.companyTableView reloadData];
     
     //HANDLES EDIT BUTTON SHOWS ONLY WHEN EDIT CLICKED & NOT WHEN VIEW FIRST LOADS*
     if ([self.companyTableView isEditing]) {
@@ -81,17 +109,25 @@
     //MOVE OBJECTS UNDERNEATH NAVBAR LOWER
     [self.navigationController.navigationBar setTranslucent:NO];
     
-}
-//****************************************************************************************
-
--(void)viewDidAppear:(BOOL)animated{
     
-    [self.dataManager financialData];
+    [self.dataManager getAPIFinancialData];
+    
     [self.companyTableView reloadData];
     
+
 }
 //****************************************************************************************
 
+-(void)viewWillDisappear:(BOOL)animated{
+    
+    //NSNOTIFICATIONCENTER REMOVE OBSERVER WHEN DATA IS ALREADY USED
+    [[NSNotificationCenter defaultCenter]removeObserver:self name:@"Data is Ready" object:nil];
+    
+    
+}
+//****************************************************************************************
+
+//****************************************************************************************
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
@@ -128,7 +164,7 @@
     Company *currentCompany = self.dataManager.companyListDAO[indexPath.row];
     
     //**********************RUN ON DIFF THREAD********************************
-    //1. GET ALL IMAGES FROM ONLINE RUN ON DIFFERENT THREAD
+    //1. GET ALL IMAGES FROM ONLINE RUN ON DIFFERENT THREAD 
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         
         UIImage *imageToSet = [UIImage imageWithData:[NSData dataWithContentsOfURL:currentCompany.companyLogoURL]];
@@ -160,7 +196,7 @@
     
     //ADD METHOD/TARGET TO THE EDIT BUTTON;
     [editButton addTarget:self
-                   action:@selector(segueToEditCompany:)
+                   action:@selector(pushToEditCompany:)
          forControlEvents:UIControlEventTouchUpInside];
     
     //***ASSIGN TAG TO THE BUTTON ***
@@ -192,15 +228,18 @@
     
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         NSInteger selectedIndex = indexPath.row;
-        self.dataManager.selectedIndexForRemovalInCoreData = selectedIndex;
         
-        //REMOVE COMPANY
+        //LET DAO KNOW THE CURRENT MANAGED COMPANY
+        self.dataManager.currentManagedCompanyDAO  = self.dataManager.managedCompanyListDAO[selectedIndex];
+        
+        //REMOVE COMPANY FROM ARRAY
         [self.dataManager.companyListDAO removeObjectAtIndex:indexPath.row];
         [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
         
         //REMOVE MANAGED COMPANY FROM CORE DATA
-        [self.dataManager removeManagedCompanyFromCoreData:selectedIndex];
+        [self.dataManager removeManagedCompanyFromCoreData:self.dataManager.currentManagedCompanyDAO];
         
+        //TOGGLE EMPTY SCREEN IF ALL COMPANIES ARE DELETED
         if([self.dataManager.companyListDAO count] == 0){
             [self.companyTableView setHidden:YES];
             [self.emptyViewAndMessage setHidden:NO];
@@ -234,15 +273,20 @@
     //DEFINE THE COMPANY THAT IS CLICKED
     Company *selectedCompany = self.dataManager.companyListDAO[indexPath.row];
     
+    //LET DAO KNOW THE CURRENT MANAGED COMPANY
+    self.dataManager.currentManagedCompanyDAO = self.dataManager.managedCompanyListDAO[indexPath.row];
+    
     //INIT A VIEW CONTROLLER "CLICK A ROW AND GET A NEW VIEW W/ LIST OF DIFFERENT PRODUCTS"
     MainViewController *companyDetailsView = [[MainViewController alloc]init];
     
     //SET THE HEADER TITLE OF THE PRODUCT VIEW CONTROLLER NEXT PAGE
     companyDetailsView.title = [NSString stringWithFormat:@"%@ Products", selectedCompany.companyName];
     
-    //***SAVE LAST KNOW INDEXPATH SELECTED FOR USE TO ADD PRODUCTS***
-    self.dataManager.indexOfLastCompanyTouched = indexPath.row;
+    //LET THE DETAILS VIEW KNOW WHCIH COMPANY WAS SELECTED
     companyDetailsView.companyToDisplay = selectedCompany;
+    
+    //LET THE DAO KNOW THE CURRENT COMPANY
+    self.dataManager.currentCompanyDAO = selectedCompany;
     
     //PUSHES TO THE DIFFERENT PRODUCTS FROM THE COMPANY TO THE PRODUCT VIEW CONTROLLER
     
@@ -270,7 +314,7 @@
 }
 
 //METHOD TO GO TO NEW COMPANY TABLE VIEW SCREEN
--(void)segueToAddCompanyView{
+-(void)pushToAddCompanyView{
     
     //INITIALIZE THE VIEW YOU'RE TRYING TO SEND TO
     NewCompanyViewController *addNewCompanyView = [[NewCompanyViewController alloc]init];
@@ -281,19 +325,21 @@
 }
 
 //METHOD TO SEGUE TO EDIT COMPANY NAME AND LOGO URL
--(void)segueToEditCompany: (UIButton*) sender {
+-(void)pushToEditCompany: (UIButton*) sender {
     
     //TEST
     NSLog(@"INDEX OF SELECTED ACC. BUTTON = %ld", (long)sender.tag);
     
-    //ALLOC A NEW EDIT COMPANY VIEW CONTROLLER
+    //LET EDIT COMPANY SCREEN KNOW WHICH CURRENT COMPANY WAS CLICKED FOR EDITING
     EditCompanyViewController *editScreen = [[EditCompanyViewController alloc]init];
     
     //USE THE TAG SET ON THE BUTTON TO DISPLAY THE COMPANY TO BE EDITED  ***
     editScreen.currentCompany = [self.dataManager.companyListDAO objectAtIndex:sender.tag];
     
-    //USE THE SENDER TAG TO ASSIGN
-    self.dataManager.indexOfLastCompanyTouched = sender.tag;
+    NSLog(@"%@",editScreen.currentCompany.companyName);
+    
+    //USE THE SENDER TAG LET DAO KNOW WHICH COMPANY
+    self.dataManager.currentManagedCompanyDAO = [self.dataManager.managedCompanyListDAO objectAtIndex:sender.tag];
     
     //SEGUE TO THE NEW VIEW
     [self.navigationController pushViewController:editScreen animated:YES];
@@ -309,7 +355,7 @@
     [super dealloc];
 }
 - (IBAction)emptyAddCompanyButton:(UIButton *)sender {
-    [self segueToAddCompanyView];
+    [self pushToAddCompanyView];
 }
 
 - (IBAction)undoButton:(UIButton *)sender {

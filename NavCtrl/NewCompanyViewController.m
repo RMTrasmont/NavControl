@@ -125,13 +125,16 @@
     self.theNewCompanyURL = [NSURL URLWithString:(self.theNewCompanyLogoURLTextField.text)];
     self.theNewCompanyStockSymbol = self.theNewCompanyStockSymbolTextField.text;
     
-    //SEND INFO TO DAO
-    self.dataManager.theNewCompanyNameDAO = self.theNewCompanyName;
-    self.dataManager.theNewCompanyURLDAO = self.theNewCompanyURL;
-    self.dataManager.theNewCompanyStockSymbolDAO = self.theNewCompanyStockSymbol;
+//    //SEND INFO TO DAO
+//    self.dataManager.theNewCompanyNameDAO = self.theNewCompanyName;
+//    self.dataManager.theNewCompanyURLDAO = self.theNewCompanyURL;
+//    self.dataManager.theNewCompanyStockSymbolDAO = self.theNewCompanyStockSymbol;
     
     //CREATE A NEW COMPANY USING DAO METHOD AND GIVE IT THE LOCAL NAME & URL
     Company *madeCompany = [self.dataManager makeNewCompanyWithName:self.theNewCompanyName withLogoURL:self.theNewCompanyURL andStockSymbol:self.theNewCompanyStockSymbol];
+    
+    //ASSIGN THE NEW COMPANY TO THE NEWCOMPANY PAROPERTY IN DAO
+    self.dataManager.theNewCompanyDAO = madeCompany;
     
     //ADD COMPANY DAO ARRAY
     [self.dataManager.companyListDAO addObject:madeCompany];
@@ -139,8 +142,8 @@
     //SAVE THE NEW COMPANY TO CORE DATA
     [self.dataManager saveNewCompanyToCoreData];
     
-    //REGISTER FOR UNDO MANAGER
-    [self.dataManager.managedObjectContext.undoManager registerUndoWithTarget:self selector:@selector(popToCompanyViewController) object:self.navigationItem.leftBarButtonItem];
+    //LET DAO KNOW THE CURRENT COMPANY
+    self.dataManager.currentCompanyDAO = madeCompany;
     
     //POP BACK TO COMPANY VIEW CONTROLLER // PUSHING ONLY ADDS ANOTHER LAYER OF THE SAME VIEW
     [self.navigationController popViewControllerAnimated:YES];

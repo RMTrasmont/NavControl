@@ -133,10 +133,10 @@
     NSURL *originalURL = self.currentProduct.productURL;
     
     //SEND OLD AND NEW VALUES TO DAO
-    self.dataManager.editedProductNameDAO = editedName;
-    self.dataManager.editedProductURLDAO = editedURL;
-    self.dataManager.originalProductNameDAO = originalName;
-    self.dataManager.originalProductURLDAO = originalURL;
+//    self.dataManager.editedProductNameDAO = editedName;
+//    self.dataManager.editedProductURLDAO = editedURL;
+//    self.dataManager.originalProductNameDAO = originalName;
+//    self.dataManager.originalProductURLDAO = originalURL;
     
     if([self.editNameTextField isEditing]){
         self.currentProduct.productName = editedName;
@@ -153,6 +153,9 @@
         self.currentProduct.productURL = originalURL;
         self.dataManager.editingProductURLDAO = NO;
     }
+    
+    //LET DAO KNOW THE CURRENT PRODUCT BEING EDITED
+    self.dataManager.productBeingEditedDAO = self.currentProduct;
     
     //SAVE EDITED PRODUCT TO CORE DATA
     [self.dataManager saveEditedProductToCoreData];

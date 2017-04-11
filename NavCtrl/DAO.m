@@ -241,10 +241,11 @@
     [self.companyListDAO addObject:company];
 }
 
-//*****************************REMOVE COMPANY TO DAO ARRAY LIST************************
+//*****************************REMOVE COMPANY FROM DAO ARRAY LIST************************
 
 -(void)removeCompanyFromList{
-    [self.companyListDAO removeObject:self.companyListDAO[self.indexOfLastCompanyTouched]];
+    //[self.companyListDAO removeObject:self.companyListDAO[self.indexOfLastCompanyTouched]];
+    [self.companyListDAO removeObject:self.currentCompanyDAO];
 }
 
 
@@ -260,7 +261,7 @@
 }
 
 
-//************************CREATE NEW COMPANY METHOD***************************************
+////************************CREATE NEW COMPANY METHOD***************************************
 
 -(Company *)makeNewCompanyWithName:(NSString *)name withLogoURL:(NSURL *)logoURL andStockSymbol:(NSString *)ticker{
     Company *newCompany = [[Company alloc]init];
@@ -323,29 +324,48 @@
                                         NSString *stringDataWOQuotes = [stringData stringByReplacingOccurrencesOfString:@"\"" withString:@""];
                                               
                                         //TURN INTO AN ARRAY (of symbol,prices,change)
-                                        NSArray *dataArray = [stringDataWOQuotes componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"\n"]];
-                                         
+                                        self.fetchedFinDataArrayDAO = [stringDataWOQuotes componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"\n"]];
+                                        
                                         //variable to count data recieved
-                                        int stockDataTransfered = 0;
+//                                       int stockDataTransfered = 0;
                                         
                                         //IMPLEMENT do{}while() completion handler
                                         //ASSIGN EACH STRING TO A COMPANY FINANCIAL DATA STRING
                                         //IMPLEMENT NSNOTIFICATION
-                                            do{
-                                                    for (int i = 0; i < self.companyListDAO.count; i++) {
-                                                if(dataArray[i] != nil){
-                                                    self.companyListDAO[i].financialDataString = dataArray[i];
-                                                    stockDataTransfered++;
-                                                }else {
-                                                    break;
-                                                  }
-                                                }
-                                            }while (stockDataTransfered < (dataArray.count));
-                                        
+
+//                                        do{
+//                                                    for (int i = 0; i < self.companyListDAO.count; i++) {
+//                                                if(self.fetchedFinDataArrayDAO[i] != nil){
+//                                                    self.companyListDAO[i].financialDataString = self.fetchedFinDataArrayDAO[i];
+//                                                    stockDataTransfered++;
+//                                                }else {
+//                                                    break;
+//                                                  }
+//                                                }
+//                                            }while (stockDataTransfered < (self.fetchedFinDataArrayDAO.count));
+//                                        
+                                           
+                                            
                                                 //NSNOTIFICATION HERE IF NO ERROR, DO SOMETHING
                                                 // "dispatch_async" takes you to main thread
                                         dispatch_async(dispatch_get_main_queue(), ^{
-                                                [[NSNotificationCenter defaultCenter]postNotificationName:@"Recieved All Data" object:self];
+                                            
+                                            int stockDataTransfered = 0;
+                                            do{
+                                                for (int i = 0; i < self.companyListDAO.count; i++) {
+                                                    if(self.fetchedFinDataArrayDAO[i] != nil){
+                                                        self.companyListDAO[i].financialDataString = self.fetchedFinDataArrayDAO[i];
+                                                        stockDataTransfered++;
+                                                    }else {
+                                                        break;
+                                                    }
+                                                }
+                                            }while (stockDataTransfered < (self.fetchedFinDataArrayDAO.count));
+                                            
+                                            
+                                            
+                                            [[NSNotificationCenter defaultCenter]postNotificationName:@"Data Ready" object:self];
+                                            
                                             });
                                         } else {
                                         //if theres error
@@ -366,6 +386,7 @@
     NSTimer *myTimer = [[NSTimer alloc]init];
     myTimer = [NSTimer scheduledTimerWithTimeInterval: 60.0 target: self
                                                       selector: @selector(getAPIFinancialData) userInfo: nil repeats: YES];
+    
 
     
 }
@@ -425,7 +446,7 @@
 
 //******************************SAVE TO CORE DATA***************************************
 #pragma mark - Save Managed Object
-
+//SAVE MANAGED OBEJCT
 -(void)saveManagedObject{
 NSError *error = nil;
 if ([[self managedObjectContext] save:&error] == NO) {
@@ -481,14 +502,14 @@ if ([[self managedObjectContext] save:&error] == NO) {
                 product.productName = mP.mPProductName;
                 product.productURL = [NSURL URLWithString: mP.mPProducURL];
                 [company.companyProductList addObject:product];
-                
                 }
-            
             }
-        
         }
+    
+
+    
     [self saveManagedObject];
-    //[self saveContext];
+    [self saveContext];
 
     [[NSUserDefaults standardUserDefaults]setBool:YES forKey:@"didLoadFetchFromCoreData"];
 }
@@ -500,9 +521,9 @@ if ([[self managedObjectContext] save:&error] == NO) {
     //ADD MANAGED OBJECT
     ManagedCompany *mC = [NSEntityDescription insertNewObjectForEntityForName:@"ManagedCompany" inManagedObjectContext: self.managedObjectContext];
     //ASSIGN ATTRIBUTES
-    mC.mCName = self.theNewCompanyNameDAO;
-    mC.mCLogoURL = [NSString stringWithFormat:@"%@",self.theNewCompanyURLDAO];
-    mC.mCStockSymbol = self.theNewCompanyStockSymbolDAO;
+    mC.mCName = self.theNewCompanyDAO.companyName;
+    mC.mCLogoURL = [NSString stringWithFormat:@"%@",self.theNewCompanyDAO.companyLogoURL];
+    mC.mCStockSymbol = self.theNewCompanyDAO.companyStockSymbol;
     [self saveManagedObject];
     
     //ADD MANAGED COMPANY TO MANAGED COMPANY ARRAY
@@ -514,15 +535,18 @@ if ([[self managedObjectContext] save:&error] == NO) {
 -(void)saveNewProductToCoreData{
     //ADD MANAGED PRODUCT
     ManagedProduct *mP = [NSEntityDescription insertNewObjectForEntityForName:@"ManagedProduct" inManagedObjectContext:self.managedObjectContext];
-    mP.mPProductName = self.theNewProductNameDAO;
-    mP.mPProducURL = [NSString stringWithFormat:@"%@",self.theNewProductURLDAO];
     
-    ManagedCompany *currentManagedCompany = [self.managedCompanyListDAO objectAtIndex:self.indexOfLastCompanyTouched];
+    mP.mPProductName = self.theNewProductDAO.productName;
+    mP.mPProducURL = [NSString stringWithFormat:@"%@",self.theNewProductDAO.productURL];
     
-    //CORE DATA RETURNS PRODUCT SET NOT ARRAY SO MANIPULATED
+    ManagedCompany *currentManagedCompany = self.currentManagedCompanyDAO;
+    
+    //CORE DATA RETURNS PRODUCT SET NOT ARRAY SO MANIPULATE
     NSMutableSet *productSet = [[NSMutableSet alloc]initWithSet:currentManagedCompany.products];
     [productSet addObject:mP];
+
     
+    //ASSIGN THE NEWLY CREATED SET TO MANAGED COMPANY PRODUCTS
     currentManagedCompany.products = productSet;
     
     //SAVE TO CORE DATA
@@ -533,31 +557,28 @@ if ([[self managedObjectContext] save:&error] == NO) {
 #pragma mark - WORKING EDIT COMPANY
 -(void)saveEditedCompanyToCoreData{
   
-    //EDIT MANAGED PRODUCT
-    ManagedCompany *currentManagedCompany = [self.managedCompanyListDAO objectAtIndex:self.indexOfLastAccessoryButtonTouched];
-    
     //ORIGINAL VALUES OF CURRENT MANAGED COMPANY
-    NSString *originalMCName = currentManagedCompany.mCName;
-    NSString *originalMCLogoURL = currentManagedCompany.mCLogoURL;
+    NSString *originalMCName = self.currentManagedCompanyDAO.mCName;
+    NSString *originalMCLogoURL = self.currentManagedCompanyDAO.mCLogoURL;
     
     //NEW VALUES OF CURRENT MANGED COMPANY
-    NSString *newMCName = self.editedCompanyNameDAO;
-    NSString *newLogoURL = [NSString stringWithFormat:@"%@",self.editedCompanyLogoURLDAO];
+    NSString *newMCName = self.companyBeingEditedDAO.companyName;
+    NSString *newLogoURL = [NSString stringWithFormat:@"%@",self.companyBeingEditedDAO.companyLogoURL];
     
     //SET THE EDITED NEW MANAGED COMPANY NAME TO REPLACE  ORIGINAL ONE
     //IF THERE'S INPUT CHANGE IT, IF NO INPUT, DON'T CHANGE THE NAME
     if(self.editingCompanyNameDAO){
-        currentManagedCompany.mCName = newMCName;
+        self.currentManagedCompanyDAO.mCName = newMCName;
     } else {
-        currentManagedCompany.mCName = originalMCName;
+        self.currentManagedCompanyDAO.mCName = originalMCName;
     }
     
     // SET THE EDITED NEW MANAGED COMPANY LOGO URL TO REPLACE ORIGINAL ONE
     // IF THERE'S INPUT CHANGE IT, IF NO INPUT, DON'T CHANGE URL
     if(self.editingCompanyLogoURLDAO){
-        currentManagedCompany.mCLogoURL = newLogoURL;
+        self.currentManagedCompanyDAO.mCLogoURL = newLogoURL;
     } else {
-        currentManagedCompany.mCLogoURL = originalMCLogoURL;
+        self.currentManagedCompanyDAO.mCLogoURL = originalMCLogoURL;
     }
     
     //SAVE MANAGED OBJECT
@@ -568,34 +589,36 @@ if ([[self managedObjectContext] save:&error] == NO) {
 
 -(void)saveEditedProductToCoreData{
     
-    ManagedCompany *currentCompany = [self.managedCompanyListDAO objectAtIndex:self.indexOfLastCompanyTouched];
-    
+   // ManagedCompany *currentManagedCompany = [self.managedCompanyListDAO objectAtIndex:self.indexOfLastCompanyTouched];
+    ManagedCompany *currentManagedCompany = self.currentManagedCompanyDAO;
     //GET THE SET
-    NSMutableSet *currentProductSet = [[NSMutableSet alloc]initWithSet:currentCompany.products];
-    
+    NSMutableSet *currentManagedProductSet = [[NSMutableSet alloc]initWithSet:currentManagedCompany.products];
+
     //CONVERT SET INTO ARRAY
-    NSMutableArray *productsArray = [NSMutableArray arrayWithArray:[currentProductSet allObjects]];
+    NSMutableArray *managedProductsArray = [NSMutableArray arrayWithArray:[currentManagedProductSet allObjects]];
     
     //REMOVE THE PRODUCT FROM ARRAY AND CHANGE VALUES IF NEEDED
-    ManagedProduct *currentProduct = [productsArray objectAtIndex:self.indexOfLastAccessoryButtonTouched];
-    
+    //ManagedProduct *currentManagedProduct = [managedProductsArray objectAtIndex:self.indexOfLastAccessoryButtonTouched];
+    ManagedProduct *currentManagedProduct = self.currentManagedProductDAO;
     if(self.editingProductNameDAO){
-        currentProduct.mPProductName = self.editedProductNameDAO;
-    } else {
-        currentProduct.mPProductName = self.originalProductNameDAO;
+        currentManagedProduct.mPProductName = self.productBeingEditedDAO.productName;
     }
+//    else {
+//        currentProduct.mPProductName = self.originalProductNameDAO;
+//    }
     
     if(self.editingProductURLDAO){
-        currentProduct.mPProducURL = [NSString stringWithFormat:@"%@",self.editedProductURLDAO];
-    } else {
-        currentProduct.mPProducURL = [NSString stringWithFormat:@"%@",self.originalProductURLDAO];
+        currentManagedProduct.mPProducURL = [NSString stringWithFormat:@"%@",self.productBeingEditedDAO.productURL];
     }
+//    else {
+//        currentProduct.mPProducURL = [NSString stringWithFormat:@"%@",self.originalProductURLDAO];
+//    }
     
     //UPDATE CONVERT ARRAY INTO SET
-    NSMutableSet *editedSet = [NSMutableSet setWithArray:productsArray];
+    NSMutableSet *editedSet = [NSMutableSet setWithArray:managedProductsArray];
     
     //SET THE COMAPNY PRODUCTS AS THE EDITED SET
-    currentCompany.products = [[NSMutableSet alloc]initWithSet:editedSet];
+    currentManagedCompany.products = [[NSMutableSet alloc]initWithSet:editedSet];
     
     //SAVE TO CORE DATA
     [self saveManagedObject];
@@ -605,22 +628,33 @@ if ([[self managedObjectContext] save:&error] == NO) {
 
 #pragma mark - remove Company
 
--(void)removeManagedCompanyFromCoreData:(NSInteger )index{
-    
-    //INDEX OF SELECTED CELL
-    self.selectedIndexForRemovalInCoreData = index;
+-(void)removeManagedCompanyFromCoreData:(ManagedCompany *)managedCompany{
     
     //REMOVE OBJECT FORM MANAGED COMPANY LIST ARRAY
-    ManagedCompany *companyToDelete = self.managedCompanyListDAO[index];
-    [self.managedCompanyListDAO removeObject:companyToDelete];
+    self.currentManagedCompanyDAO = managedCompany;
+    [self.managedCompanyListDAO removeObject:managedCompany];
     
-    //DELETE CONTEXT
-    [self.managedObjectContext deleteObject:companyToDelete];
-    
-    //[self saveContext];
+    //DELETE
+    [self.managedObjectContext deleteObject:managedCompany];
+    [self saveContext];
     
 }
 
+
+
+#pragma mark - remove Product
+
+-(void)removeManagedProductFromCoreData:(ManagedProduct *)mP fromManagedCompany:(ManagedCompany *)mC {
+    
+    mC = self.currentManagedCompanyDAO;
+    mP = self.currentManagedProductDAO;
+    [mC removeProductsObject:mP];
+    
+    //DELETE
+    [self.managedObjectContext deleteObject:mP];
+    [self saveContext];
+
+}
 
 
 @end
