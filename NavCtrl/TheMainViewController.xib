@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11762" systemVersion="16D32" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11762" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -14,9 +14,13 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="TheMainViewController">
             <connections>
                 <outlet property="companyTableView" destination="gTz-A3-r1w" id="WcM-mt-mgD"/>
-                <outlet property="emptyMessage" destination="nFI-gT-Q4b" id="zIl-fy-KSG"/>
-                <outlet property="emptyViewAndMessage" destination="SGP-LA-Rbm" id="GGS-0X-Jzm"/>
-                <outlet property="undoRedoHolder" destination="Y1j-VF-9aI" id="GAI-t3-7ac"/>
+                <outlet property="emptyStateLogoImageView" destination="ynF-s0-uN8" id="p00-Xp-sHt"/>
+                <outlet property="emptyUndoRedoHolderView" destination="1h9-6c-b3M" id="D3h-C5-3EN"/>
+                <outlet property="emptyViewAndMessage" destination="SGP-LA-Rbm" id="z0f-NT-E9c"/>
+                <outlet property="gifBackGroundImageView" destination="nWZ-s4-Ix3" id="DPE-vu-pyw"/>
+                <outlet property="noCompaniesLabel" destination="VNF-cT-HV1" id="Eat-0i-9ka"/>
+                <outlet property="populatedStackView" destination="z1z-kJ-xL2" id="DA3-Ra-elV"/>
+                <outlet property="populatedUndoRedoHolderView" destination="Y1j-VF-9aI" id="Unh-M0-OZJ"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
@@ -28,55 +32,117 @@
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="SGP-LA-Rbm">
                     <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                     <subviews>
-                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="StockMarket.png" translatesAutoresizingMaskIntoConstraints="NO" id="93W-5v-WF8">
-                            <rect key="frame" x="108" y="73.5" width="160" height="160"/>
+                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="nWZ-s4-Ix3">
+                            <rect key="frame" x="94" y="173" width="188" height="188"/>
                             <constraints>
-                                <constraint firstAttribute="width" secondItem="93W-5v-WF8" secondAttribute="height" multiplier="1:1" id="cyk-uk-0xO"/>
-                                <constraint firstAttribute="width" constant="160" id="zIr-I0-BVf"/>
+                                <constraint firstAttribute="width" secondItem="nWZ-s4-Ix3" secondAttribute="height" multiplier="1:1" id="OaR-cj-BfW"/>
                             </constraints>
                         </imageView>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="v37-Os-eav">
-                            <rect key="frame" x="121" y="294" width="132" height="33"/>
+                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="emptystate" translatesAutoresizingMaskIntoConstraints="NO" id="ynF-s0-uN8">
+                            <rect key="frame" x="118" y="30" width="140" height="140"/>
                             <constraints>
-                                <constraint firstAttribute="width" secondItem="v37-Os-eav" secondAttribute="height" multiplier="4:1" id="igF-l0-Z1O"/>
+                                <constraint firstAttribute="width" constant="140" id="CYT-P1-vJX"/>
+                                <constraint firstAttribute="width" secondItem="ynF-s0-uN8" secondAttribute="height" multiplier="1:1" id="FOJ-pB-HPZ"/>
                             </constraints>
-                            <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
-                            <state key="normal" title="Add Company +"/>
-                            <connections>
-                                <action selector="emptyAddCompanyButton:" destination="-1" eventType="touchUpInside" id="acj-Ac-e8l"/>
-                            </connections>
-                        </button>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" layoutMarginsFollowReadableWidth="YES" text="YOU CURRENTLY HAVE NO COMPANIES" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="4" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nFI-gT-Q4b">
-                            <rect key="frame" x="24" y="253.5" width="327" height="20.5"/>
-                            <color key="backgroundColor" red="0.90196079019999997" green="0.90196079019999997" blue="0.90196079019999997" alpha="1" colorSpace="calibratedRGB"/>
-                            <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
-                            <color key="textColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                        </imageView>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="You don't have any Companies" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VNF-cT-HV1">
+                            <rect key="frame" x="87" y="184" width="200" height="100"/>
+                            <constraints>
+                                <constraint firstAttribute="width" secondItem="VNF-cT-HV1" secondAttribute="height" multiplier="2:1" id="8CY-cw-lAt"/>
+                                <constraint firstAttribute="width" constant="200" id="HaL-7b-rBI"/>
+                            </constraints>
+                            <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
+                            <color key="textColor" red="0.60000002379999995" green="0.60000002379999995" blue="0.60000002379999995" alpha="1" colorSpace="calibratedRGB"/>
                             <nil key="highlightedColor"/>
                         </label>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7Mu-LU-B25">
+                            <rect key="frame" x="103" y="280" width="169" height="39"/>
+                            <fontDescription key="fontDescription" type="boldSystem" pointSize="22"/>
+                            <state key="normal" title="Add Company +"/>
+                            <connections>
+                                <action selector="addToCompaniesEmptyButton:" destination="-1" eventType="touchUpInside" id="Azr-Ew-f17"/>
+                            </connections>
+                        </button>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1h9-6c-b3M">
+                            <rect key="frame" x="0.0" y="601" width="375" height="66"/>
+                            <subviews>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Hoq-XR-d4R">
+                                    <rect key="frame" x="0.0" y="0.0" width="188" height="66"/>
+                                    <color key="backgroundColor" red="0.0" green="0.50196081400000003" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="24"/>
+                                    <state key="normal" title="Undo">
+                                        <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                    </state>
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                            <integer key="value" value="8"/>
+                                        </userDefinedRuntimeAttribute>
+                                        <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
+                                    </userDefinedRuntimeAttributes>
+                                    <connections>
+                                        <action selector="emptyUndoButtonPressed:" destination="-1" eventType="touchUpInside" id="5TP-Pn-deL"/>
+                                    </connections>
+                                </button>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YTb-qa-PIn">
+                                    <rect key="frame" x="188" y="0.0" width="187" height="66"/>
+                                    <color key="backgroundColor" red="0.0" green="0.50196081400000003" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="24"/>
+                                    <state key="normal" title="Redo">
+                                        <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                    </state>
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                            <integer key="value" value="5"/>
+                                        </userDefinedRuntimeAttribute>
+                                        <userDefinedRuntimeAttribute type="boolean" keyPath="layer.maskToBounds" value="YES"/>
+                                    </userDefinedRuntimeAttributes>
+                                    <connections>
+                                        <action selector="emptyRedoButtonPressed:" destination="-1" eventType="touchUpInside" id="G5g-1T-X8m"/>
+                                    </connections>
+                                </button>
+                            </subviews>
+                            <constraints>
+                                <constraint firstItem="Hoq-XR-d4R" firstAttribute="leading" secondItem="1h9-6c-b3M" secondAttribute="leading" id="DFz-Ry-yvS"/>
+                                <constraint firstItem="YTb-qa-PIn" firstAttribute="top" secondItem="1h9-6c-b3M" secondAttribute="top" id="FGt-5k-dQT"/>
+                                <constraint firstAttribute="bottom" secondItem="Hoq-XR-d4R" secondAttribute="bottom" id="Hju-an-B6S"/>
+                                <constraint firstItem="Hoq-XR-d4R" firstAttribute="top" secondItem="1h9-6c-b3M" secondAttribute="top" id="HyZ-sU-Vxd"/>
+                                <constraint firstItem="YTb-qa-PIn" firstAttribute="width" secondItem="1h9-6c-b3M" secondAttribute="width" multiplier="0.5" id="V3o-J7-bMG"/>
+                                <constraint firstAttribute="bottom" secondItem="YTb-qa-PIn" secondAttribute="bottom" id="Z3M-4T-EEH"/>
+                                <constraint firstAttribute="trailing" secondItem="YTb-qa-PIn" secondAttribute="trailing" id="d7w-v9-x4s"/>
+                                <constraint firstItem="Hoq-XR-d4R" firstAttribute="width" secondItem="1h9-6c-b3M" secondAttribute="width" multiplier="0.5" id="jWx-H5-fE5"/>
+                            </constraints>
+                        </view>
                     </subviews>
-                    <color key="backgroundColor" red="0.90196079019999997" green="0.90196079019999997" blue="0.90196079019999997" alpha="1" colorSpace="calibratedRGB"/>
+                    <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                     <constraints>
-                        <constraint firstItem="nFI-gT-Q4b" firstAttribute="centerY" secondItem="SGP-LA-Rbm" secondAttribute="centerY" constant="-70" id="60m-iH-4yr"/>
-                        <constraint firstItem="93W-5v-WF8" firstAttribute="centerX" secondItem="SGP-LA-Rbm" secondAttribute="centerX" id="Co5-n9-p44"/>
-                        <constraint firstItem="nFI-gT-Q4b" firstAttribute="centerX" secondItem="SGP-LA-Rbm" secondAttribute="centerX" id="TjK-h1-EM3"/>
-                        <constraint firstItem="v37-Os-eav" firstAttribute="centerY" secondItem="SGP-LA-Rbm" secondAttribute="centerY" constant="-23" id="X5e-pU-rjI"/>
-                        <constraint firstItem="v37-Os-eav" firstAttribute="centerX" secondItem="SGP-LA-Rbm" secondAttribute="centerX" id="f5p-Mq-dBi"/>
-                        <constraint firstItem="93W-5v-WF8" firstAttribute="centerY" secondItem="SGP-LA-Rbm" secondAttribute="centerY" constant="-180" id="mO2-Gl-jRf"/>
+                        <constraint firstItem="ynF-s0-uN8" firstAttribute="centerY" secondItem="SGP-LA-Rbm" secondAttribute="centerY" multiplier="0.3" id="DH3-JU-Uha"/>
+                        <constraint firstItem="7Mu-LU-B25" firstAttribute="centerY" secondItem="SGP-LA-Rbm" secondAttribute="centerY" multiplier="0.9" id="NwK-SU-Uvd"/>
+                        <constraint firstItem="nWZ-s4-Ix3" firstAttribute="width" secondItem="SGP-LA-Rbm" secondAttribute="width" multiplier="0.5" id="PRh-vF-geO"/>
+                        <constraint firstAttribute="trailing" secondItem="1h9-6c-b3M" secondAttribute="trailing" id="SBI-td-aSl"/>
+                        <constraint firstAttribute="bottom" secondItem="1h9-6c-b3M" secondAttribute="bottom" id="TMy-vA-7Zj"/>
+                        <constraint firstItem="VNF-cT-HV1" firstAttribute="centerX" secondItem="SGP-LA-Rbm" secondAttribute="centerX" id="TYW-Dx-iJS"/>
+                        <constraint firstItem="1h9-6c-b3M" firstAttribute="leading" secondItem="SGP-LA-Rbm" secondAttribute="leading" id="UGN-8t-mDY"/>
+                        <constraint firstItem="nWZ-s4-Ix3" firstAttribute="centerX" secondItem="SGP-LA-Rbm" secondAttribute="centerX" id="eOS-BL-Kr1"/>
+                        <constraint firstItem="7Mu-LU-B25" firstAttribute="centerX" secondItem="SGP-LA-Rbm" secondAttribute="centerX" id="he0-eW-QYn"/>
+                        <constraint firstItem="ynF-s0-uN8" firstAttribute="centerX" secondItem="SGP-LA-Rbm" secondAttribute="centerX" id="jrs-Xm-ETG"/>
+                        <constraint firstItem="1h9-6c-b3M" firstAttribute="height" secondItem="SGP-LA-Rbm" secondAttribute="height" multiplier="0.1" id="ty1-hv-jdz"/>
+                        <constraint firstItem="VNF-cT-HV1" firstAttribute="centerY" secondItem="SGP-LA-Rbm" secondAttribute="centerY" multiplier="0.7" id="zoX-qj-K2u"/>
+                        <constraint firstItem="nWZ-s4-Ix3" firstAttribute="centerY" secondItem="SGP-LA-Rbm" secondAttribute="centerY" multiplier="0.8" id="zvp-Mu-0Vw"/>
                     </constraints>
                 </view>
-                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="z1z-kJ-xL2">
+                <stackView contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="z1z-kJ-xL2">
                     <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                     <subviews>
                         <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="gTz-A3-r1w">
-                            <rect key="frame" x="0.0" y="0.0" width="375" height="605"/>
+                            <rect key="frame" x="0.0" y="0.0" width="375" height="604.5"/>
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <color key="sectionIndexBackgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                         </tableView>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Y1j-VF-9aI">
-                            <rect key="frame" x="0.0" y="605" width="375" height="62"/>
+                            <rect key="frame" x="0.0" y="604.5" width="375" height="62.5"/>
                             <subviews>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jL7-Hd-g1o" userLabel="undo">
-                                    <rect key="frame" x="0.0" y="0.0" width="187.5" height="62"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="188" height="62.5"/>
                                     <color key="backgroundColor" red="0.0" green="0.50196081400000003" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                     <fontDescription key="fontDescription" type="boldSystem" pointSize="25"/>
                                     <state key="normal" title="Undo">
@@ -89,11 +155,11 @@
                                         <userDefinedRuntimeAttribute type="boolean" keyPath="layer.maskToBounds" value="YES"/>
                                     </userDefinedRuntimeAttributes>
                                     <connections>
-                                        <action selector="undoButton:" destination="-1" eventType="touchUpInside" id="Vaz-iE-5bm"/>
+                                        <action selector="populatedUndoButtonPressed:" destination="-1" eventType="touchUpInside" id="G2d-SJ-Iem"/>
                                     </connections>
                                 </button>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PSp-ux-5tf" userLabel="redo">
-                                    <rect key="frame" x="187.5" y="0.0" width="187.5" height="62"/>
+                                    <rect key="frame" x="188" y="0.0" width="187" height="62.5"/>
                                     <color key="backgroundColor" red="0.0" green="0.50196081400000003" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                     <fontDescription key="fontDescription" type="boldSystem" pointSize="24"/>
                                     <state key="normal" title="Redo">
@@ -106,7 +172,7 @@
                                         <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
                                     </userDefinedRuntimeAttributes>
                                     <connections>
-                                        <action selector="Redo:" destination="-1" eventType="touchUpInside" id="2ql-QB-dvd"/>
+                                        <action selector="populatedRedoButtonPressed:" destination="-1" eventType="touchUpInside" id="sGG-Wn-fcu"/>
                                     </connections>
                                 </button>
                             </subviews>
@@ -145,6 +211,6 @@
         </view>
     </objects>
     <resources>
-        <image name="StockMarket.png" width="512" height="512"/>
+        <image name="emptystate" width="72" height="72"/>
     </resources>
 </document>

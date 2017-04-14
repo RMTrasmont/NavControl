@@ -8,8 +8,23 @@
 
 #import <UIKit/UIKit.h>
 #import "NewCompanyViewController.h"
+#import "UIImage+animatedGIF.h"
 @interface EmptyViewController : UIViewController
 
-@property (strong,nonatomic)NSString *emptyMessage;
+@property (retain, nonatomic) IBOutlet UIImageView *emptyImageLogo;
+
+@property (retain, nonatomic) IBOutlet UILabel *emptyMessageLabel;
+
+- (IBAction)addCompanyButton:(UIButton *)sender;
+
+@property (retain, nonatomic) IBOutlet UIImageView *animatedImageView;
+
+@property (retain, nonatomic) IBOutlet UIView *undoRedoHolderView;
+
+- (IBAction)undoButtonPressed:(UIButton *)sender;
+
+- (IBAction)redoButtonPressed:(UIButton *)sender;
+
+
 
 @end

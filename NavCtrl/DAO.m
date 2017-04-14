@@ -29,13 +29,7 @@
     if (self) {
         self.companyListDAO = [[NSMutableArray alloc]init];
         [self initializeCoreData];
-        if ([[NSUserDefaults standardUserDefaults]boolForKey:@"DidFirstRun"]){
-            [self loadFetchedFromCoreData];
-            NSLog(@"FIRST RUN DONE, NOW LOADING FROM CORE DATA");
-        } else {
-            [self firstRun];
-            NSLog(@"FIRST RUN");
-        }
+        
     }
     return self;
 }
@@ -56,16 +50,19 @@
     iPad.productName = @"iPad";
     iPad.productCompany = @"Apple";
     iPad.productURL = [NSURL URLWithString: @"http://www.apple.com/ipad/"];
+    iPad.productImageURL = [NSURL URLWithString:@"https://support.apple.com/content/dam/edam/applecare/images/en_US/ipad/featured-content-ipad-icon_2x.png"];
     
-    Product *iPod = [[Product alloc]init];
-    iPod.productName = @"iPod Touch";
-    iPod.productCompany = @"Apple";
-    iPod.productURL = [NSURL URLWithString:@"http://www.apple.com/ipod-touch/"];
+    Product *iWatch = [[Product alloc]init];
+    iWatch.productName = @"Apple Watch";
+    iWatch.productCompany = @"Apple";
+    iWatch.productURL = [NSURL URLWithString:@"https://www.apple.com/watch/"];
+    iWatch.productImageURL = [NSURL URLWithString:@"http://pisces.bbystatic.com/image2/BestBuy_US/images/products/4274/4274601_ra.jpg"];
     
-    Product *iphone = [[Product alloc]init];
-    iphone.productName = @"iPhone";
-    iphone.productCompany = @"Apple";
-    iphone.productURL = [NSURL URLWithString:@"http://www.apple.com/iphone/"];
+    Product *iPhone = [[Product alloc]init];
+    iPhone.productName = @"iPhone";
+    iPhone.productCompany = @"Apple";
+    iPhone.productURL = [NSURL URLWithString:@"http://www.apple.com/iphone/"];
+    iPhone.productImageURL = [NSURL URLWithString:@"https://i5.walmartimages.com/asr/7389e715-6eed-467c-a0f7-52ef0a94d775_1.a7c385bbc633c37a5c34489e24a3c6aa.jpeg"];
     
     //CREATE ARRAY OF PRODUCTS (TO PUT INTO COMPANY'S PRODUCTS ARRAY )
     //NSMutableArray *appleProducts = [NSMutableArray arrayWithObjects:iPad,iPod,iphone, nil];
@@ -77,7 +74,7 @@
     apple.companyImage = [UIImage imageNamed:@"appleLogo"];
     //apple.companyProductList = appleProducts;
     apple.companyLogoURL = [NSURL URLWithString:@"https://cdn2.iconfinder.com/data/icons/social-media-2046/32/apple_social_media_online-256.png"];
-    apple.companyProductList = [NSMutableArray arrayWithObjects:iPad,iPod,iphone, nil];
+    apple.companyProductList = [NSMutableArray arrayWithObjects:iPad,iWatch,iPhone, nil];
     apple.companyStockSymbol = @"AAPL";
     
     //ADD COMPANY TO DAO ARRAY OF COMPANIES
@@ -91,16 +88,19 @@
     galaxyS4.productName = @"Galaxy S4";
     galaxyS4.productCompany = @"Samsung";
     galaxyS4.productURL = [NSURL URLWithString:@"http://www.samsung.com/us/mobile/phones/all-phones/s/galaxy_s4/_/n-10+11+hv1rp+trouu"];
+    galaxyS4.productImageURL = [NSURL URLWithString:@"https://i5.walmartimages.com/asr/5d7f9931-9040-4e91-aa54-6b488dbccaea_1.5d00235d0df974062e7c313d2481906c.jpeg"];
     
     Product *galaxyNote = [[Product alloc]init];
     galaxyNote.productName = @"Galaxy Note";
     galaxyNote.productCompany = @"Samsung";
     galaxyNote.productURL = [NSURL URLWithString:@"http://www.samsung.com/us/mobile/phones/all-phones/s/galaxy_note5/_/n-10+11+hv1rp+troum"];
+    galaxyNote.productImageURL = [NSURL URLWithString:@"http://www.samsung.com/global/galaxy/galaxy-note5/images/galaxy-note5_gallery_left-perspective_black_s3.png"];
     
     Product *galaxyTab = [[Product alloc]init];
     galaxyTab.productName = @"Galaxy Tab";
     galaxyTab.productCompany = @"Samsung";
     galaxyTab.productURL = [NSURL URLWithString:@"http://www.samsung.com/us/search/searchMain?Dy=1&Nty=1&Ntt=galaxy+tabpro+s"];
+    galaxyTab.productImageURL = [NSURL URLWithString:@"https://www.att.com/catalog/en/skus/images/samsung-galaxy%20tab%204%208.0-white-450x350.png"];
     
     //CREATE ARRAY OF PRODUCTS
     //NSMutableArray *samsungProducts = [NSMutableArray arrayWithObjects:galaxyS4,galaxyNote,galaxyTab, nil];
@@ -125,17 +125,19 @@
     pixel.productName = @"Pixel";
     pixel.productCompany = @"Google";
     pixel.productURL = [NSURL URLWithString:@"https://store.google.com/search?q=pixel"];
+    pixel.productImageURL = [NSURL URLWithString:@"https://storage.googleapis.com/madebygoog/v1/phone/specs/marlin-black-en_US.jpg"];
     
     Product *pixelXL = [[Product alloc]init];
     pixelXL.productName = @"Pixel XL";
     pixelXL.productCompany = @"Google";
     pixelXL.productURL = [NSURL URLWithString:@"https://store.google.com/search?q=pixel%20xl"];
+    pixelXL.productImageURL = [NSURL URLWithString:@"https://ss7.vzw.com/is/image/VerizonWireless/pdp-features-d-1-google-pixel-14187-92316?&scl=1&scl=2"];
     
     Product *pixelC = [[Product alloc]init];
     pixelC.productName = @"Pixel C";
     pixelC.productCompany = @"Google";
     pixelC.productURL = [NSURL URLWithString:@"https://store.google.com/search?q=pixel%20c"];
-    
+    pixelC.productImageURL = [NSURL URLWithString:@"https://lh3.googleusercontent.com/h_DiEiua-WcvQg1i7jqF9VMZnFCULp_mmdwdJQQer7Qs1SPwj2AFDTo2Zuk9cSYdCg"];
     //CREATE AN ARRAY OF PRODUCTS
     //NSMutableArray *googleProducts = [NSMutableArray arrayWithObjects:pixel,pixelXL,pixelC, nil];
     
@@ -160,17 +162,19 @@
     v10.productName = @"V10";
     v10.productCompany = @"LG";
     v10.productURL = [NSURL URLWithString:@"http://www.lg.com/us/mobile-phones/v10"];
+    v10.productImageURL = [NSURL URLWithString:@"http://www.lg.com/us/mobile-phones/v10/img/bg-tech-specs-right-desktop.png"];
     
     Product *v20 = [[Product alloc]init];
     v20.productName = @"V20";
     v20.productCompany = @"LG";
     v20.productURL = [NSURL URLWithString:@"http://www.lg.com/us/mobile-phones/v20"];
+    v20.productImageURL = [NSURL URLWithString:@"http://www.lg.com/ph/images/mobile-phones/md05777787/MC_thumb_350.jpg"];
     
     Product *g5 = [[Product alloc]init];
     g5.productName = @"G5";
     g5.productCompany = @"LG";
     g5.productURL = [NSURL URLWithString:@"http://www.lg.com/us/mobile-phones/g5#G5Modularity"];
-    
+    g5.productImageURL = [NSURL URLWithString:@"https://images-na.ssl-images-amazon.com/images/G/01/aplusautomation/vendorimages/87f919ee-4c34-4313-bcd0-3f912b2da2dc.jpg._CB276075918__SR300,300_.jpg"];
     //CREATE ARRAY OF PRODUCTS
     
     //NSMutableArray *lgProducts = [NSMutableArray arrayWithObjects:v10,v20,g5, nil];
@@ -214,7 +218,8 @@
             //ASSIGN ATTRIBUTES TO MANAGED PRODUCT
             mP.mPProductName = product.productName;
             mP.mPProducURL = [NSString stringWithFormat:@"%@",product.productURL];
-           // [mC.products setByAddingObject:mP];
+            mP.mPProductImageURL = [NSString stringWithFormat:@"%@",product.productImageURL];
+            // [mC.products setByAddingObject:mP];
             [mC addProductsObject:mP];  //*****<------use when adding product****
             
             [self saveManagedObject];
@@ -251,11 +256,12 @@
 
 //***************************CREATE NEW PRODUCT METHOD**********************************
 
--(Product *)makeNewProductWithName:(NSString *)name andURL:(NSURL *)url{
+-(Product *)makeNewProductWithName:(NSString *)name withWebURL:(NSURL *)webURL andImageURL:(NSURL *)imageURL {
     Product *newProduct = [[Product alloc]init];
     if(self = [super init]){
         newProduct.productName = name;
-        newProduct.productURL = url;
+        newProduct.productURL = webURL;
+        newProduct.productImageURL = imageURL;
     }
     return newProduct;
 }
@@ -325,26 +331,6 @@
                                               
                                         //TURN INTO AN ARRAY (of symbol,prices,change)
                                         self.fetchedFinDataArrayDAO = [stringDataWOQuotes componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"\n"]];
-                                        
-                                        //variable to count data recieved
-//                                       int stockDataTransfered = 0;
-                                        
-                                        //IMPLEMENT do{}while() completion handler
-                                        //ASSIGN EACH STRING TO A COMPANY FINANCIAL DATA STRING
-                                        //IMPLEMENT NSNOTIFICATION
-
-//                                        do{
-//                                                    for (int i = 0; i < self.companyListDAO.count; i++) {
-//                                                if(self.fetchedFinDataArrayDAO[i] != nil){
-//                                                    self.companyListDAO[i].financialDataString = self.fetchedFinDataArrayDAO[i];
-//                                                    stockDataTransfered++;
-//                                                }else {
-//                                                    break;
-//                                                  }
-//                                                }
-//                                            }while (stockDataTransfered < (self.fetchedFinDataArrayDAO.count));
-//                                        
-                                           
                                             
                                                 //NSNOTIFICATION HERE IF NO ERROR, DO SOMETHING
                                                 // "dispatch_async" takes you to main thread
@@ -361,8 +347,6 @@
                                                     }
                                                 }
                                             }while (stockDataTransfered < (self.fetchedFinDataArrayDAO.count));
-                                            
-                                            
                                             
                                             [[NSNotificationCenter defaultCenter]postNotificationName:@"Data Ready" object:self];
                                             
@@ -420,7 +404,8 @@
     
     //**** UNDO REDO *****
     self.managedObjectContext.undoManager = [[NSUndoManager alloc]init];
-
+    
+    
     NSFileManager *fileManager = [NSFileManager defaultManager];
     NSURL *documentsURL = [[fileManager URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
     NSURL *storeURL = [documentsURL URLByAppendingPathComponent:@"DataModel.sqlite"];
@@ -431,6 +416,17 @@
         NSPersistentStore *store = [psc addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:storeURL options:nil error:&error];
         NSAssert(store != nil, @"Error initializing PSC: %@\n%@", [error localizedDescription], [error userInfo]);
     
+        //
+        if ([[NSUserDefaults standardUserDefaults]boolForKey:@"DidFirstRun"]){
+            [self loadFetchedFromCoreData];
+            NSLog(@"FIRST RUN DONE, NOW LOADING FROM CORE DATA");
+        } else {
+            [self firstRun];
+            NSLog(@"FIRST RUN");
+        }
+        //
+        
+        
         //ERROR HANDLING
         if (!store) {
             NSLog(@"Error Fetching Store File from URL");
@@ -501,6 +497,7 @@ if ([[self managedObjectContext] save:&error] == NO) {
                 Product *product = [[Product alloc]init];
                 product.productName = mP.mPProductName;
                 product.productURL = [NSURL URLWithString: mP.mPProducURL];
+                product.productImageURL = [NSURL URLWithString:mP.mPProductImageURL];
                 [company.companyProductList addObject:product];
                 }
             }
@@ -509,7 +506,7 @@ if ([[self managedObjectContext] save:&error] == NO) {
 
     
     [self saveManagedObject];
-    [self saveContext];
+    //[self saveContext];
 
     [[NSUserDefaults standardUserDefaults]setBool:YES forKey:@"didLoadFetchFromCoreData"];
 }
@@ -538,7 +535,7 @@ if ([[self managedObjectContext] save:&error] == NO) {
     
     mP.mPProductName = self.theNewProductDAO.productName;
     mP.mPProducURL = [NSString stringWithFormat:@"%@",self.theNewProductDAO.productURL];
-    
+    mP.mPProductImageURL = [NSString stringWithFormat:@"%@",self.theNewProductDAO.productImageURL];
     ManagedCompany *currentManagedCompany = self.currentManagedCompanyDAO;
     
     //CORE DATA RETURNS PRODUCT SET NOT ARRAY SO MANIPULATE
@@ -611,9 +608,12 @@ if ([[self managedObjectContext] save:&error] == NO) {
         currentManagedProduct.mPProducURL = [NSString stringWithFormat:@"%@",self.productBeingEditedDAO.productURL];
     }
 //    else {
-//        currentProduct.mPProducURL = [NSString stringWithFormat:@"%@",self.originalProductURLDAO];
+//        currentProduct.mPProducURL = [NSString stringWithFormat:@"%@",self.originalProductURLDAO];  
 //    }
     
+    if(self.editingProductImageURLDAO){
+        currentManagedProduct.mPProductImageURL = [NSString stringWithFormat:@"%@",self.productBeingEditedDAO.productImageURL];
+    }
     //UPDATE CONVERT ARRAY INTO SET
     NSMutableSet *editedSet = [NSMutableSet setWithArray:managedProductsArray];
     
@@ -636,7 +636,7 @@ if ([[self managedObjectContext] save:&error] == NO) {
     
     //DELETE
     [self.managedObjectContext deleteObject:managedCompany];
-    [self saveContext];
+    //[self saveContext];
     
 }
 

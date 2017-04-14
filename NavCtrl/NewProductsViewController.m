@@ -13,8 +13,10 @@
 @property (nonatomic)float textFieldHeight;
 @property (strong,nonatomic)UITextField *theNewProductTextField;
 @property (strong,nonatomic)UITextField *theNewProductURLTextField;
+@property (strong,nonatomic)UITextField *theNewProductImageURLTextField;
 @property (strong,nonatomic)UILabel *productNameLabel;
 @property (strong,nonatomic)UILabel *productURLLabel;
+@property (strong,nonatomic)UILabel *prodductImageURLLabel;
 @property (nonatomic)DAO *dataManager;
 
 @end
@@ -60,18 +62,26 @@
     //MAKE TEXTFIELD FOR PRODUCT URL
     self.theNewProductURLTextField = [self createTextFieldNamed:@"ENTER PRODUCT URL" withXLocation:20.0F withYLocation:210.0F withWidth:self.textFieldWidth andHeight:self.textFieldHeight withIDTag:1];
     
+    //MAKE TEXTFIELD FOR PRODUCT IMAGE URL
+    self.theNewProductImageURLTextField = [self createTextFieldNamed:@"ENTER IMAGE URL" withXLocation:20.F withYLocation:290.0F withWidth:self.textFieldWidth andHeight:self.textFieldHeight withIDTag:2];
+    
+    
     //MAKE PRODUCT NAME LABEL
     self.productNameLabel = [self createLabelNamed:@"New Product:" withXLocation:20.0f withYLocation:100.0f withWidth:250.0f andHeight:20.0f];
     [self.productNameLabel setFont:[UIFont boldSystemFontOfSize:16]];
     
     //MAKE PRODUCT URL LABEL
-    self.productNameLabel = [self createLabelNamed:@"New URL:" withXLocation:20.0f withYLocation:180.0f withWidth:250.0f andHeight:20.0f];
+    self.productURLLabel = [self createLabelNamed:@"New URL:" withXLocation:20.0f withYLocation:180.0f withWidth:250.0f andHeight:20.0f];
     [self.productURLLabel setFont:[UIFont boldSystemFontOfSize:16]];
+    
+    //MAKE PRODUCT IMAGE URL LABEL
+    self.prodductImageURLLabel = [self createLabelNamed:@"Image URL:" withXLocation:20.0f withYLocation:260.0f withWidth:250.0f andHeight:20.0f];
+    [self.prodductImageURLLabel setFont:[UIFont boldSystemFontOfSize:16]];
     
     //SET TEXTFIELD AS DELEGATE FOR MOVING KEYBOARD
     self.theNewProductTextField.delegate = self;
     self.theNewProductURLTextField.delegate = self;
-
+    self.theNewProductImageURLTextField.delegate = self;
     
 
 }
@@ -105,20 +115,13 @@
     //SET THE TEXT FIELD INPUT TO LOCAL VARIABLES PRODUCT NAME & URL
     self.productName = self.theNewProductTextField.text;
     self.productURL = [NSURL URLWithString:self.theNewProductURLTextField.text];
+    self.productImageURL = [NSURL URLWithString:self.theNewProductImageURLTextField.text];
     
     //CREATE NEW PRODUCT USING DAO MEHTOD & GIVE IT LOCAL NAME & URL VARIABLE
-    Product *madeProduct = [self.dataManager makeNewProductWithName:self.productName andURL:self.productURL];
+    Product *madeProduct = [self.dataManager makeNewProductWithName:self.productName withWebURL:self.productURL andImageURL:self.productImageURL];
     
     //LET DAO KNOW OF THE NEW PRODUCT
     self.dataManager.theNewProductDAO = madeProduct;
-    
-    //CALL THE CURRENT COMPANY
-   // Company *currentCompany = self.dataManager.currentCompanyDAO;
-    
-//    NSMutableArray *productArray = [[NSMutableArray alloc]initWithArray:self.dataManager.currentCompanyDAO.companyProductList];
-//    [productArray addObject:madeProduct];
-//    self.dataManager.currentCompanyDAO.companyProductList = productArray;
-    
     
         //IF THE COMPANY PRODUCTS ARRAY IS EMPTY, MAKE A NEW ARRAY THEN ADD THE PRODUCT
     if(self.dataManager.currentCompanyDAO.companyProductList == 0 ){
@@ -190,7 +193,7 @@
 -(void)textFieldDidBeginEditing:(UITextField *)textField
 {
     
-    if (textField.tag > 0)   // <--- ONLY AFFECTS THE BOTTOM
+    if (textField.tag > 0)   // <--- ONLY AFFECTS THE BOTTOM TWO
     {
         [UIView beginAnimations:nil context:NULL];
         [UIView setAnimationDelegate:self];

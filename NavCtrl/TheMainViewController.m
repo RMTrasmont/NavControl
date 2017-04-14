@@ -7,6 +7,7 @@
 //
 
 #import "TheMainViewController.h"
+#import "UIImage+animatedGIF.h"
 
 @interface TheMainViewController ()
 @property DAO *dataManager;
@@ -52,19 +53,26 @@
     self.companyTableView.delegate = self;
     self.companyTableView.dataSource = self;
     
-    //m\TURN INTO method WHEN COMPANIES ARE EMPTY HIDE TABLEVIEW & SHOW EMPTY VIEW
-    if([self.dataManager.companyListDAO count] == 0){
-        [self.companyTableView setHidden:YES];
-        [self.emptyViewAndMessage setHidden:NO];
-    } else {
-        [self.companyTableView setHidden:NO];
-        [self.emptyViewAndMessage setHidden:YES];
-    }
+    //ANIMATE BACKGROUND ON EMPTYVIEW, GIF TO IMAGE ASYNC
+    //1.LOAD ANIMATED IMAGE FROM GIF ASYNCHRONOUSLY
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        
+        UIImage *animatedFly =  [UIImage animatedImageWithAnimatedGIFURL:[NSURL URLWithString:@"http://rs1264.pbsrc.com/albums/jj486/barryfromtexas/Internet%20Fun/bug_crawls_on_screen.gif~c200"]];
+        //**********************BACK TO MAIN THREAD*****************************
+        //2.ALL IMAGES FETCHED,GO BACK TO THE MAIN QUEUE,AND ASSIGN IMAGES
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.gifBackGroundImageView setImage:animatedFly];
+        });
+    });
     
     
-    
- 
+    //HIDE THE POPULATED STACK UNDOREDO HOLDER
+    [self.populatedUndoRedoHolderView setHidden:YES];
+
 }
+
+
+
 
 //****************************************************************************************
 
@@ -99,16 +107,13 @@
 
 -(void)viewWillAppear:(BOOL)animated{
     
-    //HANDLES EDIT BUTTON SHOWS ONLY WHEN EDIT CLICKED & NOT WHEN VIEW FIRST LOADS*
-    if ([self.companyTableView isEditing]) {
-        [self.undoRedoHolder setHidden:NO];
-    }else {
-        [self.undoRedoHolder setHidden:YES];
+    //IF COMPANYLIST IS GREATER THAN 1 SHOW POPULATED VIEW
+    if([self.dataManager.companyListDAO count] >= 1){
+        [self.populatedStackView setHidden:NO];
     }
     
     //MOVE OBJECTS UNDERNEATH NAVBAR LOWER
     [self.navigationController.navigationBar setTranslucent:NO];
-    
     
     [self.dataManager getAPIFinancialData];
     
@@ -125,8 +130,6 @@
     
     
 }
-//****************************************************************************************
-
 //****************************************************************************************
 - (void)didReceiveMemoryWarning
 {
@@ -174,13 +177,18 @@
         //2.ALL IMAGES FETCHED,GO BACK TO THE MAIN QUEUE,AND ASSIGN IMAGES
         dispatch_async(dispatch_get_main_queue(), ^{
             [cell.imageView setImage:imageToSet];
-//            [cell.imageView setFrame:CGRectMake(0,0,38,38)];
             cell.textLabel.text = currentCompany.companyName;
-            
             //ALIGN TEXT LABEL TO LEFT/CENTER/RIGHT
             cell.textLabel.textAlignment = NSTextAlignmentLeft;
-//           [cell.imageView sizeToFit];
-            [cell.imageView clipsToBounds];
+          
+            //MAKE THE IMAGE VIEW FRAME PER CELL OF SIMILAR SIZE
+            CGSize itemSize = CGSizeMake(40, 40);
+            UIGraphicsBeginImageContextWithOptions(itemSize, NO, UIScreen.mainScreen.scale);
+            CGRect imageRect = CGRectMake(0.0, 0.0, itemSize.width, itemSize.height);
+            [cell.imageView.image drawInRect:imageRect];
+            cell.imageView.image = UIGraphicsGetImageFromCurrentImageContext();
+            UIGraphicsEndImageContext();
+
         });
 
     });
@@ -225,7 +233,6 @@
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
     
-    
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         NSInteger selectedIndex = indexPath.row;
         
@@ -238,17 +245,13 @@
         
         //REMOVE MANAGED COMPANY FROM CORE DATA
         [self.dataManager removeManagedCompanyFromCoreData:self.dataManager.currentManagedCompanyDAO];
-        
-        //TOGGLE EMPTY SCREEN IF ALL COMPANIES ARE DELETED
-        if([self.dataManager.companyListDAO count] == 0){
-            [self.companyTableView setHidden:YES];
-            [self.emptyViewAndMessage setHidden:NO];
-        } else {
-            [self.companyTableView setHidden:NO];
-            [self.emptyViewAndMessage setHidden:YES];
+            
+        //IF COMPANY ARRAY IS EMPTY
+        if(self.dataManager.companyListDAO.count == 0){
+            [self.populatedStackView setHidden:YES];
+            [self.view reloadInputViews];
         }
-        
-        
+    
     }
     
     else if (editingStyle == UITableViewCellEditingStyleInsert) {
@@ -304,11 +307,11 @@
     if (self.companyTableView.isEditing) {
         [self.companyTableView setEditing:NO animated:YES];
         self.navigationItem.leftBarButtonItem.title = @"Edit";
-        [self.undoRedoHolder setHidden:YES];
+        [self.populatedUndoRedoHolderView setHidden:YES];
     } else {
         [self.companyTableView setEditing:YES animated:YES];
         self.navigationItem.leftBarButtonItem.title = @"Done";
-        [self.undoRedoHolder setHidden:NO];
+        [self.populatedUndoRedoHolderView setHidden:NO];
     }
     
 }
@@ -349,21 +352,34 @@
 
 - (void)dealloc {
     [_companyTableView release];
-    [_undoRedoHolder release];
     [_emptyViewAndMessage release];
-    [_emptyMessage release];
+    [_gifBackGroundImageView release];
+    [_emptyStateLogoImageView release];
+    [_noCompaniesLabel release];
+    [_populatedStackView release];
+    [_populatedUndoRedoHolderView release];
+    [_emptyUndoRedoHolderView release];
     [super dealloc];
 }
-- (IBAction)emptyAddCompanyButton:(UIButton *)sender {
-    [self pushToAddCompanyView];
+
+
+- (IBAction)addToCompaniesEmptyButton:(UIButton *)sender {
+    NewCompanyViewController *addNewCompanyVC = [[NewCompanyViewController alloc]init];
+    [self.navigationController pushViewController:addNewCompanyVC animated:YES];}
+
+-(void)pushToEmptyView{
+    EmptyViewController *emptyView = [[EmptyViewController alloc]init];
+    [self.navigationController pushViewController:emptyView animated:YES];
+    
+}
+- (IBAction)populatedUndoButtonPressed:(UIButton *)sender {
 }
 
-- (IBAction)undoButton:(UIButton *)sender {
+- (IBAction)populatedRedoButtonPressed:(UIButton *)sender {
+}
+- (IBAction)emptyUndoButtonPressed:(UIButton *)sender {
 }
 
-- (IBAction)Redo:(UIButton *)sender {
+- (IBAction)emptyRedoButtonPressed:(UIButton *)sender {
 }
-
-
-
 @end

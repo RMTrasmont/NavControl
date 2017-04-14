@@ -13,4 +13,5 @@
 @interface NewProductsViewController : UIViewController <UITextFieldDelegate>
 @property (strong,nonatomic) NSString *productName;
 @property (strong,nonatomic)NSURL *productURL;
+@property (strong,nonatomic)NSURL *productImageURL;
 @end

@@ -28,7 +28,8 @@
 @property (strong,nonatomic)NSMutableArray<ManagedCompany *> *managedCompanyListDAO;
 //CREATION METHODS
 -(Company *)makeNewCompanyWithName:(NSString *)name withLogoURL:(NSURL *)logoURL andStockSymbol:(NSString *)ticker;
--(Product *)makeNewProductWithName:(NSString *)name andURL:(NSURL *)url;
+-(Product *)makeNewProductWithName:(NSString *)name withWebURL:(NSURL *)webURL andImageURL:(NSURL *)imageURL;
+
 //ADD COMPANY METHOD
 -(void)addCompanyToList:(Company *)company;
 //REMOVE COMPANY METHOD
@@ -67,5 +68,6 @@
 @property(strong,nonatomic)Product *productBeingEditedDAO;
 @property (nonatomic)BOOL editingProductNameDAO;
 @property (nonatomic)BOOL editingProductURLDAO;
+@property(nonatomic)BOOL editingProductImageURLDAO;
 
 @end

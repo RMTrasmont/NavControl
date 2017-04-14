@@ -12,8 +12,10 @@
 @property (nonatomic)float textFieldHeight;
 @property (strong, nonatomic) UITextField *editNameTextField;
 @property (strong,nonatomic) UITextField *editURLTextField;
+@property (strong,nonatomic)UITextField *editImageURLTextField;
 @property (strong,nonatomic)UILabel *editNameLabel;
 @property (strong,nonatomic)UILabel *editURLLabel;
+@property (strong,nonatomic)UILabel *editImageURLLabel;
 @property (nonatomic)DAO *dataManager;
 
 @end
@@ -49,12 +51,14 @@
     [self proportionalWidth:0.9f];
     [self proportionalHeight:0.075f];
     
-    //ADD TEXTFIELD FOR EDITCOMPANY EDIT NAME SCREEN
+    //ADD TEXTFIELD FOR EDITPRODUCT EDIT NAME SCREEN
     self.editNameTextField = [self createTextFieldNamed:@"EDIT PRODUCT NAME" withXLocation:20.0f withYLocation:130.0f withWidth:self.textFieldWidth andHeight:self.textFieldHeight withIDTag:0];   // <---CAN USE ID TAG TO REFER TO THE TEXT FIELD
     
-    //ADD TEXTFIELD FOR EDITCOMPANY EDIT LOGO URL
+    //ADD TEXTFIELD FOR EDITPRODUCT EDIT LOGO URL
     self.editURLTextField = [self createTextFieldNamed:@"EDIT PRODUCT URL" withXLocation:20.0F withYLocation:210.0f withWidth:self.textFieldWidth andHeight:self.textFieldHeight withIDTag:1];  // <--- CAN USE ID TAG TO REFER TO THE TEXT FIELD
     
+    //ADD TEXTFIELD FOR EDITPRODUCT IMAGE URL
+    self.editImageURLTextField = [self createTextFieldNamed:@"IMAGE URL" withXLocation:20.0F withYLocation:290.0F withWidth:self.textFieldWidth andHeight:self.textFieldHeight withIDTag:2];
     
     //ADD EDIT PRODUCT NAME LABEL
     self.editNameLabel = [self createLabelNamed:@"Product Name:" withXLocation:20.0 withYLocation:100.0f withWidth:250.0f andHeight:20.0f];
@@ -64,9 +68,14 @@
     self.editURLLabel = [self createLabelNamed:@"Product URL:" withXLocation:20.0f withYLocation:180.0f withWidth:250.0f andHeight:20.0f];
     [self.editURLLabel setFont:[UIFont boldSystemFontOfSize:16]];
     
+    //ADD EDIT PRODUCT IMAGE URL LABEL
+    self.editImageURLLabel = [self createLabelNamed:@"Image URL" withXLocation:20.0f withYLocation:260.0f withWidth:250.0f andHeight:20.0f];
+    [self.editImageURLLabel setFont:[UIFont boldSystemFontOfSize:16]];
+    
     //SET KEYBOARD AS DELEGATE FOR KEYBOARD HANDLING
     self.editNameTextField.delegate = self;
     self.editURLTextField.delegate = self;
+    self.editImageURLTextField.delegate = self;
 
 }
 
@@ -77,10 +86,12 @@
 }
 
 //************************************************************************************
+
 - (void)viewWillAppear:(BOOL)animated{
     //DISPLAY CURRENT VALUES BEFORE EDIT
     self.editNameTextField.text = self.currentProduct.productName;
     self.editURLTextField.text = [self.currentProduct.productURL absoluteString];
+    self.editImageURLTextField.text = [self.currentProduct.productImageURL absoluteString];
 }
 
 
@@ -127,16 +138,11 @@
     //NEW VALUES
     NSString *editedName = self.editNameTextField.text;
     NSURL *editedURL = [NSURL URLWithString:self.editURLTextField.text];
-    
+    NSURL *editedImageURL = [NSURL URLWithString:self.editImageURLTextField.text];
     //OLD VALUES
     NSString *originalName = self.currentProduct.productName;
     NSURL *originalURL = self.currentProduct.productURL;
-    
-    //SEND OLD AND NEW VALUES TO DAO
-//    self.dataManager.editedProductNameDAO = editedName;
-//    self.dataManager.editedProductURLDAO = editedURL;
-//    self.dataManager.originalProductNameDAO = originalName;
-//    self.dataManager.originalProductURLDAO = originalURL;
+    NSURL *originalImageURL = self.currentProduct.productImageURL;
     
     if([self.editNameTextField isEditing]){
         self.currentProduct.productName = editedName;
@@ -152,6 +158,14 @@
     } else {
         self.currentProduct.productURL = originalURL;
         self.dataManager.editingProductURLDAO = NO;
+    }
+    
+    if([self.editImageURLTextField isEditing]){
+        self.currentProduct.productImageURL = editedImageURL;
+        self.dataManager.editingProductImageURLDAO = YES;
+    }else {
+        self.currentProduct.productImageURL = originalImageURL;
+        self.dataManager.editingProductImageURLDAO = NO;
     }
     
     //LET DAO KNOW THE CURRENT PRODUCT BEING EDITED

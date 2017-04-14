@@ -18,33 +18,20 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    //ADD EMPTY STOCK IMAGE
-    UIImageView *emptyImage =[[UIImageView alloc]
-                              initWithFrame:CGRectMake((self.view.frame.size.width/2)-50,
-                                                       (self.view.frame.size.height/2)- 200,
-                                                       100,100)];
-    emptyImage.image=[UIImage imageNamed:@"StockImage"];
-    [self.view addSubview:emptyImage];
+    //1.LOAD ANIMATED IMAGE FROM GIF ASYNCHRONOUSLY
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        
+       UIImage *animatedFly =  [UIImage animatedImageWithAnimatedGIFURL:[NSURL URLWithString:@"http://rs1264.pbsrc.com/albums/jj486/barryfromtexas/Internet%20Fun/bug_crawls_on_screen.gif~c200"]];
+        //**********************BACK TO MAIN THREAD*****************************
+        //2.ALL IMAGES FETCHED,GO BACK TO THE MAIN QUEUE,AND ASSIGN IMAGES
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.animatedImageView setImage:animatedFly];
+        });
+    });
+
     
-    //ADD LABEL
-    UILabel *emptyLabel = [[UILabel alloc]initWithFrame:
-                           CGRectMake((self.view.frame.size.width/2)-150,(self.view.frame.size.height/2)-120, 300,100)];
-    [emptyLabel setText:@"You have not added any Companies"];
-    [emptyLabel setTextAlignment:NSTextAlignmentCenter];
-    [emptyLabel setTextColor:[UIColor grayColor]];
-    [self.view addSubview:emptyLabel];
     
-    //ADD BUTTON (need to add action to segue to add company)
-    UIButton *emptyAddButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    emptyAddButton.frame = CGRectMake((self.view.frame.size.width/2)-65,
-                                      (self.view.frame.size.height/2)-55,
-                                      130, 50);
-    [emptyAddButton setTitle:@"+ Add Company" forState:UIControlStateNormal];
-    emptyAddButton.titleLabel.textColor = [UIColor redColor];
-    [emptyAddButton.titleLabel setFont:[UIFont boldSystemFontOfSize:16]];
-    [emptyAddButton addTarget:self action:@selector(segueToAddCompany) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:emptyAddButton];
-    
+
 }
 
 
@@ -53,7 +40,22 @@
     NewCompanyViewController *addNewCompanyVC = [[NewCompanyViewController alloc]init];
     [self.navigationController pushViewController:addNewCompanyVC animated:YES];
 }
+- (IBAction)addCompanyButton:(UIButton *)sender {
+    NewCompanyViewController *addNewCompanyVC = [[NewCompanyViewController alloc]init];
+    [self.navigationController pushViewController:addNewCompanyVC animated:YES];
+}
 
+- (void)dealloc {
+    [_emptyImageLogo release];
+    [_emptyMessageLabel release];
+    [_animatedImageView release];
+    [_undoRedoHolderView release];
+    [super dealloc];
+}
 
+- (IBAction)undoButtonPressed:(UIButton *)sender {
+}
 
+- (IBAction)redoButtonPressed:(UIButton *)sender {
+}
 @end

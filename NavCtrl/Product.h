@@ -13,6 +13,6 @@
 @property (strong,nonatomic)NSString *productCompany;
 @property (strong,nonatomic)NSString *productName;
 @property (strong,nonatomic)NSURL *productURL;
-
-
+@property (strong,nonatomic)NSURL *productImageURL;
+@property (strong,nonatomic)UIImage *fetchedLogoImage;
 @end
