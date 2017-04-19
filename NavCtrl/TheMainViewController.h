@@ -17,7 +17,7 @@
 @interface TheMainViewController : UIViewController<UITableViewDelegate, UITableViewDataSource>
 
 //@property (strong,nonatomic)Company *currentCompany;
-@property (retain,nonatomic)MainViewController *companyProductsDetailView;
+//@property (retain,nonatomic)MainViewController *companyProductsDetailView;
 //SHOWN WHEN POPULATED
 @property (retain, nonatomic) IBOutlet UIStackView *populatedStackView;
 @property (retain, nonatomic) IBOutlet UITableView *companyTableView;
@@ -26,7 +26,6 @@
 - (IBAction)populatedRedoButtonPressed:(UIButton *)sender;
 //METHOD TO PUSH TO EMPTY VIEW
 -(void)pushToEmptyView;
-
 //SHOWN WHEN EMPTY(MIGHT NOT USE)
 @property (retain, nonatomic) IBOutlet UIView *emptyViewAndMessage;
 @property (retain, nonatomic) IBOutlet UIImageView *gifBackGroundImageView;
@@ -37,9 +36,6 @@
 - (IBAction)emptyUndoButtonPressed:(UIButton *)sender;
 - (IBAction)emptyRedoButtonPressed:(UIButton *)sender;
 
-
-
 //FETCHED FINANCE DATA
 @property(strong,nonatomic)NSMutableArray *fetchedFinancials;
-
 @end

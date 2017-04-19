@@ -111,9 +111,6 @@
 //METHOD TO POP BACK TO COMPANY VIEW CONTROLLER / SEGUE WILL ONLY ADD ANOTHER LAYER OF THE SAME VIEW USED IN "CANCEL" BUTTON
 -(void)popToCompanyViewController{
     [self.navigationController popViewControllerAnimated:YES];
-    
-    //REGISTER FOR UNDO MANAGER
-    [self.dataManager.managedObjectContext.undoManager registerUndoWithTarget:self selector:@selector(saveNewCompany) object:self.navigationItem.rightBarButtonItem];
 }
 
 //************************************************************************************
@@ -124,11 +121,6 @@
     self.theNewCompanyName = self.theNewCompanyNameTextField.text;
     self.theNewCompanyURL = [NSURL URLWithString:(self.theNewCompanyLogoURLTextField.text)];
     self.theNewCompanyStockSymbol = self.theNewCompanyStockSymbolTextField.text;
-    
-//    //SEND INFO TO DAO
-//    self.dataManager.theNewCompanyNameDAO = self.theNewCompanyName;
-//    self.dataManager.theNewCompanyURLDAO = self.theNewCompanyURL;
-//    self.dataManager.theNewCompanyStockSymbolDAO = self.theNewCompanyStockSymbol;
     
     //CREATE A NEW COMPANY USING DAO METHOD AND GIVE IT THE LOCAL NAME & URL
     Company *madeCompany = [self.dataManager makeNewCompanyWithName:self.theNewCompanyName withLogoURL:self.theNewCompanyURL andStockSymbol:self.theNewCompanyStockSymbol];

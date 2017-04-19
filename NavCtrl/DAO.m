@@ -34,7 +34,7 @@
     return self;
 }
 
-//**************************************************************************************
+//*************************************************************************************
 //CREATED ALL COMPANIES IN ONE METHOD // OOP STAGE 2
 #pragma mark - firstRun
 
@@ -200,7 +200,7 @@
     for (Company *company in self.companyListDAO) {
         
         //CREATE A MANAGED COMPANY
-        ManagedCompany *mC = [NSEntityDescription insertNewObjectForEntityForName:@"ManagedCompany" inManagedObjectContext:self.managedObjectContext];
+        ManagedCompany *mC = [NSEntityDescription insertNewObjectForEntityForName:@"ManagedCompany" inManagedObjectContext:self.managedObjectContextDAO];
         
         //ASSIGN ATTRIBUTES TO MANAGED COMPANY
         mC.mCName = company.companyName;
@@ -213,23 +213,14 @@
         for (Product *product in company.companyProductList) {
             
             //CREATE A MANANGED PRODUCT
-            ManagedProduct *mP = [NSEntityDescription insertNewObjectForEntityForName:@"ManagedProduct" inManagedObjectContext:self.managedObjectContext];
+            ManagedProduct *mP = [NSEntityDescription insertNewObjectForEntityForName:@"ManagedProduct" inManagedObjectContext:self.managedObjectContextDAO];
             
             //ASSIGN ATTRIBUTES TO MANAGED PRODUCT
             mP.mPProductName = product.productName;
             mP.mPProducURL = [NSString stringWithFormat:@"%@",product.productURL];
             mP.mPProductImageURL = [NSString stringWithFormat:@"%@",product.productImageURL];
-            // [mC.products setByAddingObject:mP];
-            [mC addProductsObject:mP];  //*****<------use when adding product****
-            
-            [self saveManagedObject];
+            [mC addProductsObject:mP];
         }
-        
-        
-        [self saveManagedObject];
-        //[self saveContext];
-        
-        
     }
     
         [[NSUserDefaults standardUserDefaults]setBool:YES forKey:@"DidFirstRun"];
@@ -308,57 +299,48 @@
     
     //****************************************
     
-    //2*.NOTE: NSURLSESSION WORKS ASYNCHRONUSLY, DOWNLOAD TASK GETS HIT BEFORE THE DATA INSIDE THE BLOCK. NOTE THE NUMBERS
-    //TO USE THE INFO THAT IS RETRIEVED FROM INSIDE THE  NSURLSESSION BLOCK, YOU NEED TO EMPLOY "COMPLETION BLOCK PATTERN"
-    //THIS METHOD SHOULD *NOT* RETURN ANYTHING, BUT RATHER PASS THE DATA BACK IN A "COMPLETION BLOCK"
-    NSURLSessionDataTask *dataTask = [[NSURLSession sharedSession]     // <--- use "Delegate based" or "Block based" style
-                                        dataTaskWithURL:financeURL
-                                        completionHandler:^(NSData *data,
-                                                            NSURLResponse *response,
-                                                            NSError *error){
+    //2*.NOTE: NSURLSESSION WORKS ASYNCHRONUSLY
+    NSURLSessionDataTask *dataTask = [[NSURLSession sharedSession] 
+    dataTaskWithURL:financeURL completionHandler:^(NSData *data,
+    NSURLResponse *response, NSError *error)
+    {
                                               
-                                        //4*: HANDLE RESPONSE  **ASYNCHRONIZATION STARTS HERE**
-                                            //check for error
-                                        if(!error){
-                                                
-                                        //GET THE DATA FROM THE URL DATA IS "CSV"
-                                        NSData *financialData = [NSData dataWithContentsOfURL:financeURL];
-                                        
-                                        //TURN FINANCIAL DATA INTO STRING note: returns "Symbol,Price,Change"
-                                        NSString *stringData = [[NSString alloc]initWithData:financialData encoding:NSUTF8StringEncoding];
-                                        //FURTHER REMOVE THE QUOTATION MARKS ""
-                                        NSString *stringDataWOQuotes = [stringData stringByReplacingOccurrencesOfString:@"\"" withString:@""];
-                                              
-                                        //TURN INTO AN ARRAY (of symbol,prices,change)
-                                        self.fetchedFinDataArrayDAO = [stringDataWOQuotes componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"\n"]];
+    //4*: HANDLE RESPONSE  **ASYNCHRONIZATION STARTS HERE**
+    
+        if(!error){
+        //GET THE DATA FROM THE URL DATA IS "CSV"
+            NSData *financialData = [NSData dataWithContentsOfURL:financeURL];
+            //TURN FINANCIAL DATA INTO STRING note: returns "Symbol,Price,Change"
+            NSString *stringData = [[NSString alloc]initWithData:financialData encoding:NSUTF8StringEncoding];
+            //FURTHER REMOVE THE QUOTATION MARKS ""
+            NSString *stringDataWOQuotes = [stringData stringByReplacingOccurrencesOfString:@"\"" withString:@""];
+            //TURN INTO AN ARRAY (of symbol,prices,change)
+            self.fetchedFinDataArrayDAO = [stringDataWOQuotes componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"\n"]];
                                             
-                                                //NSNOTIFICATION HERE IF NO ERROR, DO SOMETHING
-                                                // "dispatch_async" takes you to main thread
-                                        dispatch_async(dispatch_get_main_queue(), ^{
-                                            
-                                            int stockDataTransfered = 0;
-                                            do{
-                                                for (int i = 0; i < self.companyListDAO.count; i++) {
-                                                    if(self.fetchedFinDataArrayDAO[i] != nil){
-                                                        self.companyListDAO[i].financialDataString = self.fetchedFinDataArrayDAO[i];
-                                                        stockDataTransfered++;
-                                                    }else {
-                                                        break;
-                                                    }
-                                                }
-                                            }while (stockDataTransfered < (self.fetchedFinDataArrayDAO.count));
-                                            
-                                            [[NSNotificationCenter defaultCenter]postNotificationName:@"Data Ready" object:self];
-                                            
-                                            });
-                                        } else {
-                                        //if theres error
-                                                //NSNOTIFICATION HERE IF THERES ERROR
-                                            dispatch_async(dispatch_get_main_queue(),^{
-                                                [[NSNotificationCenter defaultCenter]postNotificationName:@"Data Missing" object:self];
-                                            });
-                                        }
-                                }];
+            //NSNOTIFICATION HERE IF NO ERROR, DO SOMETHING
+            // "dispatch_async" takes you to main thread
+            dispatch_async(dispatch_get_main_queue(), ^{
+            int stockDataTransfered = 0;
+            do{
+            for (int i = 0; i < self.companyListDAO.count; i++) {
+            if(self.fetchedFinDataArrayDAO[i] != nil){
+            self.companyListDAO[i].financialDataString = self.fetchedFinDataArrayDAO[i];
+            stockDataTransfered++;
+            }else {
+            break;
+            }
+                }
+            }while (stockDataTransfered < (self.fetchedFinDataArrayDAO.count));
+            [[NSNotificationCenter defaultCenter]postNotificationName:@"Data Ready" object:self];
+            });
+            } else {
+            //if theres error
+            //NSNOTIFICATION HERE IF THERES ERROR
+            dispatch_async(dispatch_get_main_queue(),^{
+            [[NSNotificationCenter defaultCenter]postNotificationName:@"Data Missing" object:self];
+            });
+            }
+            }];
     //3*.
     [dataTask resume];
     
@@ -383,13 +365,11 @@
     }
 }
 
-
-
 //****************************INITIALIZE CORE DATA**********************************
 #pragma mark Init Core Data
 
-- (void)initializeCoreData
-{
+- (void)initializeCoreData{
+    
     NSURL *modelURL = [[NSBundle mainBundle] URLForResource:@"CoreDataModel" withExtension:@"momd"];
     
     //MANAGED OBJECT MODEL
@@ -397,13 +377,17 @@
     NSAssert(mom != nil, @"Error initializing Managed Object Model");
     //PERSISTENCE COORDINATOR
     NSPersistentStoreCoordinator *psc = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:mom];
-    //MANAGED OBJECT CONTEXT
-    NSManagedObjectContext *moc = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSMainQueueConcurrencyType];
-    [moc setPersistentStoreCoordinator:psc];
-    [self setManagedObjectContext:moc];
+    
+    //MANAGED OBJECT CONTEXT SET TO THE ONE CREATED AT APPDELEGATE
+    
+    self.managedObjectContextDAO = [(NavControllerAppDelegate *)[[UIApplication sharedApplication] delegate] managedObjectContext];
+    
+    [self.managedObjectContextDAO setPersistentStoreCoordinator:psc];
+    
+    [self setManagedObjectContextDAO:self.managedObjectContextDAO];
     
     //**** UNDO REDO *****
-    self.managedObjectContext.undoManager = [[NSUndoManager alloc]init];
+   // self.managedObjectContextDAO.undoManager = [[NSUndoManager alloc]init];
     
     
     NSFileManager *fileManager = [NSFileManager defaultManager];
@@ -412,7 +396,7 @@
     
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void) {
         NSError *error = nil;
-        NSPersistentStoreCoordinator *psc = [[self managedObjectContext] persistentStoreCoordinator];
+        NSPersistentStoreCoordinator *psc = [[self managedObjectContextDAO] persistentStoreCoordinator];
         NSPersistentStore *store = [psc addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:storeURL options:nil error:&error];
         NSAssert(store != nil, @"Error initializing PSC: %@\n%@", [error localizedDescription], [error userInfo]);
     
@@ -443,28 +427,28 @@
 //******************************SAVE TO CORE DATA***************************************
 #pragma mark - Save Managed Object
 //SAVE MANAGED OBEJCT
--(void)saveManagedObject{
-NSError *error = nil;
-if ([[self managedObjectContext] save:&error] == NO) {
-    NSAssert(NO, @"Error saving context: %@\n%@", [error localizedDescription], [error userInfo]);
-    }
-}
+//-(void)saveManagedObject{
+//NSError *error = nil;
+//if ([[self managedObjectContext] save:&error] == NO) {
+//    NSAssert(NO, @"Error saving context: %@\n%@", [error localizedDescription], [error userInfo]);
+//    }
+//}
 
-//SAVE CONTEXT
-#pragma mark - Save Context
-//ONLY USE IN APPDELEGATE APP TERMINATES, SAVING CONTEXT OTHERWISE DISALLOWS UNDO/REDO
-- (void)saveContext
-{
-    NSError *error = nil;
-    NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
-    if (managedObjectContext != nil) {
-        if ([managedObjectContext hasChanges] && ![managedObjectContext save:&error]) {
-            
-            NSLog(@"Saving didn't work so well.. Error: %@, %@", error, [error userInfo]);
-            abort();
-        }
-    }
-}
+////SAVE CONTEXT
+//#pragma mark - Save Context
+////ONLY USE IN APPDELEGATE APP TERMINATES, SAVING CONTEXT OTHERWISE DISALLOWS UNDO/REDO
+//- (void)saveContext
+//{
+//    NSError *error = nil;
+//    NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
+//    if (managedObjectContext != nil) {
+//        if ([managedObjectContext hasChanges] && ![managedObjectContext save:&error]) {
+//            
+//            NSLog(@"Saving didn't work so well.. Error: %@, %@", error, [error userInfo]);
+//            abort();
+//        }
+//    }
+//}
 
 #pragma mark - Fetch From Core Data
 //******************************FETCH/LOAD FROM CORE DATA********************************
@@ -475,7 +459,9 @@ if ([[self managedObjectContext] save:&error] == NO) {
     NSError *error = nil;
     
     //SET MANAGED COMPANY LIST AS THE THE OBJECTS FROM CORE DATA AS AN ARRAY PROPERTY
-    self.managedCompanyListDAO = [[NSMutableArray alloc] initWithArray:[self.managedObjectContext executeFetchRequest:fetchRequest error:&error]];
+    self.managedCompanyListDAO = [[NSMutableArray alloc] initWithArray:[self.managedObjectContextDAO executeFetchRequest:fetchRequest error:&error]];
+    self.companyListDAO = [[NSMutableArray alloc] init];
+    
     
    
     //ERROR HANDLING
@@ -504,10 +490,6 @@ if ([[self managedObjectContext] save:&error] == NO) {
         }
     
 
-    
-    [self saveManagedObject];
-    //[self saveContext];
-
     [[NSUserDefaults standardUserDefaults]setBool:YES forKey:@"didLoadFetchFromCoreData"];
 }
 
@@ -516,22 +498,21 @@ if ([[self managedObjectContext] save:&error] == NO) {
 
 -(void)saveNewCompanyToCoreData{
     //ADD MANAGED OBJECT
-    ManagedCompany *mC = [NSEntityDescription insertNewObjectForEntityForName:@"ManagedCompany" inManagedObjectContext: self.managedObjectContext];
+    ManagedCompany *mC = [NSEntityDescription insertNewObjectForEntityForName:@"ManagedCompany" inManagedObjectContext: self.managedObjectContextDAO];
     //ASSIGN ATTRIBUTES
     mC.mCName = self.theNewCompanyDAO.companyName;
     mC.mCLogoURL = [NSString stringWithFormat:@"%@",self.theNewCompanyDAO.companyLogoURL];
     mC.mCStockSymbol = self.theNewCompanyDAO.companyStockSymbol;
-    [self saveManagedObject];
+    //[self saveManagedObject];
     
     //ADD MANAGED COMPANY TO MANAGED COMPANY ARRAY
     [self.managedCompanyListDAO addObject:mC];
     
-    //[self saveContext];
 }
 
 -(void)saveNewProductToCoreData{
     //ADD MANAGED PRODUCT
-    ManagedProduct *mP = [NSEntityDescription insertNewObjectForEntityForName:@"ManagedProduct" inManagedObjectContext:self.managedObjectContext];
+    ManagedProduct *mP = [NSEntityDescription insertNewObjectForEntityForName:@"ManagedProduct" inManagedObjectContext:self.managedObjectContextDAO];
     
     mP.mPProductName = self.theNewProductDAO.productName;
     mP.mPProducURL = [NSString stringWithFormat:@"%@",self.theNewProductDAO.productURL];
@@ -545,10 +526,6 @@ if ([[self managedObjectContext] save:&error] == NO) {
     
     //ASSIGN THE NEWLY CREATED SET TO MANAGED COMPANY PRODUCTS
     currentManagedCompany.products = productSet;
-    
-    //SAVE TO CORE DATA
-    [self saveManagedObject];
-    //[self saveContext];
     
 }
 #pragma mark - WORKING EDIT COMPANY
@@ -577,10 +554,6 @@ if ([[self managedObjectContext] save:&error] == NO) {
     } else {
         self.currentManagedCompanyDAO.mCLogoURL = originalMCLogoURL;
     }
-    
-    //SAVE MANAGED OBJECT
-    [self saveManagedObject];
-    //[self saveContext];
     
 }
 
@@ -619,10 +592,6 @@ if ([[self managedObjectContext] save:&error] == NO) {
     
     //SET THE COMAPNY PRODUCTS AS THE EDITED SET
     currentManagedCompany.products = [[NSMutableSet alloc]initWithSet:editedSet];
-    
-    //SAVE TO CORE DATA
-    [self saveManagedObject];
-    //[self saveContext];
 
 }
 
@@ -634,13 +603,10 @@ if ([[self managedObjectContext] save:&error] == NO) {
     self.currentManagedCompanyDAO = managedCompany;
     [self.managedCompanyListDAO removeObject:managedCompany];
     
-    //DELETE
-    [self.managedObjectContext deleteObject:managedCompany];
-    //[self saveContext];
+    //DELETE FROM CORE DATA
+    [self.managedObjectContextDAO deleteObject:managedCompany];
     
 }
-
-
 
 #pragma mark - remove Product
 
@@ -651,8 +617,7 @@ if ([[self managedObjectContext] save:&error] == NO) {
     [mC removeProductsObject:mP];
     
     //DELETE
-    [self.managedObjectContext deleteObject:mP];
-    [self saveContext];
+    [self.managedObjectContextDAO deleteObject:mP];
 
 }
 

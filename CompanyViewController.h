@@ -17,7 +17,7 @@
 
 @interface CompanyViewController : UITableViewController;
 
-@property (nonatomic,retain) IBOutlet MainViewController *productViewController;
+//@property (nonatomic,retain) IBOutlet MainViewController *productViewController;
 
 
 @end

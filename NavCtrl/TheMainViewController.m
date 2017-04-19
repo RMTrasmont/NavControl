@@ -20,13 +20,7 @@
     [super viewDidLoad];
     //SET THE DAO PROPERTY OF THIS VIEW
     self.dataManager = [DAO sharedManager];
-    
-    //TEST CORE DATA*
-    //NSLog(@"TEST COMPANY %@",self.dataManager.managedCompanyListDAO);
-    NSLog(@"TEST MANAGED COMPANY PRODUCT %@",self.dataManager.managedCompanyListDAO[0].products);
-    
-     //Uncomment the following line to preserve selection between presentations.
-//    self.clearsSelectionOnViewWillAppear = NO;
+
     
     //DISPLAY EDIT BUTTON ON LEFTSIDE OF BAR
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Edit" style:UIBarButtonItemStylePlain target:self action:@selector(toggleEditMode)];
@@ -44,7 +38,7 @@
     //NSNOTIFICATIONCENTER ADD OBSERVER WHEN DATA IS READY
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receivedNotification:) name:@"Data Ready" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receivedNotification:) name:@"Data Missing" object:nil];
-    //[self.dataManager getAPIFinancialData];
+    
     
     //TEST
     NSLog(@"TEST*****TheMainViewController*****LOADED");
@@ -57,7 +51,7 @@
     //1.LOAD ANIMATED IMAGE FROM GIF ASYNCHRONOUSLY
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         
-        UIImage *animatedFly =  [UIImage animatedImageWithAnimatedGIFURL:[NSURL URLWithString:@"http://rs1264.pbsrc.com/albums/jj486/barryfromtexas/Internet%20Fun/bug_crawls_on_screen.gif~c200"]];
+        UIImage *animatedFly =  [UIImage animatedImageWithAnimatedGIFURL:[NSURL URLWithString:@"https://68.media.tumblr.com/1acc0097ed89aaee8b6d32151b7dcbad/tumblr_n6rbvoK1GV1tcytp3o1_500.gif"]];
         //**********************BACK TO MAIN THREAD*****************************
         //2.ALL IMAGES FETCHED,GO BACK TO THE MAIN QUEUE,AND ASSIGN IMAGES
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -68,6 +62,9 @@
     
     //HIDE THE POPULATED STACK UNDOREDO HOLDER
     [self.populatedUndoRedoHolderView setHidden:YES];
+    
+    //INIT MANAGED OBJECT CONTEXT FOR USE WITH (OPTION 1)
+    self.dataManager.managedObjectContextDAO.undoManager = [[NSUndoManager alloc]init];
 
 }
 
@@ -77,11 +74,12 @@
 //****************************************************************************************
 
 - (void)receivedNotification:(NSNotification *) notification {
-    if ([[notification name] isEqualToString:@"Data is Ready"]) {
+    
+    if ([[notification name] isEqualToString:@"Data Ready"]) {
         
-        [self.dataManager getAPIFinancialData];
+        [self.companyTableView reloadData];
         
-    } else if ([[notification name] isEqualToString:@"Data is Missing"]) {
+    } else if ([[notification name] isEqualToString:@"Data Missing"]) {
         UIAlertController * alert = [UIAlertController
                                      alertControllerWithTitle:@"Error"
                                      message:@"Error Fetching Financial Data"
@@ -114,8 +112,9 @@
     
     //MOVE OBJECTS UNDERNEATH NAVBAR LOWER
     [self.navigationController.navigationBar setTranslucent:NO];
-    
+ 
     [self.dataManager getAPIFinancialData];
+    
     
     [self.companyTableView reloadData];
     
@@ -214,6 +213,8 @@
     //cell.accessoryView = self.editButton; // <--- SHOW ON CELL RIGHT AWAY
     cell.editingAccessoryView = editButton; // <--- SHOW ON EDIT VIEW
     
+
+    
     //ADD STOCK INFO ON DETAIL TEXT LABEL
     cell.detailTextLabel.text = [NSString stringWithFormat:@"%@",currentCompany.financialDataString];
     
@@ -240,7 +241,7 @@
         self.dataManager.currentManagedCompanyDAO  = self.dataManager.managedCompanyListDAO[selectedIndex];
         
         //REMOVE COMPANY FROM ARRAY
-        [self.dataManager.companyListDAO removeObjectAtIndex:indexPath.row];
+        [self.dataManager.companyListDAO removeObjectAtIndex:selectedIndex];
         [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
         
         //REMOVE MANAGED COMPANY FROM CORE DATA
@@ -372,14 +373,34 @@
     [self.navigationController pushViewController:emptyView animated:YES];
     
 }
+
+//(OPTION 1)
 - (IBAction)populatedUndoButtonPressed:(UIButton *)sender {
+   //NavControllerAppDelegate *appDelegate = (NavControllerAppDelegate*)[UIApplication sharedApplication].delegate;
+    [self.dataManager.managedObjectContextDAO undo];
+    [self.dataManager loadFetchedFromCoreData];
+    [self.companyTableView reloadData];
 }
 
 - (IBAction)populatedRedoButtonPressed:(UIButton *)sender {
-}
+    //NavControllerAppDelegate *appDelegate = (NavControllerAppDelegate*)[UIApplication sharedApplication].delegate;
+    [self.dataManager.managedObjectContextDAO redo];
+    [self.dataManager loadFetchedFromCoreData];
+    [self.companyTableView reloadData];}
+
+//(OPTION 2)
 - (IBAction)emptyUndoButtonPressed:(UIButton *)sender {
+    NavControllerAppDelegate *appDelegate = (NavControllerAppDelegate*)[UIApplication sharedApplication].delegate;
+    [appDelegate.managedObjectContext undo];
+    [self.dataManager loadFetchedFromCoreData];
+    [self.companyTableView reloadData];
 }
 
 - (IBAction)emptyRedoButtonPressed:(UIButton *)sender {
+    NavControllerAppDelegate *appDelegate = (NavControllerAppDelegate*)[UIApplication sharedApplication].delegate;
+    [appDelegate.managedObjectContext redo];
+    [self.dataManager loadFetchedFromCoreData];
+    [self.companyTableView reloadData];
 }
+
 @end

@@ -34,16 +34,15 @@
 -(void)addCompanyToList:(Company *)company;
 //REMOVE COMPANY METHOD
 -(void)removeCompanyFromList;
-//SAVE CONTEXT
--(void)saveContext;
 //GET STOCK QUOTE
 -(void)getAPIFinancialData;
 @property (strong,nonatomic)NSArray *fetchedFinDataArrayDAO;
 //CORE DATA STACK
-@property (strong,nonatomic) NSManagedObjectContext *managedObjectContext;
+@property (strong,nonatomic) NSManagedObjectContext *managedObjectContextDAO;
+//CORE DATA FETCH METHOD LOAD
+-(void) loadFetchedFromCoreData;
 //METHODS FOR SAVING TO CORE DATA
 -(void)initializeCoreData;
--(void)saveManagedObject;
 -(void)saveNewCompanyToCoreData;
 -(void)saveNewProductToCoreData;
 -(void)saveEditedCompanyToCoreData;
@@ -69,5 +68,4 @@
 @property (nonatomic)BOOL editingProductNameDAO;
 @property (nonatomic)BOOL editingProductURLDAO;
 @property(nonatomic)BOOL editingProductImageURLDAO;
-
 @end
