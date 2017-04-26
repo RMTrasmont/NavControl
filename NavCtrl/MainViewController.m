@@ -318,15 +318,14 @@
     [_detailsHolderView release];
     [_logoImageView release];
     [_stockPriceLabel release];
+    _tableView.delegate = nil;
+    _tableView.dataSource = nil;
     [_tableView release];
     [_undoRedoHolderView release];
-    [_tableView release];
     [_emptyProductsSubView release];
     [_emptyProductsLabel release];
     [_currentManagedProductSet release];
     [_sortDescriptors release];
-    _tableView.delegate = nil;
-    _tableView.dataSource = nil;
     [super dealloc];
 }
 - (IBAction)undoButton:(UIButton *)sender {
