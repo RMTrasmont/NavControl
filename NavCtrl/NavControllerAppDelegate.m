@@ -7,28 +7,30 @@
 //
 
 #import "NavControllerAppDelegate.h"
-#import "CompanyViewController.h"
+#import "DAO.h"
 
 @implementation NavControllerAppDelegate
+
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     
+    
     // Override point for customization after application launch.
-    UIViewController *rootController =
-    [[CompanyViewController alloc]
-     initWithNibName:@"CompanyViewController" bundle:nil];
+    TheMainViewController *tMVC = [[[TheMainViewController alloc]init]autorelease];
+    self.navigationController = [[[UINavigationController alloc]initWithRootViewController:tMVC]autorelease];
     
-    self.navigationController = [[UINavigationController alloc]
-                            initWithRootViewController:rootController];
+    self.window = [[UIWindow alloc]initWithFrame:[[UIScreen mainScreen] bounds]];
+
+    [_window setRootViewController:_navigationController];
+    [_window makeKeyAndVisible];
+    [_window release];
+    [self.navigationController release];
     
-    self.window = [[UIWindow alloc]
-                   initWithFrame:[[UIScreen mainScreen] bounds]];
-//  self.window addSubview:self.navigationController.view];
-    [self.window setRootViewController:self.navigationController];
-    [self.window makeKeyAndVisible];
+    //SET UP NSMANAGED OBJECT CONTEXT FOR CORE DATA, REFERE TO HERE FROM DAO
+    self.managedObjectContext = [[[NSManagedObjectContext alloc]initWithConcurrencyType:NSMainQueueConcurrencyType]autorelease];
+
     return YES;
-    
     
     /*
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
@@ -37,6 +39,7 @@
     [self.window makeKeyAndVisible];
     return YES;
      */
+    
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application
@@ -49,6 +52,7 @@
 {
     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later. 
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
+    [self saveContext];
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
@@ -64,6 +68,33 @@
 - (void)applicationWillTerminate:(UIApplication *)application
 {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+//    DAO *dataManager = [DAO sharedManager];
+//    [dataManager saveContext];
+    [self saveContext];
 }
+
+//SAVE CONTEXT
+#pragma mark - Save Context
+//ONLY USE IN APPDELEGATE APP TERMINATES, SAVING CONTEXT OTHERWISE DISALLOWS UNDO/REDO
+- (void)saveContext
+{
+    NSError *error = nil;
+    
+    if (self.managedObjectContext != nil) {
+        if ([self.managedObjectContext hasChanges] && ![self.managedObjectContext save:&error]) {
+            
+            NSLog(@"Saving didn't work so well.. Error: %@, %@", error, [error userInfo]);
+            abort();
+        }
+    }
+}
+
+-(void)dealloc{
+    [_window release];
+    [_navigationController release];
+    [_managedObjectContext release];
+    [super dealloc];
+}
+
 
 @end

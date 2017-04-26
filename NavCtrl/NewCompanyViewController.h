@@ -7,11 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "CompanyViewController.h"
 #import "DAO.h"
 #import "NewProductsViewController.h"
-@interface NewCompanyViewController : UIViewController <UITextFieldDelegate>   // <----
+@interface NewCompanyViewController : UIViewController <UITextFieldDelegate>
 @property (strong,nonatomic) NSString *theNewCompanyName;
-@property (strong,nonatomic) NSURL *theNewCompanyURL;
+@property (strong,nonatomic) NSURL *theNewCompanyLogoURL;
 @property (strong, nonatomic)NSString *theNewCompanyStockSymbol;
 @end

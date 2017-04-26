@@ -13,10 +13,10 @@
 //SINGLETON
 //A singleton is a special kind of class where only one instance of the class exists for the current process. In the case of an iPhone app, the one instance is shared across the entire app.
 // DAO file is Turned into a Singleton.
-//********************************************************
+//************************************************************************************
 + (id)sharedManager {
     static DAO *sharedMyManager = nil;
-    static dispatch_once_t onceToken;        //<--- THREAD SAFETY, THIS SINGLETON CODE IS CALLED ONLY ONCE PER APP
+    static dispatch_once_t onceToken; 
     dispatch_once(&onceToken, ^{
         sharedMyManager = [[self alloc] init];
     });
@@ -27,14 +27,16 @@
 {
     self = [super init];
     if (self) {
-        _companyListDAO = [[NSMutableArray alloc]init];
-        [self firstRun];
+        self.companyListDAO = [[[NSMutableArray alloc]init]autorelease];
+        [self initializeCoreData];
+        
     }
     return self;
 }
-//********************************************************
-//CREATED ALL COMPANIES IN ONE METHOD // OOP STAGE 2
 
+//*************************************************************************************
+//CREATED ALL COMPANIES IN ONE METHOD // OOP STAGE 2
+#pragma mark - firstRun
 
 -(void)firstRun{
     //NOTE CREATE CUSTOM INIT FOR EASIER USE IN FUTURE
@@ -42,22 +44,25 @@
     //TEST
     NSLog(@"DAO TEST RUN");
     
-    //APPLE ********************************************************
+    //APPLE *****************************************************************************
     //CREATE PRODUCTS
     Product *iPad = [[Product alloc]init];
     iPad.productName = @"iPad";
     iPad.productCompany = @"Apple";
     iPad.productURL = [NSURL URLWithString: @"http://www.apple.com/ipad/"];
+    iPad.productImageURL = [NSURL URLWithString:@"https://support.apple.com/content/dam/edam/applecare/images/en_US/ipad/featured-content-ipad-icon_2x.png"];
     
-    Product *iPod = [[Product alloc]init];
-    iPod.productName = @"iPod Touch";
-    iPod.productCompany = @"Apple";
-    iPod.productURL = [NSURL URLWithString:@"http://www.apple.com/ipod-touch/"];
+    Product *iWatch = [[Product alloc]init];
+    iWatch.productName = @"Apple Watch";
+    iWatch.productCompany = @"Apple";
+    iWatch.productURL = [NSURL URLWithString:@"https://www.apple.com/watch/"];
+    iWatch.productImageURL = [NSURL URLWithString:@"http://pisces.bbystatic.com/image2/BestBuy_US/images/products/4274/4274601_ra.jpg"];
     
-    Product *iphone = [[Product alloc]init];
-    iphone.productName = @"iPhone";
-    iphone.productCompany = @"Apple";
-    iphone.productURL = [NSURL URLWithString:@"http://www.apple.com/iphone/"];
+    Product *iPhone = [[Product alloc]init];
+    iPhone.productName = @"iPhone";
+    iPhone.productCompany = @"Apple";
+    iPhone.productURL = [NSURL URLWithString:@"http://www.apple.com/iphone/"];
+    iPhone.productImageURL = [NSURL URLWithString:@"https://i5.walmartimages.com/asr/7389e715-6eed-467c-a0f7-52ef0a94d775_1.a7c385bbc633c37a5c34489e24a3c6aa.jpeg"];
     
     //CREATE ARRAY OF PRODUCTS (TO PUT INTO COMPANY'S PRODUCTS ARRAY )
     //NSMutableArray *appleProducts = [NSMutableArray arrayWithObjects:iPad,iPod,iphone, nil];
@@ -68,31 +73,37 @@
     apple.companyName = @"Apple";
     apple.companyImage = [UIImage imageNamed:@"appleLogo"];
     //apple.companyProductList = appleProducts;
-    apple.companyLogoURL = [NSURL URLWithString:@"https://cdn3.iconfinder.com/data/icons/picons-social/57/56-apple-48.png"];
-    apple.companyProductList = [NSMutableArray arrayWithObjects:iPad,iPod,iphone, nil];
+    apple.companyLogoURL = [NSURL URLWithString:@"https://cdn2.iconfinder.com/data/icons/social-media-2046/32/apple_social_media_online-256.png"];
+    apple.companyProductList = [NSMutableArray arrayWithObjects:iPad,iWatch,iPhone, nil];
     apple.companyStockSymbol = @"AAPL";
     
     //ADD COMPANY TO DAO ARRAY OF COMPANIES
     [self.companyListDAO addObject:apple];
+    [apple release];
+    [iPad release];
+    [iWatch release];
+    [iPhone release];
     
-    
-    //SAMSUNG ********************************************************
+    //SAMSUNG ****************************************************************************
 
     //CREATE PRODUCTS
     Product *galaxyS4 = [[Product alloc]init];
     galaxyS4.productName = @"Galaxy S4";
     galaxyS4.productCompany = @"Samsung";
     galaxyS4.productURL = [NSURL URLWithString:@"http://www.samsung.com/us/mobile/phones/all-phones/s/galaxy_s4/_/n-10+11+hv1rp+trouu"];
+    galaxyS4.productImageURL = [NSURL URLWithString:@"https://i5.walmartimages.com/asr/5d7f9931-9040-4e91-aa54-6b488dbccaea_1.5d00235d0df974062e7c313d2481906c.jpeg"];
     
     Product *galaxyNote = [[Product alloc]init];
     galaxyNote.productName = @"Galaxy Note";
     galaxyNote.productCompany = @"Samsung";
     galaxyNote.productURL = [NSURL URLWithString:@"http://www.samsung.com/us/mobile/phones/all-phones/s/galaxy_note5/_/n-10+11+hv1rp+troum"];
+    galaxyNote.productImageURL = [NSURL URLWithString:@"http://www.samsung.com/global/galaxy/galaxy-note5/images/galaxy-note5_gallery_left-perspective_black_s3.png"];
     
     Product *galaxyTab = [[Product alloc]init];
     galaxyTab.productName = @"Galaxy Tab";
     galaxyTab.productCompany = @"Samsung";
     galaxyTab.productURL = [NSURL URLWithString:@"http://www.samsung.com/us/search/searchMain?Dy=1&Nty=1&Ntt=galaxy+tabpro+s"];
+    galaxyTab.productImageURL = [NSURL URLWithString:@"https://www.att.com/catalog/en/skus/images/samsung-galaxy%20tab%204%208.0-white-450x350.png"];
     
     //CREATE ARRAY OF PRODUCTS
     //NSMutableArray *samsungProducts = [NSMutableArray arrayWithObjects:galaxyS4,galaxyNote,galaxyTab, nil];
@@ -102,14 +113,17 @@
     samsung.companyName = @"Samsung";
     samsung.companyImage = [UIImage imageNamed:@"samsungLogo"];
     //samsung.companyProductList = samsungProducts;
-    samsung.companyLogoURL = [NSURL URLWithString:@"https://cdn2.iconfinder.com/data/icons/well-known-1/1024/Android-48.png"];
+    samsung.companyLogoURL = [NSURL URLWithString:@"https://cdn0.iconfinder.com/data/icons/flat-round-system/512/android-256.png"];
     samsung.companyProductList = [NSMutableArray arrayWithObjects:galaxyS4,galaxyNote,galaxyTab, nil];
     samsung.companyStockSymbol = @"SSU.DE"; //<--- German Stock Index
     
     //ADD COMPANY TO DAO ARRAY OF COMAPANIES
     [self.companyListDAO addObject:samsung];
-    
-    //GOOGLE ********************************************************
+    [samsung release];
+    [galaxyS4 release];
+    [galaxyNote release];
+    [galaxyTab release];
+    //GOOGLE **************************************************************************
     
     //CREATE PRODUCTS
     
@@ -117,17 +131,19 @@
     pixel.productName = @"Pixel";
     pixel.productCompany = @"Google";
     pixel.productURL = [NSURL URLWithString:@"https://store.google.com/search?q=pixel"];
+    pixel.productImageURL = [NSURL URLWithString:@"https://storage.googleapis.com/madebygoog/v1/phone/specs/marlin-black-en_US.jpg"];
     
     Product *pixelXL = [[Product alloc]init];
     pixelXL.productName = @"Pixel XL";
     pixelXL.productCompany = @"Google";
     pixelXL.productURL = [NSURL URLWithString:@"https://store.google.com/search?q=pixel%20xl"];
+    pixelXL.productImageURL = [NSURL URLWithString:@"https://ss7.vzw.com/is/image/VerizonWireless/pdp-features-d-1-google-pixel-14187-92316?&scl=1&scl=2"];
     
     Product *pixelC = [[Product alloc]init];
     pixelC.productName = @"Pixel C";
     pixelC.productCompany = @"Google";
     pixelC.productURL = [NSURL URLWithString:@"https://store.google.com/search?q=pixel%20c"];
-    
+    pixelC.productImageURL = [NSURL URLWithString:@"https://lh3.googleusercontent.com/h_DiEiua-WcvQg1i7jqF9VMZnFCULp_mmdwdJQQer7Qs1SPwj2AFDTo2Zuk9cSYdCg"];
     //CREATE AN ARRAY OF PRODUCTS
     //NSMutableArray *googleProducts = [NSMutableArray arrayWithObjects:pixel,pixelXL,pixelC, nil];
     
@@ -136,14 +152,18 @@
     google.companyName = @"Google";
     google.companyImage = [UIImage imageNamed:@"googleLogo"];
     //google.companyProductList = googleProducts;
-    google.companyLogoURL = [NSURL URLWithString:@"https://cdn4.iconfinder.com/data/icons/picons-social/57/40-google-plus-3-48.png"];
+    google.companyLogoURL = [NSURL URLWithString:@"https://cdn4.iconfinder.com/data/icons/new-google-logo-2015/400/new-google-favicon-256.png"];
     google.companyProductList = [NSMutableArray arrayWithObjects:pixel,pixelXL,pixelC, nil];
     google.companyStockSymbol = @"GOOG";
     
     //ADD COMPANY TO DAO ARRAY OF COMPANIES
     [self.companyListDAO addObject:google];
+    [google release];
+    [pixel release];
+    [pixelXL release];
+    [pixelC release];
     
-    //LG ********************************************************
+    //LG *********************************************************************************
     
     //CREATE PRODUCTS
     
@@ -151,17 +171,19 @@
     v10.productName = @"V10";
     v10.productCompany = @"LG";
     v10.productURL = [NSURL URLWithString:@"http://www.lg.com/us/mobile-phones/v10"];
+    v10.productImageURL = [NSURL URLWithString:@"http://www.lg.com/us/mobile-phones/v10/img/bg-tech-specs-right-desktop.png"];
     
     Product *v20 = [[Product alloc]init];
     v20.productName = @"V20";
     v20.productCompany = @"LG";
     v20.productURL = [NSURL URLWithString:@"http://www.lg.com/us/mobile-phones/v20"];
+    v20.productImageURL = [NSURL URLWithString:@"http://www.lg.com/ph/images/mobile-phones/md05777787/MC_thumb_350.jpg"];
     
     Product *g5 = [[Product alloc]init];
     g5.productName = @"G5";
     g5.productCompany = @"LG";
     g5.productURL = [NSURL URLWithString:@"http://www.lg.com/us/mobile-phones/g5#G5Modularity"];
-    
+    g5.productImageURL = [NSURL URLWithString:@"https://images-na.ssl-images-amazon.com/images/G/01/aplusautomation/vendorimages/87f919ee-4c34-4313-bcd0-3f912b2da2dc.jpg._CB276075918__SR300,300_.jpg"];
     //CREATE ARRAY OF PRODUCTS
     
     //NSMutableArray *lgProducts = [NSMutableArray arrayWithObjects:v10,v20,g5, nil];
@@ -172,100 +194,89 @@
     lg.companyName = @"LG";
     lg.companyImage = [UIImage imageNamed:@"lgLogo"];
     //lg.companyProductList = lgProducts;
-    lg.companyLogoURL = [NSURL URLWithString:@"https://cdn4.iconfinder.com/data/icons/flat-brand-logo-2/512/lg-48.png"];
+    lg.companyLogoURL = [NSURL URLWithString:@"http://icons.iconarchive.com/icons/blackvariant/button-ui-requests-5/256/LG-icon.png"];
     lg.companyProductList = [NSMutableArray arrayWithObjects:v10,v20,g5, nil];
     lg.companyStockSymbol = @"LGLG.F"; // <--- German Stock Index
     
     //ADD COMPANY TO DAO ARRAY OF COMPANIES
     [self.companyListDAO addObject:lg];
+    [lg release];
+    [v10 release];
+    [v20 release];
+    [g5 release];
     
+    //WHEN APP FIRST RUNS SAVE PROPERTIES TO CORE DATA
+    //THE SECOND TIME IT RUNS IT WILL "FETCH" FROM CORE DATA
+    
+    for (Company *company in self.companyListDAO) {
+        
+        //CREATE A MANAGED COMPANY
+        ManagedCompany *mC = [NSEntityDescription insertNewObjectForEntityForName:@"ManagedCompany" inManagedObjectContext:self.managedObjectContextDAO];
+        
+        //ASSIGN ATTRIBUTES TO MANAGED COMPANY
+        mC.mCName = company.companyName;
+        mC.mCLogoURL = [NSString stringWithFormat:@"%@", company.companyLogoURL];
+        mC.mCStockSymbol = company.companyStockSymbol;
+        mC.mCFinancialDataString = company.financialDataString;
+        [self.managedCompanyListDAO addObject:mC];
+        mC.products = [[[NSMutableSet alloc]init]autorelease];
+        
+        for (Product *product in company.companyProductList) {
+            
+            //CREATE A MANANGED PRODUCT
+            ManagedProduct *mP = [NSEntityDescription insertNewObjectForEntityForName:@"ManagedProduct" inManagedObjectContext:self.managedObjectContextDAO];
+            
+            //ASSIGN ATTRIBUTES TO MANAGED PRODUCT
+            mP.mPProductName = product.productName;
+            mP.mPProducURL = [NSString stringWithFormat:@"%@",product.productURL];
+            mP.mPProductImageURL = [NSString stringWithFormat:@"%@",product.productImageURL];
+            [mC addProductsObject:mP];
+        }
+    }
+        [[NSUserDefaults standardUserDefaults]setBool:YES forKey:@"DidFirstRun"];
 }
 
 
-
-//****************************************************************************************
-
-
-//ADD COMPANY TO DAO ARRAY LIST
 -(void)addCompanyToList:(Company *)company{
     [self.companyListDAO addObject:company];
 }
 
-//****************************************************************************************
-//CREATE NEW PRODUCT METHOD
--(Product *)makeNewProductWithName:(NSString *)name andURL:(NSURL *)url{
-    Product *newProduct = [[Product alloc]init];
+-(void)removeCompanyFromList{
+    //[self.companyListDAO removeObject:self.companyListDAO[self.indexOfLastCompanyTouched]];
+    [self.companyListDAO removeObject:self.currentCompanyDAO];
+}
+
+
+-(Product *)makeNewProductWithName:(NSString *)name withWebURL:(NSURL *)webURL andImageURL:(NSURL *)imageURL {
+    Product *newProduct = [[[Product alloc]init]autorelease];
     if(self = [super init]){
         newProduct.productName = name;
-        newProduct.productURL = url;
+        newProduct.productURL = webURL;
+        newProduct.productImageURL = imageURL;
     }
     return newProduct;
 }
 
-
-//****************************************************************************************
-//CREATE NEW COMPANY METHOD
 -(Company *)makeNewCompanyWithName:(NSString *)name withLogoURL:(NSURL *)logoURL andStockSymbol:(NSString *)ticker{
-    Company *newCompany = [[Company alloc]init];
+    Company *newCompany = [[[Company alloc]init]autorelease];
     if(self = [super init]){
         newCompany.companyName = name;
         newCompany.companyLogoURL = logoURL;
         newCompany.companyStockSymbol = ticker;
+        
+        if([newCompany.companyLogoURL isEqual:@""]){
+            newCompany.companyImage = [UIImage imageNamed:@"StockMarket.png"];
+        }
     }
     
     return newCompany;
 }
 
+#pragma mark API Data
 
-//*************************************IMAGES***************************************************
-//METHODS TO GET IMAGE FROM URL
--(UIImage *) getImageFromURL:(NSString *)fileURL {
-    NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:fileURL]];
-    UIImage *result = [UIImage imageWithData:data];
-    return result;
-}
 
-//METHOD TO SAVE THE IMAGE
--(void) saveImage:(UIImage *)image withFileName:(NSString *)imageName ofType:(NSString *)extension inDirectory:(NSString *)directoryPath {
-    if ([[extension lowercaseString] isEqualToString:@"png"]) {
-        [UIImagePNGRepresentation(image) writeToFile:[directoryPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@", imageName, @"png"]] options:NSAtomicWrite error:nil];
-    } else if ([[extension lowercaseString] isEqualToString:@"jpg"] || [[extension lowercaseString] isEqualToString:@"jpeg"]) {
-        [UIImageJPEGRepresentation(image, 1.0) writeToFile:[directoryPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@", imageName, @"jpg"]] options:NSAtomicWrite error:nil];
-    } else {
-        NSLog(@"Image Save Failed\nExtension: (%@) is not recognized, use (PNG/JPG)", extension);
-    }
-}
-
-//METHOD TO LOAD THE IMAGE
--(UIImage *) loadImage:(NSString *)fileName ofType:(NSString *)extension inDirectory:(NSString *)directoryPath {
-    UIImage *result = [UIImage imageWithContentsOfFile:[NSString stringWithFormat:@"%@/%@.%@", directoryPath, fileName, extension]];
-    
-    return result;
-}
-
-//EXAMPLE IMPLEMENTATION
-
-//Definitions
-//NSString * documentsDirectoryPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
-
-//GET IMAGE FROM URL
-//UIImage * imageFromURL = [self getImageFromURL:@"http://www.yourdomain.com/yourImage.png"];
-
-//SAVE IMAGE TO DIRECTORY
-//[self saveImage:imageFromURL withFileName:@"My Image" ofType:@"png" inDirectory:documentsDirectoryPath];
-
-//LOAD IMAGE FORM DIRECTORY
-//UIImage * imageFromWeb = [self loadImage:@"My Image" ofType:@"png" inDirectory:documentsDirectoryPath];
-
-//****************************************************************************************
-
-//****************************************************************************************
-// METHOD TO GET STOCK QUOTE
 -(void)getAPIFinancialData{
-    //LET COMPANY VIEWCONTROLLER KNOW TO RELOAD ITS DATA <---
-    //[[NSNotificationCenter defaultCenter] postNotificationName:@"GetFinancialDataFromDAO" object:nil];
 
-    //************************************
     //GET ARRAY OF COMPANY SYMBOLS
     NSMutableArray *tickerArray = [[NSMutableArray alloc]init];
     
@@ -276,6 +287,7 @@
     
     //CONVERT ARRAY OF TICKERS INTO STRING
     NSString *tickerString = [tickerArray componentsJoinedByString:@","];
+    [tickerArray release];
     
     //REPLACE COMMAS WITH PLUS SIGNS
     NSString *tickerForFinanceSearch =[tickerString stringByReplacingOccurrencesOfString:@"," withString:@"+"];
@@ -285,75 +297,141 @@
     
     NSURL *financeURL = [NSURL URLWithString:financeURLString];
     
+    NSURLSessionConfiguration *sessionConfig = [NSURLSessionConfiguration defaultSessionConfiguration];
+    sessionConfig.timeoutIntervalForRequest = 60.0;
     
-    //****************************************
+    //2*.NOTE: NSURLSESSION WORKS ASYNCHRONUSLY
+    NSURLSessionDataTask *dataTask = [[NSURLSession sharedSession]
+    dataTaskWithURL:financeURL completionHandler:^(NSData *data,
+    NSURLResponse *response, NSError *error)
+    {
     
-    //2*.NOTE: NSURLSESSION WORKS ASYNCHRONUSLY, DOWNLOAD TASK GETS HIT BEFORE THE DATA INSIDE THE BLOCK. NOTE THE NUMBERS
-    //TO USE THE INFO THAT IS RETRIEVED FROM INSIDE THE  NSURLSESSION BLOCK, YOU NEED TO EMPLOY "COMPLETION BLOCK PATTERN"
-    //THIS METHOD SHOULD *NOT* RETURN ANYTHING, BUT RATHER PASS THE DATA BACK IN A "COMPLETION BLOCK"
-    NSURLSessionDataTask *dataTask = [[NSURLSession sharedSession]     // <--- use "Delegate based" or "Block based" style
-                                        dataTaskWithURL:financeURL
-                                        completionHandler:^(NSData *data,
-                                                            NSURLResponse *response,
-                                                            NSError *error){
-                                              
-                                        //4*: HANDLE RESPONSE  **ASYNCHRONIZATION STARTS HERE**
-                                            //check for error
-                                        if(!error){
-                                                
-                                        //GET THE DATA FROM THE URL DATA IS "CSV"
-                                        NSData *financialData = [NSData dataWithContentsOfURL:financeURL];
-                                        
-                                        //TURN FINANCIAL DATA INTO STRING note: returns "Symbol,Price,Change"
-                                        NSString *stringData = [[NSString alloc]initWithData:financialData encoding:NSUTF8StringEncoding];
-                                        //FURTHER REMOVE THE QUOTATION MARKS ""
-                                        NSString *stringDataWOQuotes = [stringData stringByReplacingOccurrencesOfString:@"\"" withString:@""];
-                                              
-                                        //TURN INTO AN ARRAY (of symbol,prices,change)
-                                        NSArray *dataArray = [stringDataWOQuotes componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"\n"]];
-                                         
-                                        //variable to count data recieved
-                                        int stockDataTransfered = 0;
-                                        
-                                        //IMPLEMENT do{}while() completion handler
-                                        //ASSIGN EACH STRING TO A COMPANY FINANCIAL DATA STRING
-                                        //IMPLEMENT NSNOTIFICATION
-                                            do{
-                                                    for (int i = 0; i < self.companyListDAO.count; i++) {
-                                                if(dataArray[i] != nil){
-                                                    self.companyListDAO[i].financialDataString = dataArray[i];
-                                                    stockDataTransfered++;
-                                                }else {
-                                                    break;
-                                                  }
-                                                }
-                                            }while (stockDataTransfered < (dataArray.count));
-                                        
-                                                //NSNOTIFICATION HERE IF NO ERROR, DO SOMETHING
-                                                // "dispatch_async" takes you to main thread
-                                        dispatch_async(dispatch_get_main_queue(), ^{
-                                                [[NSNotificationCenter defaultCenter]postNotificationName:@"Recieved All Data" object:self];
-                                            });
-                                        } else {
-                                        //if theres error
-                                                //NSNOTIFICATION HERE IF THERES ERROR
-                                            dispatch_async(dispatch_get_main_queue(),^{
-                                                [[NSNotificationCenter defaultCenter]postNotificationName:@"Data Missing" object:self];
-                                            });
-                                        }
-                                }];
+        if(!error){
+        //GET THE DATA FROM THE URL DATA IS "CSV"
+            NSData *financialData = [NSData dataWithContentsOfURL:financeURL];
+            //TURN FINANCIAL DATA INTO STRING note: returns "Symbol,Price,Change"
+            NSString *stringData = [[NSString alloc]initWithData:financialData encoding:NSUTF8StringEncoding];
+            
+            //FURTHER REMOVE THE QUOTATION MARKS ""
+            NSString *stringDataWOQuotes = [stringData stringByReplacingOccurrencesOfString:@"\"" withString:@""];
+            [stringData release];
+            
+            //TURN INTO AN ARRAY (of symbol,prices,change)
+            self.fetchedFinDataArrayDAO = [stringDataWOQuotes componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"\n"]];
+            
+            NSLog(@"FETCHED FINANCIAL DATA %@",self.fetchedFinDataArrayDAO);
+            
+            //NSNOTIFICATION HERE IF NO ERROR, DO SOMETHING
+            dispatch_async(dispatch_get_main_queue(), ^{
+                
+            [[NSNotificationCenter defaultCenter]postNotificationName:@"Data Ready" object:self];
+            
+            });
+                } else {
+            NSLog(@"[FinancialDataRequest] Session Invalidation: %@", [error description]);
+            //NSNOTIFICATION HERE IF THERES ERROR
+            dispatch_async(dispatch_get_main_queue(),^{
+            [[NSNotificationCenter defaultCenter]postNotificationName:@"Data Missing" object:self];
+            });
+                }
+            }];
     //3*.
     [dataTask resume];
+    
 }
 
+#pragma mark Init Core Data
 
-//*************************************************************************************************************************************
+-(NSString*) archivePath{
+    NSArray *documentsDirectories = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsDirectory = [documentsDirectories objectAtIndex:0];
+    return [documentsDirectory stringByAppendingPathComponent:@"store.data"];
+}
 
+- (void)initializeCoreData{
+    NSManagedObjectModel *model = [NSManagedObjectModel mergedModelFromBundles:nil];
+    NSPersistentStoreCoordinator *psc =
+    [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:model];
+    NSString *path = [self archivePath];
+    NSURL *storeURL = [NSURL fileURLWithPath:path];
+    NSError *error = nil;
+    if(![psc addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:storeURL options:nil error:&error]){
+        [NSException raise:@"Open failed" format:@"Reason: %@", [error localizedDescription]];
+    }
+    self.managedObjectContextDAO = [(NavControllerAppDelegate *)[[UIApplication sharedApplication] delegate] managedObjectContext];
 
+    [self.managedObjectContextDAO setPersistentStoreCoordinator:psc];
+    
+    
+        if ([[NSUserDefaults standardUserDefaults]boolForKey:@"DidFirstRun"]){
+            [self loadFetchedFromCoreData];
+            NSLog(@"FIRST RUN DONE, NOW LOADING FROM CORE DATA");
+        } else {
+            [self firstRun];
+            NSLog(@"FIRST RUN");
+        }
+}
 
-//*************************************************************************************************************************************
+#pragma mark - Fetch From Core Data
 
+-(void) loadFetchedFromCoreData{
+    //AFTER TRANSFER TO CORE DATA, NOW FETCH & LOAD FROM CORE DATA
+    NSFetchRequest* fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"ManagedCompany"];
+    NSError *error = nil;
+    
+    //SET MANAGED COMPANY LIST AS THE THE OBJECTS FROM CORE DATA AS AN ARRAY PROPERTY
+    
+    self.managedCompanyListDAO = [[NSMutableArray alloc] init];
+    
+    self.managedCompanyListDAO =
+    [NSMutableArray arrayWithArray:[self.managedObjectContextDAO executeFetchRequest:fetchRequest error:&error]];
+    
+    self.companyListDAO = [[NSMutableArray alloc] init];
+   
+    //ERROR HANDLING
+    if (error != nil) {
+        NSLog(@"Error %@",[error localizedDescription]);
+    } else {
+        for(ManagedCompany *mC in self.managedCompanyListDAO){
+            
+            Company *company = [[[Company alloc]init]autorelease];
+            company.companyName = mC.mCName;
+            company.companyStockSymbol = mC.mCStockSymbol;
+            company.companyLogoURL = [NSURL URLWithString:mC.mCLogoURL];;
+            company.financialDataString = mC.mCFinancialDataString;
+            company.companyProductList = [[[NSMutableArray alloc]init]autorelease];
+           
+            
+            for(ManagedProduct *mP in mC.products){
+                Product *product = [[[Product alloc]init]autorelease];
+                product.productName = mP.mPProductName;
+                product.productURL = [NSURL URLWithString: mP.mPProducURL];
+                product.productImageURL = [NSURL URLWithString:mP.mPProductImageURL];
+                [company.companyProductList addObject:product];
+                }
+             [self.companyListDAO addObject:company];
+            }
+    }
+    [[NSUserDefaults standardUserDefaults]setBool:YES forKey:@"didLoadFetchFromCoreData"];
+     [self getAPIFinancialData];
+}
 
+#pragma mark - Saving to Core Data
+
+-(void)dealloc{
+    [_companyListDAO release];
+    [_managedCompanyListDAO release];
+    [_fetchedFinDataArrayDAO release];
+    [_currentCompanyDAO release];
+    [_theNewCompanyDAO release];
+    [_theNewProductDAO release];
+    [_currentManagedCompanyDAO release];
+    [_companyBeingEditedDAO release];
+    [_currentManagedProductDAO release];
+    [_productBeingEditedDAO release];
+    [_managedObjectContextDAO release];
+    [super dealloc];
+}
 
 
 @end

@@ -11,39 +11,37 @@
 #import "Product.h"
 #import "NewCompanyViewController.h"
 #import "NewProductsViewController.h"
-#import "CompanyViewController.h"
-#import "ProductViewController.h"
-@interface DAO : NSObject 
-
-
-//Singleton
+#import <CoreData/CoreData.h>
+#import "ManagedCompany+CoreDataClass.h"
+#import "ManagedProduct+CoreDataClass.h"
+#import "ManagedCompany+CoreDataProperties.h"
+#import "ManagedProduct+CoreDataProperties.h"
+#import "NavControllerAppDelegate.h"
+@interface DAO : NSObject <NSFetchRequestResult>
 
 + (id)sharedManager;
-
 -(void)firstRun;
-
-//COMPANY AND NEW PRODUCT PROPERTIES GET SET HERE
-@property(strong,nonatomic)NSMutableArray <Company *> *companyListDAO;
-
-//PROPERTY FOR LAST TOUCHED COMPANY INDEX
-@property (nonatomic) NSInteger indexOfLastCompanyTouched;
-
-//PROPERTY FOR LAST PRODUCT TOUCHED INDEX
-@property(nonatomic) NSInteger indexOfLastProductTouched;
-
-
-//CREATE A COMPANY METHOD
+@property (strong,nonatomic)NSMutableArray <Company *> *companyListDAO;
+@property (strong,nonatomic)NSMutableArray<ManagedCompany *> *managedCompanyListDAO;
 -(Company *)makeNewCompanyWithName:(NSString *)name withLogoURL:(NSURL *)logoURL andStockSymbol:(NSString *)ticker;
-
-//CREATE A PRODUCT METHOD
--(Product *)makeNewProductWithName:(NSString *)name andURL:(NSURL *)url;
-
-//ADD COMPANY  TO COMAPNYLIST IN DAO METHOD
+-(Product *)makeNewProductWithName:(NSString *)name withWebURL:(NSURL *)webURL andImageURL:(NSURL *)imageURL;
 -(void)addCompanyToList:(Company *)company;
-
-//GET STOCK QUOTE
--(void)getAPIFinancialData;       //<---
-
-//- (void)retrieveData:(void (^)(NSDictionary * dictionary))completionHandler; // <-----
-
+-(void)removeCompanyFromList;
+-(void)getAPIFinancialData;
+@property (strong,nonatomic)NSArray *fetchedFinDataArrayDAO;
+@property (strong,nonatomic) NSManagedObjectContext *managedObjectContextDAO;
+-(void) loadFetchedFromCoreData;
+-(void)initializeCoreData;
+@property (strong,nonatomic)Company *currentCompanyDAO;
+@property (strong,nonatomic)Company *theNewCompanyDAO;
+@property(strong,nonatomic)Product *theNewProductDAO;
+@property (strong,nonatomic)ManagedCompany *currentManagedCompanyDAO;
+@property (strong,nonatomic)Company *companyBeingEditedDAO;
+@property (nonatomic)BOOL editingCompanyNameDAO;
+@property (nonatomic)BOOL editingCompanyLogoURLDAO;
+@property(strong,nonatomic)ManagedProduct *currentManagedProductDAO;
+@property(strong,nonatomic)Product *productBeingEditedDAO;
+@property (nonatomic)BOOL editingProductNameDAO;
+@property (nonatomic)BOOL editingProductURLDAO;
+@property(nonatomic)BOOL editingProductImageURLDAO;
 @end

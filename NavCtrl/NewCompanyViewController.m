@@ -29,11 +29,6 @@
     
     self.dataManager = [DAO sharedManager];
     
-    //CALL THE LOGOURL TEXTFIELD(DELEGATING) AND SET THIS VIEW(DELEGATE) AS IT'S DELEGATE
-    self.theNewCompanyNameTextField.delegate = self;
-    self.theNewCompanyLogoURLTextField.delegate = self;
-    self.theNewCompanyStockSymbolTextField.delegate = self;
-    
     //ADD BACKGROUND COLOR
     [self.view setBackgroundColor:[UIColor whiteColor]];
     
@@ -44,13 +39,13 @@
     self.navigationItem.leftBarButtonItem = [[[UIBarButtonItem alloc]
                                                initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
                                                target:self
-                                               action:@selector(popToCompanyViewController)]   //<---MAKE & DEFINE METHOD
+                                               action:@selector(popToCompanyViewController)]
                                               autorelease];
 
     //ADD SAVE BUTTON TO TOP RIGHT BAR
     self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc]
                                                initWithBarButtonSystemItem:UIBarButtonSystemItemSave
-                                               target:self action:@selector(saveNewCompany)]  // <--- MAKE & DEFINE METHOD
+                                               target:self action:@selector(saveNewCompany)]
                                                autorelease];
     
     
@@ -79,72 +74,49 @@
     self.companyTickerLabel = [self createLabelNamed:@"Stock Ticker:" withXLocation:20.0f withYLocation:230.0f withWidth:250.0f andHeight:20.0f];
     [self.companyTickerLabel setFont:[UIFont boldSystemFontOfSize:16]];
     
-   //SET TEXTFIELD AS DELEGATE
-    self.theNewCompanyLogoURLTextField.delegate = self;      //<------
-    self.theNewCompanyStockSymbolTextField.delegate = self;  //<------
-    
-
+   //SET TEXTFIELD AS DELEGATE FOR MOVING KEYBOARD
+    self.theNewCompanyLogoURLTextField.delegate = self;
+    self.theNewCompanyStockSymbolTextField.delegate = self;
     
 }
 
-//************************************************************************************
-
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-    
-
-}
-
-//************************************************************************************
-
-- (void)viewWillDisappear:(BOOL)animated
-{
-    [super viewWillDisappear:animated];
-    
-
-}
-
-//************************************************************************************
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
 
-//************************************************************************************
-//METHOD TO POP BACK TO COMPANY VIEW CONTROLLER / SEGUE WILL ONLY ADD ANOTHER LAYER OF THE SAME VIEW
+//METHOD TO POP BACK TO COMPANY VIEW CONTROLLER
 -(void)popToCompanyViewController{
-    
     [self.navigationController popViewControllerAnimated:YES];
 }
 
-//************************************************************************************
 //METHOD TO ADD COMPANY TO LIST OF COMPANIES & THEN SEGUE BACK TO TO COMPANY LIST VIEW 
 -(void)saveNewCompany{
-    //GET TEXTFIELD INPUT FOR NEW COMPANY AND COMPANY LOGO URL
-    NSString *newCompany = self.theNewCompanyNameTextField.text;
-    NSLog(@"%@",newCompany);
-    
-    NSURL *newCompanyLogoURL = [NSURL URLWithString: self.theNewCompanyLogoURLTextField.text];
-    NSLog(@"%@",newCompanyLogoURL);
     
     //SET THE TEXTFIELD INPUT TO LOCAL VARIABLES COMPANY NAME & URL VARIABLE
     self.theNewCompanyName = self.theNewCompanyNameTextField.text;
-    self.theNewCompanyURL = [NSURL URLWithString:(self.theNewCompanyLogoURLTextField.text)];
+    self.theNewCompanyLogoURL = [NSURL URLWithString:(self.theNewCompanyLogoURLTextField.text)];
     self.theNewCompanyStockSymbol = self.theNewCompanyStockSymbolTextField.text;
     
     //CREATE A NEW COMPANY USING DAO METHOD AND GIVE IT THE LOCAL NAME & URL
-    Company *madeCompany = [self.dataManager makeNewCompanyWithName:self.theNewCompanyName withLogoURL:self.theNewCompanyURL andStockSymbol:self.theNewCompanyStockSymbol];
+    Company *madeCompany = [self.dataManager makeNewCompanyWithName:self.theNewCompanyName withLogoURL:self.theNewCompanyLogoURL andStockSymbol:self.theNewCompanyStockSymbol];
+    
+    //ASSIGN THE NEW COMPANY TO THE NEWCOMPANY PAROPERTY IN DAO
+    self.dataManager.theNewCompanyDAO = madeCompany;
     
     //ADD COMPANY DAO ARRAY
     [self.dataManager.companyListDAO addObject:madeCompany];
     
+    //LET DAO KNOW THE CURRENT COMPANY
+    self.dataManager.currentCompanyDAO = madeCompany;
+    
     //POP BACK TO COMPANY VIEW CONTROLLER // PUSHING ONLY ADDS ANOTHER LAYER OF THE SAME VIEW
     [self.navigationController popViewControllerAnimated:YES];
+    
+    
 }
 
-//************************************************************************************
 //METHOD TO PROPORTIONALLY ADJUST WIDTH & HEIGHT OF TEXTFIELD IN RELATION TO VIEW
 -(void)proportionalWidth:(float)percent{
     _textFieldWidth = self.view.frame.size.width * percent;
@@ -154,12 +126,11 @@
     _textFieldHeight = self.view.frame.size.height * percent;
 }
 
-//************************************************************************************
 //METHOD TO CREATE TEXTFIELD
 -(UITextField *)createTextFieldNamed:(NSString *)placeHolder withXLocation:(float)x withYLocation:(float)y withWidth:(float)width andHeight:(float)height withIDTag:(int)tag{
     
     CGRect newTextFieldFrame = CGRectMake(x,y,width,height);
-    UITextField *newTextField = [[UITextField alloc] initWithFrame:newTextFieldFrame];
+    UITextField *newTextField = [[[UITextField alloc] initWithFrame:newTextFieldFrame]autorelease];
     newTextField.placeholder = placeHolder;
     newTextField.backgroundColor = [UIColor whiteColor];
     newTextField.textColor = [UIColor blackColor];
@@ -176,28 +147,21 @@
     return newTextField;
 }
 
-//************************************************************************************
-//OVERRIDE METHOD TO MAKE KEYBOARD DISAPEAR WHEN CLICKING OUTSIDE OF TEXTFIELD
-//- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
-//    [self.view endEditing:YES];
-//    [super touchesBegan:touches withEvent:event];
-//}
-
-//************************************************************************************
 //METHOD TO CREATE LABEL
 -(UILabel *)createLabelNamed:(NSString *)labelName withXLocation:(float)x withYLocation:(float)y withWidth:(float)width andHeight:(float)height{
     CGRect newLabelFrame = CGRectMake(x,y,width,height);
-    UILabel *newLabel = [[UILabel alloc]initWithFrame:newLabelFrame];
+    UILabel *newLabel = [[[UILabel alloc]initWithFrame:newLabelFrame]autorelease];
     newLabel.text = labelName;
     [self.view addSubview:newLabel];
     return newLabel;
 }
 
+//OVERRIDE METHOD TO MAKE KEYBOARD DISAPEAR WHEN CLICKING OUTSIDE OF TEXTFIELD
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
+    [self.view endEditing:YES];
+    [super touchesBegan:touches withEvent:event];
+}
 
-
-
-//************************************************************************************
-//TEXTFIELD & KEYBOARD METHODS
 //METHOD TO MOVE TEXTFIELD UP WHEN CLICKED
 -(void)textFieldDidBeginEditing:(UITextField *)textField
 {
@@ -213,8 +177,23 @@
         [UIView commitAnimations];
     }
 }
-
 //METHOD TO MOVE TEXTFIELD BACK DOWN WHEN CLICKED "DONE"
+-(void)textFieldDidEndEditing:(UITextField *)textField{
+    
+    if (textField.tag > 0)
+    {
+        [UIView beginAnimations:nil context:NULL];
+        [UIView setAnimationDelegate:self];
+        [UIView setAnimationDuration:0.5];
+        [UIView setAnimationBeginsFromCurrentState:YES];
+        self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y + 80.0,
+                                     self.view.frame.size.width, self.view.frame.size.height);
+        [UIView commitAnimations];
+    }
+    [textField resignFirstResponder];
+}
+
+
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
     
@@ -228,10 +207,24 @@
                                       self.view.frame.size.width, self.view.frame.size.height);
         [UIView commitAnimations];
         
+
     }
     [textField resignFirstResponder];
     return YES;
 }
-//************************************************************************************
+
+-(void)dealloc{
+    [_theNewCompanyName release];
+    [_theNewCompanyLogoURL release];
+    [_theNewCompanyStockSymbol release];
+    [_theNewCompanyNameTextField release];
+    [_theNewCompanyLogoURLTextField release];
+    [_theNewCompanyStockSymbolTextField release];
+    [_companyNameLabel release];
+    [_companyURLLabel release];
+    [_companyTickerLabel release];
+    [super dealloc];
+}
+
 
 @end
