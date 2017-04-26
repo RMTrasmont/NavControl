@@ -7,7 +7,6 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "CompanyViewController.h"
 #import "DAO.h"
 #import "NewProductsViewController.h"
 @interface NewCompanyViewController : UIViewController <UITextFieldDelegate>   // <----

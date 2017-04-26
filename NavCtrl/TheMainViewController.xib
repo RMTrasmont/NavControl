@@ -17,7 +17,6 @@
                 <outlet property="emptyStateLogoImageView" destination="ynF-s0-uN8" id="p00-Xp-sHt"/>
                 <outlet property="emptyUndoRedoHolderView" destination="1h9-6c-b3M" id="D3h-C5-3EN"/>
                 <outlet property="emptyViewAndMessage" destination="SGP-LA-Rbm" id="z0f-NT-E9c"/>
-                <outlet property="gifBackGroundImageView" destination="nWZ-s4-Ix3" id="DPE-vu-pyw"/>
                 <outlet property="noCompaniesLabel" destination="VNF-cT-HV1" id="Eat-0i-9ka"/>
                 <outlet property="populatedStackView" destination="z1z-kJ-xL2" id="DA3-Ra-elV"/>
                 <outlet property="populatedUndoRedoHolderView" destination="Y1j-VF-9aI" id="Unh-M0-OZJ"/>
@@ -32,12 +31,6 @@
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="SGP-LA-Rbm">
                     <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                     <subviews>
-                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="nWZ-s4-Ix3">
-                            <rect key="frame" x="94" y="173" width="188" height="188"/>
-                            <constraints>
-                                <constraint firstAttribute="width" secondItem="nWZ-s4-Ix3" secondAttribute="height" multiplier="1:1" id="OaR-cj-BfW"/>
-                            </constraints>
-                        </imageView>
                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="emptystate" translatesAutoresizingMaskIntoConstraints="NO" id="ynF-s0-uN8">
                             <rect key="frame" x="118" y="30" width="140" height="140"/>
                             <constraints>
@@ -117,17 +110,14 @@
                     <constraints>
                         <constraint firstItem="ynF-s0-uN8" firstAttribute="centerY" secondItem="SGP-LA-Rbm" secondAttribute="centerY" multiplier="0.3" id="DH3-JU-Uha"/>
                         <constraint firstItem="7Mu-LU-B25" firstAttribute="centerY" secondItem="SGP-LA-Rbm" secondAttribute="centerY" multiplier="0.9" id="NwK-SU-Uvd"/>
-                        <constraint firstItem="nWZ-s4-Ix3" firstAttribute="width" secondItem="SGP-LA-Rbm" secondAttribute="width" multiplier="0.5" id="PRh-vF-geO"/>
                         <constraint firstAttribute="trailing" secondItem="1h9-6c-b3M" secondAttribute="trailing" id="SBI-td-aSl"/>
                         <constraint firstAttribute="bottom" secondItem="1h9-6c-b3M" secondAttribute="bottom" id="TMy-vA-7Zj"/>
                         <constraint firstItem="VNF-cT-HV1" firstAttribute="centerX" secondItem="SGP-LA-Rbm" secondAttribute="centerX" id="TYW-Dx-iJS"/>
                         <constraint firstItem="1h9-6c-b3M" firstAttribute="leading" secondItem="SGP-LA-Rbm" secondAttribute="leading" id="UGN-8t-mDY"/>
-                        <constraint firstItem="nWZ-s4-Ix3" firstAttribute="centerX" secondItem="SGP-LA-Rbm" secondAttribute="centerX" id="eOS-BL-Kr1"/>
                         <constraint firstItem="7Mu-LU-B25" firstAttribute="centerX" secondItem="SGP-LA-Rbm" secondAttribute="centerX" id="he0-eW-QYn"/>
                         <constraint firstItem="ynF-s0-uN8" firstAttribute="centerX" secondItem="SGP-LA-Rbm" secondAttribute="centerX" id="jrs-Xm-ETG"/>
                         <constraint firstItem="1h9-6c-b3M" firstAttribute="height" secondItem="SGP-LA-Rbm" secondAttribute="height" multiplier="0.1" constant="-10" id="ty1-hv-jdz"/>
                         <constraint firstItem="VNF-cT-HV1" firstAttribute="centerY" secondItem="SGP-LA-Rbm" secondAttribute="centerY" multiplier="0.7" id="zoX-qj-K2u"/>
-                        <constraint firstItem="nWZ-s4-Ix3" firstAttribute="centerY" secondItem="SGP-LA-Rbm" secondAttribute="centerY" multiplier="0.8" id="zvp-Mu-0Vw"/>
                     </constraints>
                 </view>
                 <stackView contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="z1z-kJ-xL2">

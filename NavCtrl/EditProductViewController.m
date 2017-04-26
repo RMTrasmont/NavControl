@@ -88,10 +88,12 @@
 //************************************************************************************
 
 - (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:YES];
     //DISPLAY CURRENT VALUES BEFORE EDIT
     self.editNameTextField.text = self.currentProduct.productName;
     self.editURLTextField.text = [self.currentProduct.productURL absoluteString];
     self.editImageURLTextField.text = [self.currentProduct.productImageURL absoluteString];
+    
 }
 
 
@@ -110,7 +112,7 @@
 -(UITextField *)createTextFieldNamed:(NSString *)placeHolder withXLocation:(float)x withYLocation:(float)y withWidth:(float)width andHeight:(float)height withIDTag:(int)tag{
     
     CGRect newTextFieldFrame = CGRectMake(x,y,width,height);
-    UITextField *newTextField = [[UITextField alloc] initWithFrame:newTextFieldFrame];
+    UITextField *newTextField = [[[UITextField alloc] initWithFrame:newTextFieldFrame]autorelease];
     newTextField.placeholder = placeHolder;
     newTextField.backgroundColor = [UIColor whiteColor];
     newTextField.textColor = [UIColor blackColor];
@@ -172,7 +174,7 @@
     self.dataManager.productBeingEditedDAO = self.currentProduct;
     
     //SAVE EDITED PRODUCT TO CORE DATA
-    [self.dataManager saveEditedProductToCoreData];
+//    [self.dataManager saveEditedProductToCoreData];
     
     [self.navigationController popViewControllerAnimated:YES];
 
@@ -182,7 +184,7 @@
 //METHOD TO CREATE LABEL
 -(UILabel *)createLabelNamed:(NSString *)labelName withXLocation:(float)x withYLocation:(float)y withWidth:(float)width andHeight:(float)height{
     CGRect newLabelFrame = CGRectMake(x,y,width,height);
-    UILabel *newLabel = [[UILabel alloc]initWithFrame:newLabelFrame];
+    UILabel *newLabel = [[[UILabel alloc]initWithFrame:newLabelFrame]autorelease];
     newLabel.text = labelName;
     [self.view addSubview:newLabel];
     return newLabel;
@@ -248,6 +250,17 @@
 }
 //************************************************************************************
 
-
+-(void)dealloc{
+    [_currentParentCompany release];
+    [_currentProduct release];
+    [_editNameTextField release];
+    [_editURLTextField release];
+    [_editImageURLTextField release];
+    [_editNameLabel release];
+    [_editURLLabel release];
+    [_editImageURLLabel release];
+    [super dealloc];
+        
+}
 
 @end

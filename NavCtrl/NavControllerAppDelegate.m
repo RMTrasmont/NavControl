@@ -7,7 +7,6 @@
 //
 
 #import "NavControllerAppDelegate.h"
-#import "CompanyViewController.h"
 #import "DAO.h"
 
 @implementation NavControllerAppDelegate
@@ -18,19 +17,20 @@
     
     
     // Override point for customization after application launch.
-    TheMainViewController *tMVC = [[TheMainViewController alloc]init];
-    self.navigationController = [[UINavigationController alloc]initWithRootViewController:tMVC];
-    self.window = [[UIWindow alloc]
-                   initWithFrame:[[UIScreen mainScreen] bounds]];
+    TheMainViewController *tMVC = [[[TheMainViewController alloc]init]autorelease];
+    self.navigationController = [[[UINavigationController alloc]initWithRootViewController:tMVC]autorelease];
+    
+    self.window = [[UIWindow alloc]initWithFrame:[[UIScreen mainScreen] bounds]];
 
-    [self.window setRootViewController:self.navigationController];
-    [self.window makeKeyAndVisible];
+    [_window setRootViewController:_navigationController];
+    [_window makeKeyAndVisible];
+    [_window release];
+    [self.navigationController release];
     
     //SET UP NSMANAGED OBJECT CONTEXT FOR CORE DATA, REFERE TO HERE FROM DAO
-    self.managedObjectContext = [[NSManagedObjectContext alloc]initWithConcurrencyType:NSMainQueueConcurrencyType];
-    
+    self.managedObjectContext = [[[NSManagedObjectContext alloc]initWithConcurrencyType:NSMainQueueConcurrencyType]autorelease];
+
     return YES;
-    
     
     /*
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
@@ -89,6 +89,12 @@
     }
 }
 
+-(void)dealloc{
+    [_window release];
+    [_navigationController release];
+    [_managedObjectContext release];
+    [super dealloc];
+}
 
 
 @end

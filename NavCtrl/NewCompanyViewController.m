@@ -132,7 +132,7 @@
     [self.dataManager.companyListDAO addObject:madeCompany];
     
     //SAVE THE NEW COMPANY TO CORE DATA
-    [self.dataManager saveNewCompanyToCoreData];
+//    [self.dataManager saveNewCompanyToCoreData];
     
     //LET DAO KNOW THE CURRENT COMPANY
     self.dataManager.currentCompanyDAO = madeCompany;
@@ -158,7 +158,7 @@
 -(UITextField *)createTextFieldNamed:(NSString *)placeHolder withXLocation:(float)x withYLocation:(float)y withWidth:(float)width andHeight:(float)height withIDTag:(int)tag{
     
     CGRect newTextFieldFrame = CGRectMake(x,y,width,height);
-    UITextField *newTextField = [[UITextField alloc] initWithFrame:newTextFieldFrame];
+    UITextField *newTextField = [[[UITextField alloc] initWithFrame:newTextFieldFrame]autorelease];
     newTextField.placeholder = placeHolder;
     newTextField.backgroundColor = [UIColor whiteColor];
     newTextField.textColor = [UIColor blackColor];
@@ -179,7 +179,7 @@
 //METHOD TO CREATE LABEL
 -(UILabel *)createLabelNamed:(NSString *)labelName withXLocation:(float)x withYLocation:(float)y withWidth:(float)width andHeight:(float)height{
     CGRect newLabelFrame = CGRectMake(x,y,width,height);
-    UILabel *newLabel = [[UILabel alloc]initWithFrame:newLabelFrame];
+    UILabel *newLabel = [[[UILabel alloc]initWithFrame:newLabelFrame]autorelease];
     newLabel.text = labelName;
     [self.view addSubview:newLabel];
     return newLabel;
@@ -245,5 +245,19 @@
     return YES;
 }
 //************************************************************************************
+
+-(void)dealloc{
+    [_theNewCompanyName release];
+    [_theNewCompanyURL release];
+    [_theNewCompanyStockSymbol release];
+    [_theNewCompanyNameTextField release];
+    [_theNewCompanyLogoURLTextField release];
+    [_theNewCompanyStockSymbolTextField release];
+    [_companyNameLabel release];
+    [_companyURLLabel release];
+    [_companyTickerLabel release];
+    [super dealloc];
+}
+
 
 @end

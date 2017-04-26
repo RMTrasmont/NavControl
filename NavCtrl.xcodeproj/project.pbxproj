@@ -18,18 +18,14 @@
 		48A656D018163BF200746D36 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 48A656B818163BF200746D36 /* UIKit.framework */; };
 		48A656D818163BF200746D36 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 48A656D618163BF200746D36 /* InfoPlist.strings */; };
 		48A656DA18163BF200746D36 /* NavCtrlTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 48A656D918163BF200746D36 /* NavCtrlTests.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		48A656E618163C1B00746D36 /* CompanyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 48A656E418163C1B00746D36 /* CompanyViewController.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		48A656E718163C1B00746D36 /* CompanyViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 48A656E518163C1B00746D36 /* CompanyViewController.xib */; };
-		48A656EB18163F8700746D36 /* ProductViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 48A656E918163F8700746D36 /* ProductViewController.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		48A656EE1816468000746D36 /* Sunflower.gif in Resources */ = {isa = PBXBuildFile; fileRef = 48A656ED1816468000746D36 /* Sunflower.gif */; };
 		530D057F1E9ED124006C0B8D /* image.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 530D057E1E9ED124006C0B8D /* image.xcassets */; };
-		530D05811E9EE19C006C0B8D /* Empty.xib in Resources */ = {isa = PBXBuildFile; fileRef = 530D05801E9EE19C006C0B8D /* Empty.xib */; };
 		530D05831E9EECE8006C0B8D /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 530D05821E9EECE8006C0B8D /* ImageIO.framework */; };
 		530D05871E9EEDE2006C0B8D /* UIImage+animatedGIF.m in Sources */ = {isa = PBXBuildFile; fileRef = 530D05861E9EEDE2006C0B8D /* UIImage+animatedGIF.m */; };
 		530FD8EC1E3FF71700F7877D /* WebVCViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 530FD8EB1E3FF71700F7877D /* WebVCViewController.m */; };
 		537057401E7C545F00965D8F /* CoreDataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 5370573E1E7C545F00965D8F /* CoreDataModel.xcdatamodeld */; };
 		537057421E7C696700965D8F /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 537057411E7C696700965D8F /* CoreData.framework */; };
-		537346121E912000002EF701 /* EmptyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 537346111E912000002EF701 /* EmptyViewController.m */; };
 		5373466E1E92BE48002EF701 /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5373466D1E92BE48002EF701 /* MainViewController.m */; };
 		537346701E92BE4F002EF701 /* MainViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5373466F1E92BE4F002EF701 /* MainViewController.xib */; };
 		5399E3A01E56502E00C38A43 /* NewCompanyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5399E39F1E56502E00C38A43 /* NewCompanyViewController.m */; };
@@ -71,14 +67,9 @@
 		48A656D518163BF200746D36 /* NavCtrlTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "NavCtrlTests-Info.plist"; sourceTree = "<group>"; };
 		48A656D718163BF200746D36 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		48A656D918163BF200746D36 /* NavCtrlTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NavCtrlTests.m; sourceTree = "<group>"; };
-		48A656E318163C1B00746D36 /* CompanyViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CompanyViewController.h; path = ../CompanyViewController.h; sourceTree = "<group>"; };
-		48A656E418163C1B00746D36 /* CompanyViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CompanyViewController.m; path = ../CompanyViewController.m; sourceTree = "<group>"; };
 		48A656E518163C1B00746D36 /* CompanyViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = CompanyViewController.xib; path = ../CompanyViewController.xib; sourceTree = "<group>"; };
-		48A656E818163F8700746D36 /* ProductViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ProductViewController.h; path = ../ProductViewController.h; sourceTree = "<group>"; };
-		48A656E918163F8700746D36 /* ProductViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ProductViewController.m; path = ../ProductViewController.m; sourceTree = "<group>"; };
 		48A656ED1816468000746D36 /* Sunflower.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = Sunflower.gif; sourceTree = "<group>"; };
 		530D057E1E9ED124006C0B8D /* image.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = image.xcassets; sourceTree = "<group>"; };
-		530D05801E9EE19C006C0B8D /* Empty.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = Empty.xib; sourceTree = "<group>"; };
 		530D05821E9EECE8006C0B8D /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
 		530D05851E9EEDE2006C0B8D /* UIImage+animatedGIF.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIImage+animatedGIF.h"; path = "../../../../Xcode Practice & Project/uiimage-from-animated-gif-master/uiimage-from-animated-gif/UIImage+animatedGIF.h"; sourceTree = "<group>"; };
 		530D05861E9EEDE2006C0B8D /* UIImage+animatedGIF.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIImage+animatedGIF.m"; path = "../../../../Xcode Practice & Project/uiimage-from-animated-gif-master/uiimage-from-animated-gif/UIImage+animatedGIF.m"; sourceTree = "<group>"; };
@@ -86,8 +77,6 @@
 		530FD8EB1E3FF71700F7877D /* WebVCViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WebVCViewController.m; sourceTree = "<group>"; };
 		5370573F1E7C545F00965D8F /* CoreDataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = CoreDataModel.xcdatamodel; sourceTree = "<group>"; };
 		537057411E7C696700965D8F /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
-		537346101E912000002EF701 /* EmptyViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EmptyViewController.h; sourceTree = "<group>"; };
-		537346111E912000002EF701 /* EmptyViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EmptyViewController.m; sourceTree = "<group>"; };
 		5373466C1E92BE3F002EF701 /* MainViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = MainViewController.h; path = "../../../../Xcode Practice & Project/Turn To Tech/Assignments/NavControllerMainViewRefactor/NavControllerMainViewRefactor/MainViewController.h"; sourceTree = "<group>"; };
 		5373466D1E92BE48002EF701 /* MainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MainViewController.m; path = "../../../../Xcode Practice & Project/Turn To Tech/Assignments/NavControllerMainViewRefactor/NavControllerMainViewRefactor/MainViewController.m"; sourceTree = "<group>"; };
 		5373466F1E92BE4F002EF701 /* MainViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = MainViewController.xib; path = "../../../../Xcode Practice & Project/Turn To Tech/Assignments/NavControllerMainViewRefactor/NavControllerMainViewRefactor/MainViewController.xib"; sourceTree = "<group>"; };
@@ -147,24 +136,6 @@
 			name = AppDelegate;
 			sourceTree = "<group>";
 		};
-		483796CC1BCBF7C70062D5AB /* OldCompanyTableView */ = {
-			isa = PBXGroup;
-			children = (
-				48A656E318163C1B00746D36 /* CompanyViewController.h */,
-				48A656E418163C1B00746D36 /* CompanyViewController.m */,
-			);
-			name = OldCompanyTableView;
-			sourceTree = "<group>";
-		};
-		483796CD1BCBF7EB0062D5AB /* OldProductTableView */ = {
-			isa = PBXGroup;
-			children = (
-				48A656E818163F8700746D36 /* ProductViewController.h */,
-				48A656E918163F8700746D36 /* ProductViewController.m */,
-			);
-			name = OldProductTableView;
-			sourceTree = "<group>";
-		};
 		48A656A818163BF200746D36 = {
 			isa = PBXGroup;
 			children = (
@@ -203,10 +174,7 @@
 				483796CB1BCBF7A00062D5AB /* AppDelegate */,
 				53D0E58B1E9555D400C63DEF /* CompanyMainVC */,
 				5373466B1E92BE19002EF701 /* ProductsMainVC */,
-				537346131E91200D002EF701 /* EmptyViewController */,
 				530D05841E9EED31006C0B8D /* UIImageAnimatedGif */,
-				483796CC1BCBF7C70062D5AB /* OldCompanyTableView */,
-				483796CD1BCBF7EB0062D5AB /* OldProductTableView */,
 				530FD8ED1E413BBA00F7877D /* WebVcViewController */,
 				53EA62BC1E523C5000091583 /* Company */,
 				53EA62BB1E523C3600091583 /* Product */,
@@ -269,16 +237,6 @@
 				530FD8EB1E3FF71700F7877D /* WebVCViewController.m */,
 			);
 			name = WebVcViewController;
-			sourceTree = "<group>";
-		};
-		537346131E91200D002EF701 /* EmptyViewController */ = {
-			isa = PBXGroup;
-			children = (
-				537346101E912000002EF701 /* EmptyViewController.h */,
-				537346111E912000002EF701 /* EmptyViewController.m */,
-				530D05801E9EE19C006C0B8D /* Empty.xib */,
-			);
-			name = EmptyViewController;
 			sourceTree = "<group>";
 		};
 		5373466B1E92BE19002EF701 /* ProductsMainVC */ = {
@@ -445,7 +403,6 @@
 				53D0E5851E94501C00C63DEF /* Launch Screen.storyboard in Resources */,
 				48A656EE1816468000746D36 /* Sunflower.gif in Resources */,
 				48A656E718163C1B00746D36 /* CompanyViewController.xib in Resources */,
-				530D05811E9EE19C006C0B8D /* Empty.xib in Resources */,
 				53D0E58D1E958CC800C63DEF /* StockMarket.png in Resources */,
 				48A656BF18163BF200746D36 /* InfoPlist.strings in Resources */,
 				530D057F1E9ED124006C0B8D /* image.xcassets in Resources */,
@@ -469,8 +426,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				48A656E618163C1B00746D36 /* CompanyViewController.m in Sources */,
-				537346121E912000002EF701 /* EmptyViewController.m in Sources */,
 				48A656C518163BF200746D36 /* NavControllerAppDelegate.m in Sources */,
 				53EA62C81E52793A00091583 /* DAO.m in Sources */,
 				537057401E7C545F00965D8F /* CoreDataModel.xcdatamodeld in Sources */,
@@ -480,7 +435,6 @@
 				530FD8EC1E3FF71700F7877D /* WebVCViewController.m in Sources */,
 				48A656C118163BF200746D36 /* main.m in Sources */,
 				530D05871E9EEDE2006C0B8D /* UIImage+animatedGIF.m in Sources */,
-				48A656EB18163F8700746D36 /* ProductViewController.m in Sources */,
 				53FBDE2D1E6619090034DBCE /* EditProductViewController.m in Sources */,
 				5399E3A01E56502E00C38A43 /* NewCompanyViewController.m in Sources */,
 				53EA62BF1E523C9800091583 /* Company.m in Sources */,

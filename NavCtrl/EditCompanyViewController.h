@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "DAO.h"
 #import "Company.h"
-#import "CompanyViewController.h"
+
 @interface EditCompanyViewController : UIViewController <UITextFieldDelegate>
 
 @property (strong, nonatomic) Company *currentCompany;

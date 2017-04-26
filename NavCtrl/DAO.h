@@ -11,13 +11,12 @@
 #import "Product.h"
 #import "NewCompanyViewController.h"
 #import "NewProductsViewController.h"
-#import "CompanyViewController.h"
-#import "ProductViewController.h"
 #import <CoreData/CoreData.h>
 #import "ManagedCompany+CoreDataClass.h"
 #import "ManagedProduct+CoreDataClass.h"
 #import "ManagedCompany+CoreDataProperties.h"
 #import "ManagedProduct+CoreDataProperties.h"
+#import "NavControllerAppDelegate.h"
 @interface DAO : NSObject <NSFetchRequestResult>
 
 //SINGLETON
@@ -43,12 +42,12 @@
 -(void) loadFetchedFromCoreData;
 //METHODS FOR SAVING TO CORE DATA
 -(void)initializeCoreData;
--(void)saveNewCompanyToCoreData;
--(void)saveNewProductToCoreData;
--(void)saveEditedCompanyToCoreData;
--(void)saveEditedProductToCoreData;
--(void)removeManagedCompanyFromCoreData:(ManagedCompany *)managedCompany;
--(void)removeManagedProductFromCoreData:(ManagedProduct *)mP fromManagedCompany:(ManagedCompany *)mC;
+//-(void)saveNewCompanyToCoreData;
+//-(void)saveNewProductToCoreData;
+//-(void)saveEditedCompanyToCoreData;
+//-(void)saveEditedProductToCoreData;
+//-(void)removeManagedCompanyFromCoreData:(ManagedCompany *)managedCompany; 
+//-(void)removeManagedProductFromCoreData:(ManagedProduct *)mP fromManagedCompany:(ManagedCompany *)mC;
 
 //PROPERTY FOR REMOVING COMPANY
 //@property (nonatomic)NSInteger selectedIndexForRemovalInCoreData;

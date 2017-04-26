@@ -7,7 +7,6 @@
 //
 
 #import "WebVCViewController.h"
-#import "ProductViewController.h"
 @interface WebVCViewController ()
 
 @end
@@ -22,8 +21,8 @@
     webVCView.frame = CGRectMake(self.view.frame.origin.x,self.view.frame.origin.y , self.view.frame.size.width, self.view.frame.size.height);
     
     [self.view addSubview: webVCView];
+    [webVCView release];
     
-    NSLog(@"%@",self.webURL);
 }
 
 - (void)didReceiveMemoryWarning {
@@ -40,5 +39,8 @@
     // Pass the selected object to the new view controller.
 }
 */
-
+-(void)dealloc{
+    [_webURL release];
+    [super dealloc];
+}
 @end

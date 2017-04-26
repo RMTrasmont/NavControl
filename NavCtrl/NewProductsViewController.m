@@ -133,7 +133,7 @@
     
     
    //SAVE TO CORE DATA
-    [self.dataManager saveNewProductToCoreData];
+//    [self.dataManager saveNewProductToCoreData];
     
     //SEGUE "POP" VIEW TO BE BACK AT PRODUCTS VIEW CONTROLLER SCREEN
     [self.navigationController popViewControllerAnimated:YES];
@@ -144,7 +144,7 @@
 -(UITextField *)createTextFieldNamed:(NSString *)placeHolder withXLocation:(float)x withYLocation:(float)y withWidth:(float)width andHeight:(float)height withIDTag:(int)tag{
     
     CGRect newTextFieldFrame = CGRectMake(x,y,width,height);
-    UITextField *newTextField = [[UITextField alloc] initWithFrame:newTextFieldFrame];
+    UITextField *newTextField = [[[UITextField alloc] initWithFrame:newTextFieldFrame]autorelease];
     newTextField.placeholder = placeHolder;
     newTextField.backgroundColor = [UIColor whiteColor];
     newTextField.textColor = [UIColor blackColor];
@@ -175,7 +175,7 @@
 //METHOD TO CREATE LABEL
 -(UILabel *)createLabelNamed:(NSString *)labelName withXLocation:(float)x withYLocation:(float)y withWidth:(float)width andHeight:(float)height{
     CGRect newLabelFrame = CGRectMake(x,y,width,height);
-    UILabel *newLabel = [[UILabel alloc]initWithFrame:newLabelFrame];
+    UILabel *newLabel = [[[UILabel alloc]initWithFrame:newLabelFrame]autorelease];
     newLabel.text = labelName;
     [self.view addSubview:newLabel];
     return newLabel;
@@ -240,7 +240,18 @@
     return YES;
 }
 //************************************************************************************
-
+-(void)dealloc{
+    [_productName release];
+    [_productURL release];
+    [_productImageURL release];
+    [_theNewProductTextField release];
+    [_theNewProductURLTextField release];
+    [_theNewProductImageURLTextField release];
+    [_productNameLabel release];
+    [_productURLLabel release];
+    [_prodductImageURLLabel release];
+    [super dealloc];
+}
 
 
 @end

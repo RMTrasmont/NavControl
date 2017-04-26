@@ -14,6 +14,7 @@
 @property (strong,nonatomic)UITextField *editLogoURLTextField;
 @property (strong,nonatomic)UILabel *editNameLabel;
 @property (strong,nonatomic)UILabel *editURLLabel;
+
 @property (nonatomic) DAO *dataManager;
 
 @end
@@ -54,17 +55,21 @@
     //ADD TEXTFIELD FOR EDITCOMPANY EDIT LOGO URL
     self.editLogoURLTextField = [self createTextFieldNamed:@"ENTER COMPANY LOGO URL" withXLocation:20.0F withYLocation:210.0f withWidth:self.textFieldWidth andHeight:self.textFieldHeight withIDTag:1];  // <--- CAN USE ID TAG TO REFER TO THE TEXT FIELD
     
+    
     //ADD EDIT COMPANY LABEL
     self.editNameLabel = [self createLabelNamed:@"Company Name:" withXLocation:20.0f withYLocation:100.0f withWidth:250.0f andHeight:20.0f];
     [self.editNameLabel setFont:[UIFont boldSystemFontOfSize:16]];
+    
     
     //ADD EDIT COMPANY LOGO URL LABEL
     self.editURLLabel = [self createLabelNamed:@"Logo URL:" withXLocation:20.0f withYLocation:180.0f withWidth:250.0f andHeight:20.0f];
     [self.editURLLabel setFont:[UIFont boldSystemFontOfSize:16]];
     
+    
     //SET TEXTFIELD DELEGATE FOR KEYBOARD HANDLING
     self.editNameTextField.delegate = self;
     self.editLogoURLTextField.delegate = self;
+    
     
     NSLog(@"EDITING TEST ***** %@",self.currentCompany.companyName);
     
@@ -73,6 +78,8 @@
 
 -(void)viewWillAppear:(BOOL)animated {
     //DISPLAY CURRENT VALUES BEFORE EDIT
+    
+    [super viewWillAppear:true];
     self.editNameTextField.text = self.currentCompany.companyName;
     self.editLogoURLTextField.text = [self.currentCompany.companyLogoURL absoluteString];
 }
@@ -108,7 +115,7 @@
 -(UITextField *)createTextFieldNamed:(NSString *)placeHolder withXLocation:(float)x withYLocation:(float)y withWidth:(float)width andHeight:(float)height withIDTag:(int)tag{
     
     CGRect newTextFieldFrame = CGRectMake(x,y,width,height);
-    UITextField *newTextField = [[UITextField alloc] initWithFrame:newTextFieldFrame];
+    UITextField *newTextField = [[[UITextField alloc] initWithFrame:newTextFieldFrame]autorelease];
     newTextField.placeholder = placeHolder;
     newTextField.backgroundColor = [UIColor whiteColor];
     newTextField.textColor = [UIColor blackColor];
@@ -167,7 +174,7 @@
 
     
     //SAVE EDITED COMPANY TO CORE DATA
-    [self.dataManager saveEditedCompanyToCoreData];
+//    [self.dataManager saveEditedCompanyToCoreData];
     
     //POP OUT OF THE VIEW
     [self.navigationController popViewControllerAnimated:YES];
@@ -178,10 +185,10 @@
 //METHOD TO CREATE LABEL
 -(UILabel *)createLabelNamed:(NSString *)labelName withXLocation:(float)x withYLocation:(float)y withWidth:(float)width andHeight:(float)height{
     CGRect newLabelFrame = CGRectMake(x,y,width,height);
-    UILabel *newLabel = [[UILabel alloc]initWithFrame:newLabelFrame];
+    UILabel *newLabel = [[[UILabel alloc]initWithFrame:newLabelFrame] autorelease];
     newLabel.text = labelName;
     [self.view addSubview:newLabel];
-    return newLabel;
+    return newLabel ;
 }
 
 //*************************KEYBOARD HANDLING **********************************************
@@ -244,5 +251,16 @@
 }
 //************************************************************************************
 
+- (void)dealloc
+{
+    [_currentCompany release];
+    [_editURLLabel release];
+    [_editNameLabel release];
+    [_currentCompany release];
+    [_editNameTextField release];
+    [_editLogoURLTextField release];
+    [super dealloc];
+
+}
 
 @end
