@@ -75,64 +75,38 @@
     [self.companyTickerLabel setFont:[UIFont boldSystemFontOfSize:16]];
     
    //SET TEXTFIELD AS DELEGATE FOR MOVING KEYBOARD
-    self.theNewCompanyLogoURLTextField.delegate = self;      //<------
-    self.theNewCompanyStockSymbolTextField.delegate = self;  //<------
-    
-
+    self.theNewCompanyLogoURLTextField.delegate = self;
+    self.theNewCompanyStockSymbolTextField.delegate = self;
     
 }
 
-//************************************************************************************
-
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-    
-
-}
-
-//************************************************************************************
-
-- (void)viewWillDisappear:(BOOL)animated
-{
-    [super viewWillDisappear:animated];
-    
-
-}
-
-//************************************************************************************
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
 
-//************************************************************************************
-//METHOD TO POP BACK TO COMPANY VIEW CONTROLLER / SEGUE WILL ONLY ADD ANOTHER LAYER OF THE SAME VIEW USED IN "CANCEL" BUTTON
+//METHOD TO POP BACK TO COMPANY VIEW CONTROLLER
 -(void)popToCompanyViewController{
     [self.navigationController popViewControllerAnimated:YES];
 }
 
-//************************************************************************************
 //METHOD TO ADD COMPANY TO LIST OF COMPANIES & THEN SEGUE BACK TO TO COMPANY LIST VIEW 
 -(void)saveNewCompany{
     
     //SET THE TEXTFIELD INPUT TO LOCAL VARIABLES COMPANY NAME & URL VARIABLE
     self.theNewCompanyName = self.theNewCompanyNameTextField.text;
-    self.theNewCompanyURL = [NSURL URLWithString:(self.theNewCompanyLogoURLTextField.text)];
+    self.theNewCompanyLogoURL = [NSURL URLWithString:(self.theNewCompanyLogoURLTextField.text)];
     self.theNewCompanyStockSymbol = self.theNewCompanyStockSymbolTextField.text;
     
     //CREATE A NEW COMPANY USING DAO METHOD AND GIVE IT THE LOCAL NAME & URL
-    Company *madeCompany = [self.dataManager makeNewCompanyWithName:self.theNewCompanyName withLogoURL:self.theNewCompanyURL andStockSymbol:self.theNewCompanyStockSymbol];
+    Company *madeCompany = [self.dataManager makeNewCompanyWithName:self.theNewCompanyName withLogoURL:self.theNewCompanyLogoURL andStockSymbol:self.theNewCompanyStockSymbol];
     
     //ASSIGN THE NEW COMPANY TO THE NEWCOMPANY PAROPERTY IN DAO
     self.dataManager.theNewCompanyDAO = madeCompany;
     
     //ADD COMPANY DAO ARRAY
     [self.dataManager.companyListDAO addObject:madeCompany];
-    
-    //SAVE THE NEW COMPANY TO CORE DATA
-//    [self.dataManager saveNewCompanyToCoreData];
     
     //LET DAO KNOW THE CURRENT COMPANY
     self.dataManager.currentCompanyDAO = madeCompany;
@@ -143,7 +117,6 @@
     
 }
 
-//************************************************************************************
 //METHOD TO PROPORTIONALLY ADJUST WIDTH & HEIGHT OF TEXTFIELD IN RELATION TO VIEW
 -(void)proportionalWidth:(float)percent{
     _textFieldWidth = self.view.frame.size.width * percent;
@@ -153,7 +126,6 @@
     _textFieldHeight = self.view.frame.size.height * percent;
 }
 
-//************************************************************************************
 //METHOD TO CREATE TEXTFIELD
 -(UITextField *)createTextFieldNamed:(NSString *)placeHolder withXLocation:(float)x withYLocation:(float)y withWidth:(float)width andHeight:(float)height withIDTag:(int)tag{
     
@@ -175,7 +147,6 @@
     return newTextField;
 }
 
-//************************************************************************************
 //METHOD TO CREATE LABEL
 -(UILabel *)createLabelNamed:(NSString *)labelName withXLocation:(float)x withYLocation:(float)y withWidth:(float)width andHeight:(float)height{
     CGRect newLabelFrame = CGRectMake(x,y,width,height);
@@ -185,15 +156,12 @@
     return newLabel;
 }
 
-
-//*************************KEYBOARD HANDLING **********************************************
 //OVERRIDE METHOD TO MAKE KEYBOARD DISAPEAR WHEN CLICKING OUTSIDE OF TEXTFIELD
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
     [self.view endEditing:YES];
     [super touchesBegan:touches withEvent:event];
 }
 
-//TEXTFIELD & KEYBOARD METHODS
 //METHOD TO MOVE TEXTFIELD UP WHEN CLICKED
 -(void)textFieldDidBeginEditing:(UITextField *)textField
 {
@@ -244,11 +212,10 @@
     [textField resignFirstResponder];
     return YES;
 }
-//************************************************************************************
 
 -(void)dealloc{
     [_theNewCompanyName release];
-    [_theNewCompanyURL release];
+    [_theNewCompanyLogoURL release];
     [_theNewCompanyStockSymbol release];
     [_theNewCompanyNameTextField release];
     [_theNewCompanyLogoURLTextField release];

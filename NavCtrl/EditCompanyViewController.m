@@ -36,13 +36,12 @@
     self.navigationItem.leftBarButtonItem = [[[UIBarButtonItem alloc]
                                               initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
                                               target:self
-                                              action:@selector(popToCompanyViewController)]   //<---MAKE & DEFINE METHOD
-                                             autorelease];
+                                              action:@selector(popToCompanyViewController)]                                              autorelease];
     
     //ADD SAVE BUTTON TO TOP RIGHT BAR
     self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc]
                                                initWithBarButtonSystemItem:UIBarButtonSystemItemSave
-                                               target:self action:@selector(saveEditedCompany)]  // <--- MAKE & DEFINE METHOD
+                                               target:self action:@selector(saveEditedCompany)]
                                               autorelease];
     
     //SET PROPORTIONAL TEXTFIELD SIZES
@@ -50,10 +49,10 @@
     [self proportionalHeight:0.075f];
     
     //ADD TEXTFIELD FOR EDITCOMPANY EDIT NAME SCREEN
-    self.editNameTextField = [self createTextFieldNamed:@"ENTER COMPANY NAME" withXLocation:20.0f withYLocation:130.0f withWidth:self.textFieldWidth andHeight:self.textFieldHeight withIDTag:0];   // <---CAN USE ID TAG TO REFER TO THE TEXT FIELD
+    self.editNameTextField = [self createTextFieldNamed:@"ENTER COMPANY NAME" withXLocation:20.0f withYLocation:130.0f withWidth:self.textFieldWidth andHeight:self.textFieldHeight withIDTag:0];
     
     //ADD TEXTFIELD FOR EDITCOMPANY EDIT LOGO URL
-    self.editLogoURLTextField = [self createTextFieldNamed:@"ENTER COMPANY LOGO URL" withXLocation:20.0F withYLocation:210.0f withWidth:self.textFieldWidth andHeight:self.textFieldHeight withIDTag:1];  // <--- CAN USE ID TAG TO REFER TO THE TEXT FIELD
+    self.editLogoURLTextField = [self createTextFieldNamed:@"ENTER COMPANY LOGO URL" withXLocation:20.0F withYLocation:210.0f withWidth:self.textFieldWidth andHeight:self.textFieldHeight withIDTag:1];
     
     
     //ADD EDIT COMPANY LABEL
@@ -73,34 +72,18 @@
     
     NSLog(@"EDITING TEST ***** %@",self.currentCompany.companyName);
     
-
 }
 
 -(void)viewWillAppear:(BOOL)animated {
-    //DISPLAY CURRENT VALUES BEFORE EDIT
-    
     [super viewWillAppear:true];
     self.editNameTextField.text = self.currentCompany.companyName;
     self.editLogoURLTextField.text = [self.currentCompany.companyLogoURL absoluteString];
 }
 
-//************************************************************************************
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
-//************************************************************************************
-/*
-#pragma mark - Navigation
 
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
-
-//************************************************************************************
 //METHOD TO PROPORTIONALLY ADJUST WIDTH & HEIGHT OF TEXTFIELD IN RELATION TO VIEW
 -(void)proportionalWidth:(float)percent{
     _textFieldWidth = self.view.frame.size.width * percent;
@@ -110,7 +93,6 @@
     _textFieldHeight = self.view.frame.size.height * percent;
 }
 
-//************************************************************************************
 //METHOD TO CREATE TEXTFIELD
 -(UITextField *)createTextFieldNamed:(NSString *)placeHolder withXLocation:(float)x withYLocation:(float)y withWidth:(float)width andHeight:(float)height withIDTag:(int)tag{
     
@@ -132,13 +114,11 @@
     return newTextField;
 }
 
-//************************************************************************************
 //METHOD TO POP OUT OF EDIT SCREEN
 -(void)popToCompanyViewController{
     [self.navigationController popViewControllerAnimated:YES];
 }
 
-//************************************************************************************
 //METHOD TO SAVE INFO IN EDIT COMPANY SCREEN
 #pragma mark - WORKING EDIT COMPANY
 -(void)saveEditedCompany{
@@ -171,17 +151,12 @@
     
     //LET DAO KNOW OF THE COMPANY BEING EDITED
     self.dataManager.companyBeingEditedDAO = self.currentCompany;
-
-    
-    //SAVE EDITED COMPANY TO CORE DATA
-//    [self.dataManager saveEditedCompanyToCoreData];
     
     //POP OUT OF THE VIEW
     [self.navigationController popViewControllerAnimated:YES];
     
 }
 
-//************************************************************************************
 //METHOD TO CREATE LABEL
 -(UILabel *)createLabelNamed:(NSString *)labelName withXLocation:(float)x withYLocation:(float)y withWidth:(float)width andHeight:(float)height{
     CGRect newLabelFrame = CGRectMake(x,y,width,height);
@@ -191,14 +166,12 @@
     return newLabel ;
 }
 
-//*************************KEYBOARD HANDLING **********************************************
 //OVERRIDE METHOD TO MAKE KEYBOARD DISAPEAR WHEN CLICKING OUTSIDE OF TEXTFIELD
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
     [self.view endEditing:YES];
     [super touchesBegan:touches withEvent:event];
 }
 
-//TEXTFIELD & KEYBOARD METHODS
 //METHOD TO MOVE TEXTFIELD UP WHEN CLICKED
 -(void)textFieldDidBeginEditing:(UITextField *)textField
 {
@@ -214,6 +187,7 @@
         [UIView commitAnimations];
     }
 }
+
 //METHOD TO MOVE TEXTFIELD BACK DOWN WHEN CLICKED "DONE"
 -(void)textFieldDidEndEditing:(UITextField *)textField{
     
@@ -233,7 +207,6 @@
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
-    
     if (textField.tag > 0)
     {
         [UIView beginAnimations:nil context:NULL];
@@ -243,13 +216,10 @@
         self.view .frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y+80.0,
                                       self.view.frame.size.width, self.view.frame.size.height);
         [UIView commitAnimations];
-        
-        
     }
     [textField resignFirstResponder];
     return YES;
 }
-//************************************************************************************
 
 - (void)dealloc
 {

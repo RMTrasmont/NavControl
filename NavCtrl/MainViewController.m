@@ -52,22 +52,19 @@
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
     
-
-    
     //ASSIGN IMAGE IN DETAILS VIEW AS THE FETCHED IMAGES FROM THE MAIN VIEW
     [self.logoImageView setImage:self.companyToDisplay.fetchedLogoImage];
     
     //ASSIGN STOCK INFO ON LABEL ON DETAILS VIEW
     self.stockPriceLabel.text = self.companyToDisplay.financialDataString;
     
+    [_undoRedoHolderView setHidden:YES];
+    
 }
-
-//**************************************************************************************
 
 - (void)viewWillAppear:(BOOL)animated {
     
     [super viewWillAppear:animated];
-    
     
     //MOVE OBJECTS UNDERNEATH NAVBAR LOWER
     [self.navigationController.navigationBar setTranslucent:NO];
@@ -88,9 +85,6 @@
 
 }
 
-//*************************************************************************************
-
-
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
@@ -110,9 +104,6 @@
     // Return the number of rows in the section.
     return self.companyToDisplay.companyProductList.count;
 }
-
-//*************************************************************************************
-
 
 #pragma mark - Table View Cells
 
@@ -150,7 +141,6 @@
             cell.imageView.image = UIGraphicsGetImageFromCurrentImageContext();
             UIGraphicsEndImageContext();
         
-        
         });
         
     });
@@ -163,17 +153,13 @@
                    action:@selector(pushToEditProductScreen:)
          forControlEvents:UIControlEventTouchUpInside];
     
-    //***ADD TAG TO THE BUTTON THAT IS INDEXPATH.ROW***
+    //ADD TAG TO THE BUTTON THAT IS @ INDEXPATH.ROW
     [editButton setTag:indexPath.row];
-    
-    cell.accessoryView = editButton;           // <--- SHOW ON CELL RIGHT AWAY
-    //cell.editingAccessoryView = editButton;  // <--- SHOW ON CELL ONCE EDIT BUTTON CLICKED
-    
+    //SHOW ACCESSORY BUTTON ON ON CELL RIGHT AWAY
+    cell.accessoryView = editButton;
     return cell;
 }
 
-//*************************************************************************************
-// DO ALL CUSTOMIZING OF CELLS HERE INSIDE THIS METHOD
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     
@@ -186,7 +172,6 @@
     webVC.webURL = currentProduct.productURL;
     
     //PUSHES THE NEXT VIEW// ANIMATED
-    //[self.navigationController pushViewController:webVC animated:YES];
     CATransition* transition = [CATransition animation];
     transition.duration = 0.8f;
     transition.type = kCATransitionPush;
@@ -203,52 +188,33 @@
     
 }
 
-//*************************************************************************************
-
-//DELETE PRODUCTS ON TABLEVIEW CELL METHOD
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
     
-//    //REMOVES THE ACTUAL OBJECT FROM THE NSMUTABLE ARRAY THE TABLEVIEW USES
-//    [self.dataManager.currentCompanyDAO.companyProductList removeObjectAtIndex:indexPath.row];
-//    [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-//    
-//    //self.dataManager.currentManagedCompanyDAO.products
-//    ManagedCompany *mC = self.dataManager.currentManagedCompanyDAO;
-//    //CONVERT NS SET TO NS ARRAY TO USE INDEXPATH TO GET MANAGED PRODUCT
-//    NSMutableArray *productArray = [[NSMutableArray alloc]initWithArray:[mC.products allObjects]];
-//    ManagedProduct *mP = productArray[indexPath.row];
-//    [productArray release];
-//    
-//    //LET DAO KNOW THE CURRENT MANAGED PRODUCT
-//    self.dataManager.currentManagedProductDAO = mP;
-    
-    
-    //REMOVE MANAGED MANAGED PRODUCT FROM CORE DATA
-//    [self.dataManager removeManagedProductFromCoreData:mP fromManagedCompany:mC];
-    
-    //IF PRODUCTS ARRAY IS EMPTY HIDE TABLE
-    if(self.dataManager.currentCompanyDAO.companyProductList.count == 0){
-        [self.tableView setHidden:YES];
-        [self.tableView reloadData];
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
+        NSInteger selectedIndex = indexPath.row;
+        
+        //REMOVE PRODUCT FROM ARRAY
+        [self.dataManager.currentCompanyDAO.companyProductList removeObjectAtIndex:selectedIndex];
+        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+        
+        //IF PRODUCTS ARRAY IS EMPTY HIDE TABLE
+        if(self.dataManager.currentCompanyDAO.companyProductList.count == 0){
+            [self.tableView setHidden:YES];
+            [self.tableView reloadData];
+        }
     }
-    
+
     //CALL TO REFRESH THE DATA AND UPDATE NUMBER OF ITEMS
     [tableView reloadData];
     
-    
 }
 
-//***********************************************************************************
-//PUSH TO THE VIEW TO ADD PRODUCTS
 -(void)pushToAddProductView{
     
     //INIT A VIEW CONTROLLER OF THE KIND NEWPRODUCT
     NewProductsViewController *addNewProductView = [[NewProductsViewController alloc]init];
-    
-    //SEGUE TO THAT NEW PRODUCTS VIEW CONTROLLER
-    //[self.navigationController pushViewController:addNewProductView animated:YES];
-    
+
     CATransition* transition = [CATransition animation];
     transition.duration = 0.4f;
     transition.type = kCATransitionReveal ;
@@ -257,32 +223,17 @@
                                                 forKey:kCATransition];
     [self.navigationController pushViewController:addNewProductView animated:YES];
 
-    
     [addNewProductView release];
 }
 
-//************************************************************************************
-
--(void)viewDidDisappear:(BOOL)animated{
-//    for(Product *product in _companyToDisplay.companyProductList){
-//        product.fetchedLogoImage = nil;
-//        product.productImageURL = nil;
-//    }
-}
 
 //MOVE BACK TO MAIN COMPANYVIEW
 -(void)popToCompanyView{
     [self.navigationController popViewControllerAnimated:YES];
-    
-    
-   
 }
 
 //METHOD TO SEGUE "PUSH" TO EDIT PRODUCT SCREEN
 -(void)pushToEditProductScreen:(UIButton *)sender{
-    
-    //TEST
-    NSLog(@"INDEX OF SELECTED ACC. BUTTON = %ld", (long)sender.tag);
     
     EditProductViewController *editScreen = [[EditProductViewController alloc]init];
     
@@ -293,12 +244,6 @@
     Product *currentProduct = [currentCompany.companyProductList objectAtIndex:sender.tag];
     editScreen.currentProduct = currentProduct;
     
-    //SET THE VALUE OF THE LAST EDIT BUTTON TOUCHED
-//    self.dataManager.indexOfLastAccessoryButtonTouched = sender.tag;
-    
-    //ANIMATED TRANSITION
-    //[self.navigationController pushViewController:editScreen animated:YES];
-    
     CATransition* transition = [CATransition animation];
     transition.duration = 0.4f;
     transition.type = kCATransitionMoveIn;
@@ -307,27 +252,9 @@
                                                 forKey:kCATransition];
     [self.navigationController pushViewController:editScreen animated:YES];
     
-    
     [editScreen release];
 }
 
-
-////************************************************************************************
-- (void)dealloc {
-    [_companyToDisplay release];
-    [_detailsHolderView release];
-    [_logoImageView release];
-    [_stockPriceLabel release];
-    _tableView.delegate = nil;
-    _tableView.dataSource = nil;
-    [_tableView release];
-    [_undoRedoHolderView release];
-    [_emptyProductsSubView release];
-    [_emptyProductsLabel release];
-    [_currentManagedProductSet release];
-    [_sortDescriptors release];
-    [super dealloc];
-}
 - (IBAction)undoButton:(UIButton *)sender {
     NavControllerAppDelegate *appDelegate = (NavControllerAppDelegate*)[UIApplication sharedApplication].delegate;
     [appDelegate.managedObjectContext undo];
@@ -345,6 +272,22 @@
     NewProductsViewController *pVC = [[NewProductsViewController alloc]init];
     [self.navigationController pushViewController:pVC animated:YES];
     [pVC release];
+}
+
+- (void)dealloc {
+    [_companyToDisplay release];
+    [_detailsHolderView release];
+    [_logoImageView release];
+    [_stockPriceLabel release];
+    _tableView.delegate = nil;
+    _tableView.dataSource = nil;
+    [_tableView release];
+    [_undoRedoHolderView release];
+    [_emptyProductsSubView release];
+    [_emptyProductsLabel release];
+    [_currentManagedProductSet release];
+    [_sortDescriptors release];
+    [super dealloc];
 }
 
 

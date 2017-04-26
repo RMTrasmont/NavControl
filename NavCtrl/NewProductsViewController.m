@@ -39,15 +39,13 @@
     self.navigationItem.leftBarButtonItem = [[[UIBarButtonItem alloc]
                                                initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
                                                target:self
-                                               action:@selector(popBackProductsView)]   //<---MAKE & DEFINE METHOD
-                                               autorelease];
+                                               action:@selector(popBackProductsView)]                                                autorelease];
     
     //ADD SAVE BUTTON W/ ACTION
     self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc]
                                               initWithBarButtonSystemItem:UIBarButtonSystemItemSave
                                               target:self
-                                              action:@selector(saveNewProduct)]   //<---MAKE & DEFINE METHOD
-                                             autorelease];
+                                              action:@selector(saveNewProduct)]                                             autorelease];
     
     
     //SET PROPORTIONS FOR WIDTH
@@ -86,29 +84,16 @@
 
 }
 
-//************************************************************************************
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+    
 }
-//************************************************************************************
-/*
-#pragma mark - Navigation
 
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
-
-//************************************************************************************
-//METHOD TO SEGUE BACK TO PRODUCTS VIEW
+//METHOD TO POP BACK TO PRODUCTS VIEW
 -(void)popBackProductsView{
     [self.navigationController popViewControllerAnimated:YES];
 }
 
-//************************************************************************************
 //METHOD TO SAVE NEW PRODUCT
 -(void)saveNewProduct{ 
 
@@ -131,15 +116,10 @@
         [self.dataManager.currentCompanyDAO.companyProductList addObject:madeProduct];
     }
     
-    
-   //SAVE TO CORE DATA
-//    [self.dataManager saveNewProductToCoreData];
-    
     //SEGUE "POP" VIEW TO BE BACK AT PRODUCTS VIEW CONTROLLER SCREEN
     [self.navigationController popViewControllerAnimated:YES];
 }
 
-//************************************************************************************
 //METHOD TO CREATE TEXTFIELD
 -(UITextField *)createTextFieldNamed:(NSString *)placeHolder withXLocation:(float)x withYLocation:(float)y withWidth:(float)width andHeight:(float)height withIDTag:(int)tag{
     
@@ -161,7 +141,6 @@
     return newTextField;
 }
 
-//************************************************************************************
 //METHODS TO SET THE TEXTFIELD HEIGHT AND WIDTH PROPORTIONAL TO THE HEIGHT AND WIDTH OF THE VIEW
 -(void)proportionalWidth:(float)percent{
     _textFieldWidth = self.view.frame.size.width * percent;
@@ -171,7 +150,6 @@
     _textFieldHeight = self.view.frame.size.height * percent;
 }
 
-//************************************************************************************
 //METHOD TO CREATE LABEL
 -(UILabel *)createLabelNamed:(NSString *)labelName withXLocation:(float)x withYLocation:(float)y withWidth:(float)width andHeight:(float)height{
     CGRect newLabelFrame = CGRectMake(x,y,width,height);
@@ -181,7 +159,6 @@
     return newLabel;
 }
 
-//*************************KEYBOARD HANDLING **********************************************
 //OVERRIDE METHOD TO MAKE KEYBOARD DISAPEAR WHEN CLICKING OUTSIDE OF TEXTFIELD
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
     [self.view endEditing:YES];
@@ -193,7 +170,7 @@
 -(void)textFieldDidBeginEditing:(UITextField *)textField
 {
     
-    if (textField.tag > 0)   // <--- ONLY AFFECTS THE BOTTOM TWO
+    if (textField.tag > 0)
     {
         [UIView beginAnimations:nil context:NULL];
         [UIView setAnimationDelegate:self];
@@ -239,7 +216,7 @@
     [textField resignFirstResponder];
     return YES;
 }
-//************************************************************************************
+
 -(void)dealloc{
     [_productName release];
     [_productURL release];

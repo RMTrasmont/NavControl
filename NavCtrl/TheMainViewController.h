@@ -22,7 +22,6 @@
 - (IBAction)populatedRedoButtonPressed:(UIButton *)sender;
 //SHOWN WHEN EMPTY(MIGHT NOT USE)
 @property (retain, nonatomic) IBOutlet UIView *emptyViewAndMessage;
-@property (retain, nonatomic) IBOutlet UIImageView *gifBackGroundImageView;
 @property (retain, nonatomic) IBOutlet UIImageView *emptyStateLogoImageView;
 @property (retain, nonatomic) IBOutlet UILabel *noCompaniesLabel;
 - (IBAction)addToCompaniesEmptyButton:(UIButton *)sender;

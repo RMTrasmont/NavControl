@@ -19,7 +19,6 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    //SET THE DAO PROPERTY OF THIS VIEW
     self.dataManager = [DAO sharedManager];
 
     
@@ -37,11 +36,8 @@
     self.title = @"Company";
     
     //NSNOTIFICATIONCENTER ADD OBSERVER WHEN DATA IS READY
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receivedFinNotification:) name:@"Data Ready" object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receivedFinNotification:) name:@"Data Missing" object:nil];
-    
-    //TEST
-    NSLog(@"TEST*****TheMainViewController*****LOADED");
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receivedFinNotificationForFinFetch:) name:@"Data Ready" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receivedFinNotificationForFinFetch:) name:@"Data Missing" object:nil];
     
     //SET TABLEVIEW DELEGATES
     self.companyTableView.delegate = self;
@@ -54,30 +50,8 @@
     
 }
 
-//****************************************************************************************
-
 -(void)fetchImages
 {
-//    //**********************RUN ON DIFF THREAD********************************
-//    //1. GET ALL IMAGES FROM ONLINE RUN ON DIFFERENT THREAD
-//    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-//        for (Company *currentCompany in self.dataManager.companyListDAO) {
-//            UIImage *imageToSet = [UIImage imageWithData:[NSData dataWithContentsOfURL:currentCompany.companyLogoURL]];
-//            currentCompany.fetchedLogoImage = imageToSet;
-//        }
-//        
-//        
-//        //**********************BACK TO MAIN THREAD*****************************
-//        //2.ALL IMAGES FETCHED,GO BACK TO THE MAIN QUEUE,AND ASSIGN IMAGES
-//        dispatch_async(dispatch_get_main_queue(), ^{
-//            [self.companyTableView reloadData];
-//            
-//        });
-//        
-//    });
-    
-    //CHANGES***
-    
     for (Company *currentCompany in self.dataManager.companyListDAO){
         
         NSURLSessionConfiguration *sessConfig = [NSURLSessionConfiguration defaultSessionConfiguration];
@@ -85,20 +59,13 @@
             
             dispatch_async(dispatch_get_main_queue(), ^{
                 UIImage *imageToSet = [UIImage imageWithData:data];
-                NSLog(@"IMAGE DATA %@",data);  //** TEST
                 currentCompany.fetchedLogoImage = imageToSet;
                 [self.companyTableView reloadData];
                 sessConfig.timeoutIntervalForRequest = 5.0;
             });
-            
-            
         }]resume];
-        
     }
-
-
 }
-
 
 -(void)timedRecieveNotification{
     self.myTimer = [[[NSTimer alloc]init]autorelease];
@@ -108,9 +75,9 @@
     [self.companyTableView reloadData];
 }
 
-- (void)receivedFinNotification:(NSNotification *) notification {
+- (void)receivedFinNotificationForFinFetch:(NSNotification *) notification {
     
-    if ([[notification name] isEqualToString:@"Data Ready"]) {
+    if ([[notification name] isEqualToString:@"Data Ready" ] ||[[notification name] isEqualToString:@"Added New Company"]){
         
         
        for (int i = 0; i < [self.dataManager.companyListDAO count]; i++) {
@@ -148,8 +115,6 @@
     }
 }
 
-//****************************************************************************************
-
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:YES];
     //IF COMPANYLIST IS GREATER THAN 1 SHOW POPULATED VIEW
@@ -157,44 +122,22 @@
         [self.populatedStackView setHidden:NO];
     }
     
+    
     //MOVE OBJECTS UNDERNEATH NAVBAR LOWER
     [self.navigationController.navigationBar setTranslucent:NO];
     
-    //[self.companyTableView reloadData];
-    
-    for(Company *company in _dataManager.companyListDAO){
-        
-        if([company.fetchedLogoImage isEqual:nil]){
-            [self fetchImages];
-        }else{
-            break;
-        }
-        
-    }
-    
-    //[[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(fetchImages) name:@"Images Fetched" object:nil];
- 
-
+    [self.dataManager getAPIFinancialData];
+    [self fetchImages];
+    [self.companyTableView reloadData];
 }
-//****************************************************************************************
+
+
 
 -(void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:YES];
-    //NSNOTIFICATIONCENTER REMOVE OBSERVER WHEN DATA IS ALREADY USED
-    [[NSNotificationCenter defaultCenter]removeObserver:self name:@"Data is Ready" object:nil];
     
 }
 
--(void)viewDidDisappear:(BOOL)animated{
-//    for (Company *company in _dataManager.companyListDAO){
-//        company.financialDataString = nil;
-//        company.fetchedLogoImage = nil;
-//        company.companyLogoURL = nil;
-//    }
-    
-}
-
-//****************************************************************************************
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
@@ -228,10 +171,8 @@
     
     Company *currentCompany = [self.dataManager.companyListDAO objectAtIndex:indexPath.row];
     
-     //CHANGES***
-    
-    if([currentCompany.fetchedLogoImage isEqual:nil]){
-        [cell.imageView setImage:[UIImage imageNamed:@"StockMarket"]];
+    if([currentCompany.fetchedLogoImage isEqual:@""]){
+        [cell.imageView setImage:[UIImage imageNamed:@"StockMarket.png"]];
     } else {
         [cell.imageView setImage:currentCompany.fetchedLogoImage];
     }
@@ -248,9 +189,7 @@
     UIGraphicsEndImageContext();
     
     
-    
     //ASSIGN CUSTOM EDIT BUTTON TO ACCESSORY VIEW CELL TO EDIT NAMES AND URL
-    //UIButton *editButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     UIButton *editButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     [editButton setImage:[UIImage imageNamed:@"editPencil(48x48)"] forState:UIControlStateNormal];
     
@@ -287,15 +226,9 @@
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         NSInteger selectedIndex = indexPath.row;
         
-        //LET DAO KNOW THE CURRENT MANAGED COMPANY
-//        self.dataManager.currentManagedCompanyDAO  = self.dataManager.managedCompanyListDAO[selectedIndex];
-        
         //REMOVE COMPANY FROM ARRAY
         [self.dataManager.companyListDAO removeObjectAtIndex:selectedIndex];
         [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-        
-        //REMOVE MANAGED COMPANY FROM CORE DATA
-//        [self.dataManager removeManagedCompanyFromCoreData:self.dataManager.currentManagedCompanyDAO];
         
         //IF COMPANY ARRAY IS EMPTY
         if(self.dataManager.companyListDAO.count == 0){
@@ -366,7 +299,6 @@
 //METHOD TO GO TO NEW COMPANY TABLE VIEW SCREEN
 -(void)pushToAddCompanyView{
     
-    //INITIALIZE THE VIEW YOU'RE TRYING TO SEND TO
     NewCompanyViewController *addNewCompanyView = [[NewCompanyViewController alloc]init];
     
     CATransition* transition = [CATransition animation];
@@ -383,9 +315,6 @@
 //METHOD TO SEGUE TO EDIT COMPANY NAME AND LOGO URL
 -(void)pushToEditCompany: (UIButton*) sender {
     
-    //TEST
-    NSLog(@"INDEX OF SELECTED ACC. BUTTON = %ld", (long)sender.tag);
-    
     //LET EDIT COMPANY SCREEN KNOW WHICH CURRENT COMPANY WAS CLICKED FOR EDITING
     EditCompanyViewController *editScreen = [[EditCompanyViewController alloc]init];
     
@@ -393,9 +322,6 @@
     editScreen.currentCompany = [self.dataManager.companyListDAO objectAtIndex:sender.tag];
     
     NSLog(@"%@",editScreen.currentCompany.companyName);
-    
-    //USE THE SENDER TAG LET DAO KNOW WHICH COMPANY
-//    self.dataManager.currentManagedCompanyDAO = [self.dataManager.managedCompanyListDAO objectAtIndex:sender.tag];
     
     //SEGUE TO THE NEW VIEW/ ANIMATED TRANSITION
     CATransition* transition = [CATransition animation];
@@ -410,22 +336,6 @@
 }
 
 
-- (void)dealloc {
-    [_companyTableView release];
-    [_emptyViewAndMessage release];
-    [_gifBackGroundImageView release];
-    [_emptyStateLogoImageView release];
-    [_noCompaniesLabel release];
-    [_populatedStackView release];
-    [_populatedUndoRedoHolderView release];
-    [_emptyUndoRedoHolderView release];
-    [_fetchedFinancials release];
-    _companyTableView.delegate = nil;
-    _companyTableView.dataSource = nil;
-       [super dealloc];
-}
-
-
 - (IBAction)addToCompaniesEmptyButton:(UIButton *)sender {
     NewCompanyViewController *addNewCompanyVC = [[[NewCompanyViewController alloc]init]autorelease];
     [self.navigationController pushViewController:addNewCompanyVC animated:YES];
@@ -437,6 +347,7 @@
    NavControllerAppDelegate *appDelegate = (NavControllerAppDelegate*)[UIApplication sharedApplication].delegate;
     [appDelegate.managedObjectContext undo];
     [self.dataManager loadFetchedFromCoreData];
+    [self fetchImages];
     [self.companyTableView reloadData];
 }
 
@@ -444,9 +355,10 @@
     NavControllerAppDelegate *appDelegate = (NavControllerAppDelegate*)[UIApplication sharedApplication].delegate;
     [appDelegate.managedObjectContext redo];
     [self.dataManager loadFetchedFromCoreData];
-    [self.companyTableView reloadData];}
+    [self fetchImages];
+    [self.companyTableView reloadData];
+}
 
-//(OPTION 2)
 - (IBAction)emptyUndoButtonPressed:(UIButton *)sender {
     NavControllerAppDelegate *appDelegate = (NavControllerAppDelegate*)[UIApplication sharedApplication].delegate;
     [appDelegate.managedObjectContext undo];
@@ -459,6 +371,20 @@
     [appDelegate.managedObjectContext redo];
     [self.dataManager loadFetchedFromCoreData];
     [self.companyTableView reloadData];
+}
+
+- (void)dealloc {
+    _companyTableView.delegate = nil;
+    _companyTableView.dataSource = nil;
+    [_companyTableView release];
+    [_emptyViewAndMessage release];
+    [_emptyStateLogoImageView release];
+    [_noCompaniesLabel release];
+    [_populatedStackView release];
+    [_populatedUndoRedoHolderView release];
+    [_emptyUndoRedoHolderView release];
+    [_fetchedFinancials release];
+    [super dealloc];
 }
 
 

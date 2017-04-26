@@ -79,13 +79,10 @@
 
 }
 
-//************************************************************************************
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
-
-//************************************************************************************
 
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:YES];
@@ -107,7 +104,6 @@
     _textFieldHeight = self.view.frame.size.height * percent;
 }
 
-//************************************************************************************
 //METHOD TO CREATE TEXTFIELD
 -(UITextField *)createTextFieldNamed:(NSString *)placeHolder withXLocation:(float)x withYLocation:(float)y withWidth:(float)width andHeight:(float)height withIDTag:(int)tag{
     
@@ -129,13 +125,11 @@
     return newTextField;
 }
 
-//************************************************************************************
-//METHOD TO POP OUT OF EDIT SCREEN
 -(void)popToProductViewController{
     [self.navigationController popViewControllerAnimated:YES];
 }
-//************************************************************************************
-//METHOD TO SAVE EDITED PRODUCT
+
+
 -(void)saveEditedProduct{
     //NEW VALUES
     NSString *editedName = self.editNameTextField.text;
@@ -172,9 +166,6 @@
     
     //LET DAO KNOW THE CURRENT PRODUCT BEING EDITED
     self.dataManager.productBeingEditedDAO = self.currentProduct;
-    
-    //SAVE EDITED PRODUCT TO CORE DATA
-//    [self.dataManager saveEditedProductToCoreData];
     
     [self.navigationController popViewControllerAnimated:YES];
 
