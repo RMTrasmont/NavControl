@@ -26,13 +26,13 @@
 		530FD8EC1E3FF71700F7877D /* WebVCViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 530FD8EB1E3FF71700F7877D /* WebVCViewController.m */; };
 		537057401E7C545F00965D8F /* CoreDataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 5370573E1E7C545F00965D8F /* CoreDataModel.xcdatamodeld */; };
 		537057421E7C696700965D8F /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 537057411E7C696700965D8F /* CoreData.framework */; };
-		5373466E1E92BE48002EF701 /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5373466D1E92BE48002EF701 /* MainViewController.m */; };
-		537346701E92BE4F002EF701 /* MainViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5373466F1E92BE4F002EF701 /* MainViewController.xib */; };
 		5399E3A01E56502E00C38A43 /* NewCompanyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5399E39F1E56502E00C38A43 /* NewCompanyViewController.m */; };
 		53D0E5851E94501C00C63DEF /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 53D0E5841E94501C00C63DEF /* Launch Screen.storyboard */; };
 		53D0E5891E9555CE00C63DEF /* TheMainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 53D0E5871E9555CE00C63DEF /* TheMainViewController.m */; };
 		53D0E58A1E9555CE00C63DEF /* TheMainViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 53D0E5881E9555CE00C63DEF /* TheMainViewController.xib */; };
 		53D0E58D1E958CC800C63DEF /* StockMarket.png in Resources */ = {isa = PBXBuildFile; fileRef = 53D0E58C1E958CC800C63DEF /* StockMarket.png */; };
+		53D7DC1F1EB0EDCF00ECC469 /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 53D7DC1D1EB0EDCF00ECC469 /* MainViewController.m */; };
+		53D7DC201EB0EDCF00ECC469 /* MainViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 53D7DC1E1EB0EDCF00ECC469 /* MainViewController.xib */; };
 		53D998DA1E5CCDA2004A4CC3 /* NewProductsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 53D998D91E5CCDA2004A4CC3 /* NewProductsViewController.m */; };
 		53EA62BA1E523C2C00091583 /* Product.m in Sources */ = {isa = PBXBuildFile; fileRef = 53EA62B91E523C2C00091583 /* Product.m */; };
 		53EA62BF1E523C9800091583 /* Company.m in Sources */ = {isa = PBXBuildFile; fileRef = 53EA62BE1E523C9800091583 /* Company.m */; };
@@ -77,9 +77,6 @@
 		530FD8EB1E3FF71700F7877D /* WebVCViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WebVCViewController.m; sourceTree = "<group>"; };
 		5370573F1E7C545F00965D8F /* CoreDataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = CoreDataModel.xcdatamodel; sourceTree = "<group>"; };
 		537057411E7C696700965D8F /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
-		5373466C1E92BE3F002EF701 /* MainViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = MainViewController.h; path = "../../../../Xcode Practice & Project/Turn To Tech/Assignments/NavControllerMainViewRefactor/NavControllerMainViewRefactor/MainViewController.h"; sourceTree = "<group>"; };
-		5373466D1E92BE48002EF701 /* MainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MainViewController.m; path = "../../../../Xcode Practice & Project/Turn To Tech/Assignments/NavControllerMainViewRefactor/NavControllerMainViewRefactor/MainViewController.m"; sourceTree = "<group>"; };
-		5373466F1E92BE4F002EF701 /* MainViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = MainViewController.xib; path = "../../../../Xcode Practice & Project/Turn To Tech/Assignments/NavControllerMainViewRefactor/NavControllerMainViewRefactor/MainViewController.xib"; sourceTree = "<group>"; };
 		5399E39E1E56502E00C38A43 /* NewCompanyViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewCompanyViewController.h; sourceTree = "<group>"; };
 		5399E39F1E56502E00C38A43 /* NewCompanyViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewCompanyViewController.m; sourceTree = "<group>"; };
 		53D0E5841E94501C00C63DEF /* Launch Screen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
@@ -87,6 +84,9 @@
 		53D0E5871E9555CE00C63DEF /* TheMainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TheMainViewController.m; sourceTree = "<group>"; };
 		53D0E5881E9555CE00C63DEF /* TheMainViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TheMainViewController.xib; sourceTree = "<group>"; };
 		53D0E58C1E958CC800C63DEF /* StockMarket.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = StockMarket.png; path = ../../../StockMarket.png; sourceTree = "<group>"; };
+		53D7DC1C1EB0EDCF00ECC469 /* MainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainViewController.h; sourceTree = "<group>"; };
+		53D7DC1D1EB0EDCF00ECC469 /* MainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainViewController.m; sourceTree = "<group>"; };
+		53D7DC1E1EB0EDCF00ECC469 /* MainViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MainViewController.xib; sourceTree = "<group>"; };
 		53D998D81E5CCDA2004A4CC3 /* NewProductsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewProductsViewController.h; sourceTree = "<group>"; };
 		53D998D91E5CCDA2004A4CC3 /* NewProductsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewProductsViewController.m; sourceTree = "<group>"; };
 		53EA62B81E523C2C00091583 /* Product.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Product.h; sourceTree = "<group>"; };
@@ -242,9 +242,9 @@
 		5373466B1E92BE19002EF701 /* ProductsMainVC */ = {
 			isa = PBXGroup;
 			children = (
-				5373466C1E92BE3F002EF701 /* MainViewController.h */,
-				5373466D1E92BE48002EF701 /* MainViewController.m */,
-				5373466F1E92BE4F002EF701 /* MainViewController.xib */,
+				53D7DC1C1EB0EDCF00ECC469 /* MainViewController.h */,
+				53D7DC1D1EB0EDCF00ECC469 /* MainViewController.m */,
+				53D7DC1E1EB0EDCF00ECC469 /* MainViewController.xib */,
 			);
 			name = ProductsMainVC;
 			sourceTree = "<group>";
@@ -403,11 +403,11 @@
 				53D0E5851E94501C00C63DEF /* Launch Screen.storyboard in Resources */,
 				48A656EE1816468000746D36 /* Sunflower.gif in Resources */,
 				48A656E718163C1B00746D36 /* CompanyViewController.xib in Resources */,
+				53D7DC201EB0EDCF00ECC469 /* MainViewController.xib in Resources */,
 				53D0E58D1E958CC800C63DEF /* StockMarket.png in Resources */,
 				48A656BF18163BF200746D36 /* InfoPlist.strings in Resources */,
 				530D057F1E9ED124006C0B8D /* image.xcassets in Resources */,
 				53D0E58A1E9555CE00C63DEF /* TheMainViewController.xib in Resources */,
-				537346701E92BE4F002EF701 /* MainViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -437,8 +437,8 @@
 				530D05871E9EEDE2006C0B8D /* UIImage+animatedGIF.m in Sources */,
 				53FBDE2D1E6619090034DBCE /* EditProductViewController.m in Sources */,
 				5399E3A01E56502E00C38A43 /* NewCompanyViewController.m in Sources */,
+				53D7DC1F1EB0EDCF00ECC469 /* MainViewController.m in Sources */,
 				53EA62BF1E523C9800091583 /* Company.m in Sources */,
-				5373466E1E92BE48002EF701 /* MainViewController.m in Sources */,
 				53FBDE291E65E4E30034DBCE /* EditCompanyViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
