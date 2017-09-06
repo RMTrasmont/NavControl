@@ -178,6 +178,7 @@
     transition.subtype = kCATransitionFade;
     [self.navigationController.view.layer addAnimation:transition
                                                 forKey:kCATransition];
+    //PUSH TO WEB VIEW
     [self.navigationController pushViewController:webVC animated:YES];
 
     [webVC release];

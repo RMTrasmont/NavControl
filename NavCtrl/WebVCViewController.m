@@ -19,8 +19,8 @@
     WKWebView * webVCView  = [[WKWebView alloc] initWithFrame: self.view.frame];
     [webVCView loadRequest:[NSURLRequest requestWithURL: self.webURL]];
     webVCView.frame = CGRectMake(self.view.frame.origin.x,self.view.frame.origin.y , self.view.frame.size.width, self.view.frame.size.height);
-    
     [self.view addSubview: webVCView];
+    
     [webVCView release];
     
 }
